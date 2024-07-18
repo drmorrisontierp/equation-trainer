@@ -266,7 +266,6 @@ function check() {
         createBalanceRow();
         row++;
         setAvailable();
-        console.log(available);
         selected = available[0];
         select(selected);
         hideUnused();
