@@ -157,6 +157,16 @@ function del() {
     element(selected).innerHTML = expr.slice(0, -1);
 }
 
+/**
+ * Remove the last character from the selected DOM elements innerHTML.
+ * 
+ * @param {string} selected - The ID of the selected element.
+ */
+function clear() {
+    let expr = element(selected).innerHTML;
+    element(selected).innerHTML = expr.slice(0, -1);
+}
+
 
 /**
  * Modifies the `available` array by prepending the `row` number to each ID.
@@ -179,9 +189,12 @@ function setAvailable() {
  * @param {string} selected - The ID of the currently selected element (global variable).
  */
 function select(id) {
+    let rowText = row.toString()
+    if (id.slice(1, 1+ rowText.length) === rowText) {
     element(selected).style.borderColor = "black";
     selected = id;
     element(id).style.borderColor = "gold";
+    }
 }
 
 
@@ -262,6 +275,7 @@ function check() {
      * setting available elements, and updating the UI.
      */
     function complete() {
+        element(selected).style.borderColor = "black";
         createBalanceRow();
         row++;
         setAvailable();
@@ -549,13 +563,13 @@ function createBalanceRow() {
     });
 
     newRow.innerHTML = `
-        <div id="b${row + 1}1" class="blhs"></div>
+        <div id="b${row + 1}1" class="blhs" onmousedown="select(id)"></div>
         <div id="b${row + 1}2b" class="blank"></div>
-        <div id="b${row + 1}2" class="blhs"></div>
+        <div id="b${row + 1}2" class="blhs" onmousedown="select(id)"></div>
         <div id="b${row + 1}3b" class="blank"></div>
-        <div id="b${row + 1}3" class="brhs"></div>
+        <div id="b${row + 1}3" class="brhs" onmousedown="select(id)"></div>
         <div id="b${row + 1}4b" class="blank"></div>
-        <div id="b${row + 1}4" class="brhs"></div>
+        <div id="b${row + 1}4" class="brhs" onmousedown="select(id)"></div>
     `;
 
     element("left").appendChild(newRow);

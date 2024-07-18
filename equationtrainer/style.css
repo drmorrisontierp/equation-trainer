@@ -67,3 +67,70 @@
     text-align: center;
     width:40px
 }
+
+#keyboard {
+    display: grid;
+    grid-template-columns: 150px 150px;
+    grid-template-rows: 200px 50px;
+    gap: 40px;
+}
+
+#keypad {
+    grid-area: 1/1/2/2;
+    display: grid;
+    grid-template-columns: 50px 50px 50px;
+    grid-template-rows: 50px 50px 50px 50px;
+    gap: 5px;
+}
+
+#operations {
+    grid-area: 1/2/2/3;
+    display: grid;
+    grid-template-columns: 75px 75px;
+    grid-template-rows: 50px 50px 50px 50px;
+    gap: 5px;
+}
+
+#check {
+    grid-area: 2/1/3/3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    border: solid black 1px;
+    width: 250px;
+    height: 50px;
+    margin-left: 45px;
+    
+}
+
+.button {
+    border: solid black 1px;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
+#dummy {
+    width: 50px;
+    height: 50px;
+}
+
+#plus {
+    margin-left: 23px;
+}
+#times {
+    margin-left: 23px;
+}
+#del {
+    margin-left: 23px;
+}
+.arrow-button {
+    border: solid black 1px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+}
