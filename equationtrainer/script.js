@@ -360,6 +360,7 @@ function checkXWithAddition(p, b) {
     let fractionsToAdd = [];      // Positions for valid addition/subtraction
 
     // Iterate through the positions
+    let alertText = ""
     for (let x = 0; x < 4; x++) {
         if (b[x][0] === "") continue; // Skip empty balance entries
 
@@ -367,15 +368,19 @@ function checkXWithAddition(p, b) {
         if (b[x][0][0] === "+" || b[x][0][0] === "-") {
             if (b[x][0].includes("x") && !p[x][0].includes("x")) {
                 console.log("Fail: b contains 'x' but p does not");
+            alertText += `Vid position  ${(x+1)} måste båda termerna innehålla "x".`
                 faults++;
             } else if (!b[x][0].includes("x") && p[x][0].includes("x")) {
                 console.log("Fail: p contains 'x' but b does not");
+                alertText += `Vid position  ${(x+1)} måste båda termerna innehålla "x".`
                 faults++;
             } else if (b[x][1].includes("x") && !p[x][1].includes("x")) {
                 console.log("Fail: b denominator contains 'x' but p does not");
+                alertText += `Vid position  ${(x+1)} måste båda termerna innehålla "x".`
                 faults++;
             } else if (!b[x][1].includes("x") && p[x][1].includes("x")) {
                 console.log("Fail: p denominator contains 'x' but b does not");
+                alertText += `Vid position  ${(x+1)} måste båda termerna innehålla "x".`
                 faults++;
             } else {
                 positionsToAdd.push(x); // Add position to the list if valid
@@ -383,6 +388,7 @@ function checkXWithAddition(p, b) {
             console.log(`faults: ${faults}, positionsToAdd: ${positionsToAdd}`);
         } else {
             console.log("Fail: invalid sign in b", x);
+            alertText += `Vid position  ${(x+1)} det finns en ogiltig operation, antigen addera/subtrhera eller multiplicera/dividera men inte samtidig..`
             faults++;
         }
     }
@@ -391,6 +397,7 @@ function checkXWithAddition(p, b) {
     for (let x of positionsToAdd) {
         if (p[x][1] !== b[x][1] && b[x][0] !== "") {
             console.log("Fail: mismatched denominators");
+            alertText += `Vid position  ${(x+1)} kan du inte addera bråk som har olika nämnare: du måste förlänga eller förkorta först.`
             faults++;
         } else {
             fractionsToAdd.push(x); // Add position to the list if denominators match
@@ -400,6 +407,7 @@ function checkXWithAddition(p, b) {
 
     // Return null if faults are found, else return positions for addition/subtraction
     if (faults > 0) {
+        element("info-screen").innerHTML = alertText
         console.log("Returning null due to faults");
         return null;
     } else {
