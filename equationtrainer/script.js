@@ -407,17 +407,16 @@ function checkMultiplication(p, b) {
         }
     }
 
-    // Check if any empty positions have invalid operations
-    for (let x of emptyPosition) {
-        if (b[x][0] === "*" || b[x][0] === "/") {
-            return null;
-        }
+    let bCheck = ""
+    for (let x = 0; x < 4; x++) {
+        bCheck += b[x][0]
     }
+
 
     // Ensure all filled positions have the same operation
     let lastPosition = b[filledPosition[0]][0];
     for (let x of filledPosition) {
-        if (b[x][0] !== lastPosition) {
+        if (b[x][0] !== lastPosition || b[x][0] === "" || b[x][0] === "0") {
             return null;
         }
         lastPosition = b[x][0];
