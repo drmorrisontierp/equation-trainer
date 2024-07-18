@@ -1,7 +1,22 @@
+#screen {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 100vh;
+}
+
 #left {
+    grid-area: 1/1/2/2;
     overflow-y: scroll;
     max-height: 98vh;
+    border: solid black 1px;
 }
+
+#right {
+    grid-area: 1/2/2/3;
+    max-height: 98vh;
+    border: solid black 1px;
+}
+
 .row {
     display: grid;
     grid-template-columns: repeat(7, 40px);
