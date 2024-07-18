@@ -32,6 +32,11 @@ function className(id) {
     return document.getElementsByClassName(id);
 }
 
+const scrollToBottom = (id) => {
+    const element = document.getElementById(id);
+    element.scrollTop = element.scrollHeight;
+}
+
 
 /**
  * Sets attributes for an element.
@@ -270,6 +275,7 @@ function check() {
         select(selected);
         hideUnused();
         updateRow();
+        scrollToBottom("left");
     }
 
     // Perform the extend operation if valid

@@ -1,5 +1,6 @@
 #left {
     overflow-y: scroll;
+    max-height: 98vh;
 }
 .row {
     display: grid;
