@@ -1,0 +1,50 @@
+.row {
+    display: grid;
+    grid-template-columns: repeat(7, 40px);
+    grid-template-rows: 80px;
+}
+
+.bal {
+    display: grid;
+    grid-template-columns: repeat(7, 40px);
+    grid-template-rows: 40px;
+}
+
+.plhs {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.prhs {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.num {
+    border-bottom: solid black 1px;
+    text-align: center;
+}
+
+.int {
+    text-align: center;
+}
+
+.blhs {
+    display: flex;
+    flex-direction: column;
+    border: solid black 1px;
+    justify-content: center;
+    text-align: center;
+    width:40px
+}
+
+.brhs {
+    display: flex;
+    flex-direction: column;
+    border: solid black 1px;
+    justify-content: center;
+    text-align: center;
+    width:40px
+}
