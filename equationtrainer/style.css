@@ -134,3 +134,11 @@
     justify-content: center;
     text-align: center;
 }
+#display {
+    border: solid black 1px;
+}
+
+#info-screen {
+    min-width: 300px;
+    min-height: 200px;
+}

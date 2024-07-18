@@ -190,10 +190,11 @@ function setAvailable() {
  */
 function select(id) {
     let rowText = row.toString()
-    if (id.slice(1, 1+ rowText.length) === rowText) {
-    element(selected).style.borderColor = "black";
-    selected = id;
-    element(id).style.borderColor = "gold";
+    if (id.slice(1, 1 + rowText.length) === rowText) {
+        element(selected).style.borderColor = "black";
+        index = available.indexOf(id)
+        selected = available[index];
+        element(id).style.borderColor = "gold";
     }
 }
 
@@ -326,8 +327,17 @@ function check() {
 function checkBalance(b) {
     console.log("checkBalance")
     if ([b[0], b[1]].sort().join() !== [b[2], b[3]].sort().join() || b.join("") === "") {
+        console.log(b)
+        let lhs = []
+        let rhs = []
+        lhs[0] = b[0][0] === "" ||  b[0][0] === "" ? "" : b[0][1] !== "1" ? `${b[0][0]}/${b[0][1]}` : b[0][0],
+        lhs[1] = b[1][0] === "" ||  b[1][0] === "" ? "" : b[1][1] !== "1" ? `${b[1][0]}/${b[1][1]}` : b[1][0]
+        rhs[0] = b[2][0] === "" ||  b[2][0] === "" ? "" : b[2][1] !== "1" ? `${b[2][0]}/${b[2][1]}` : b[2][0]
+        rhs[1] = b[3][0] === "" ||  b[3][0] === "" ? "" : b[3][1] !== "1" ? `${b[3][0]}/${b[3][1]}` : b[3][0]
+        console.log(lhs, rhs)
+        
         console.log("failed to balance", b.join(""), [b[0], b[1]].sort().join() !== [b[2], b[3]].sort().join())
-        alert("Du behöver göra samma sak på båda sidor!")
+        element("info-screen").innerHTML = `Du behöver göra samma sak på båda sidor! Just nu har du på vänster leden ${lhs.join("")} och på höger leden ${rhs.join("")} `
         return false
     }
     console.log("no problems with balance", b.join(""))
