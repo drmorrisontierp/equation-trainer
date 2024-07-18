@@ -216,35 +216,25 @@ function check() {
 
     // Process the current row's elements to populate the p array
     for (let x = 1; x < 5; x++) {
-        let corrected = "";
-        let elementContent = element(`p${row}${x}`).children[0].innerHTML;
-        corrected = elementContent;
-
-        console.log("Corrected value before pushing:", corrected);
-
-        // Push the corrected value into the p array
         if (element(`p${row}${x}`).children.length === 1) {
-            if (elementContent === "x") {
+            if (element(`p${row}${x}`).children[0].innerHTML === "x") {
                 p.push(["1x", "1"]);
             } else {
-                p.push([elementContent, "1"]);
+                p.push([element(`p${row}${x}`).children[0].innerHTML, "1"]);
             }
         } else {
-            if (elementContent === "x") {
+            if (element(`p${row}${x}`).children[0].innerHTML === "x") {
                 p.push([
                     "1x",
                     element(`p${row}${x}`).children[1].innerHTML === "x" ? "1x" : element(`p${row}${x}`).children[1].innerHTML
                 ]);
             } else {
-                console.log("Value for pushing:", elementContent);
                 p.push([
-                    elementContent,
+                    element(`p${row}${x}`).children[0].innerHTML,
                     element(`p${row}${x}`).children[1].innerHTML === "x" ? "1x" : element(`p${row}${x}`).children[1].innerHTML
                 ]);
             }
         }
-
-        console.log("Current p array:", [...p]);
 
         // Handle the b array
         let bSplit = element(`b${row}${x}`).innerHTML.slice(1).split("/");
@@ -255,9 +245,6 @@ function check() {
         if (bSplit[0] === "") bSplit[1] = "";
         b.push([sign + bSplit[0], bSplit[1]]);
     }
-
-    console.log("Final p array:", p);
-    console.log("Final b array:", b);
 
     // Check for possible operations
     let extendCheck = checkExtend(p, b);
@@ -345,8 +332,6 @@ function checkBalance(b) {
  */
 function checkXWithAddition(p, b) {
     console.log("checkXWithAddition");
-    console.log("p array:", p);
-    console.log("b array:", b);
 
     let faults = 0;               // Counter for faults
     let positionsToAdd = [];      // Positions to be considered for addition
@@ -355,8 +340,6 @@ function checkXWithAddition(p, b) {
     // Iterate through the positions
     for (let x = 0; x < 4; x++) {
         if (b[x][0] === "") continue; // Skip empty balance entries
-
-        console.log(`Checking position: ${x}`);
 
         // Check if the balance has a valid sign and validate 'x' presence
         if (b[x][0][0] === "+" || b[x][0][0] === "-") {
@@ -459,7 +442,7 @@ function checkMultiplication(p, b) {
  * @returns {Array|null} - An array of details for extending/reducing the fractions or null if no such operations are found.
  */
 function checkExtend(p, b) {
-    console.log("check extend", p, b);
+    console.log("check extend");
 
     let a = [];        // Stores indices of valid operations
     let reduce = [];   // Stores whether to reduce (true) or extend (false)
@@ -493,7 +476,7 @@ function checkExtend(p, b) {
  * @param {Array} s - The array containing signs (not used in this function).
  */
 function createNewRow(p, s) {
-    console.log("Creating new row with p array:", p);
+    console.log("Creating new row");
 
     let newRow = document.createElement("div");
     setAttributes(newRow, {
@@ -537,7 +520,6 @@ function createNewRow(p, s) {
  */
 function updateRow() {
     let newRow = element(`row-${row}`);
-    console.log(newRow.children[5].children[0]);
 
     // Update the signs and values based on conditions
     if (newRow.children[0].children[0].innerHTML === "0" && newRow.children[1].children[0].innerHTML === "-") {
