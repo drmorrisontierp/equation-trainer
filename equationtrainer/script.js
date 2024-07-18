@@ -253,14 +253,8 @@ function check() {
 
     // Check for possible operations
     let extendCheck = checkExtend(p, b);
-    console.log("extendCheck:", extendCheck);
-
     let xCheck = checkXWithAddition(p, b);
-    console.log("xCheck:", xCheck);
-
     let multiplicationCheck = checkMultiplication(p, b);
-    console.log("multiplicationCheck:", multiplicationCheck);
-
 
     /**
      * Completes the process after an operation is performed.
@@ -290,7 +284,6 @@ function check() {
 
     // Perform the multiplication operation if valid
     if (multiplicationCheck) {
-        console.log("multiplicationCheck", multiplicationCheck);
         createNewRow(p, s);
         multiplication(p, b, s, multiplicationCheck[0]);
         complete()
@@ -301,7 +294,6 @@ function check() {
     if (!checkBalance(b)) return;
 
     if (xCheck) {
-        console.log("xCheck", xCheck);
         createNewRow(p, s);
         addition(p, b, s, xCheck);
         complete()
@@ -321,6 +313,7 @@ function checkBalance(b) {
     console.log("checkBalance")
     if ([b[0], b[1]].sort().join() !== [b[2], b[3]].sort().join() || b.join("") === "") {
         console.log("failed to balance", b.join(""), [b[0], b[1]].sort().join() !== [b[2], b[3]].sort().join())
+        alert("Du behöver göra samma sak på båda sidor!")
         return false
     }
     console.log("no problems with balance", b.join(""))
