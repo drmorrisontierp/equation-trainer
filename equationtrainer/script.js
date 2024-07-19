@@ -37,6 +37,15 @@ const scrollToBottom = (id) => {
     element.scrollTop = element.scrollHeight;
 }
 
+const countChars = (str, char) => {
+    let count = 0
+    if (str === "") return 0;
+    for (let x = 0; x < str.length; x++) {
+        if (str[x] === char) count ++;
+    }
+    return count
+}
+
 
 /**
  * Sets attributes for an element.
@@ -131,18 +140,20 @@ function handleKeydown(event) {
 
 
 function enter(key) {
-    //let entered = element(selected).innerHTML
-    //lastEntered = ""
-    //if (entered !== "") {
-    //    lastEntered = entered[entered.length-1]
-    //} else {
-    //    lastEntered = "m"
-    //}
-    //console.log(entered, lastEntered)
-    // if ("*/".includes(key) && entered !== "") return
-    //if ("+-".includes(key) && !("/*".includes(lastEntered) || entered === "")) return
-    //if (key === "x" && !"0123456789-/+*".includes(lastEntered)) return
-    //if ("0123456789".includes(key) && !"0123456789-/+*".includes(lastEntered)) return*/
+    let entered = element(selected).innerHTML
+    const divChars = countChars(entered, "/")
+    lastEntered = ""
+    if (entered !== "") {
+        lastEntered = entered[entered.length-1]
+    } else {
+        lastEntered = "m"
+    }
+    console.log(entered, lastEntered)
+    if (key === "/" && ("+-/".includes(lastEntered) || divChars > 1)) return
+    if (key === "*" && entered !== "") return
+    if ("+-".includes(key) && !("/*".includes(lastEntered) || entered === "")) return
+    if (key === "x" && !"0123456789-/+*".includes(lastEntered)) return
+    if ("0123456789".includes(key) && !"0123456789-/+*".includes(lastEntered)) return
     element(selected).innerHTML += key;
 }
 
