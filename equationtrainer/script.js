@@ -41,7 +41,7 @@ const countChars = (str, char) => {
     let count = 0
     if (str === "") return 0;
     for (let x = 0; x < str.length; x++) {
-        if (str[x] === char) count ++;
+        if (str[x] === char) count++;
     }
     return count
 }
@@ -144,7 +144,7 @@ function enter(key) {
     const divChars = countChars(entered, "/")
     lastEntered = ""
     if (entered !== "") {
-        lastEntered = entered[entered.length-1]
+        lastEntered = entered[entered.length - 1]
     } else {
         lastEntered = "m"
     }
@@ -233,6 +233,27 @@ function moveThrough(direction) {
 }
 
 
+function checkWin() {
+    console.log("check win")
+    let plhs = ""; // String to hold the current row's left-hand-sides values
+    let prhs = ""; // String to hold the current row's right-hand-sides values
+    // Process the current row's elements to populate the p array
+    for (let x = 1; x < 3; x ++) {
+        console.log(element(`p${row}${x}`).children[0].innerHTML)
+        if (element(`p${row+1}${x}`).children[0].innerHTML !== "0") plhs += element(`p${row+1}${x}`).children[0].innerHTML
+        if (element(`p${row+1}${x+2}`).children[0].innerHTML !== "0") prhs += element(`p${row+1}${x+2}`).children[0].innerHTML
+        console.log(plhs, prhs)
+    }
+    
+    if ((plhs === "x" && prhs !== "x") || (prhs === "x" && plhs !== "x") ) {
+        alert("YOU WON!")
+        console.log("You won")
+    } else {
+        return
+    }
+
+}
+
 /**
  * Checks the current row's equation, validates the inputs, and decides which operation to perform.
  */
@@ -287,6 +308,7 @@ function check() {
      * setting available elements, and updating the UI.
      */
     function complete() {
+        checkWin()
         element(selected).style.borderColor = "black";
         createBalanceRow();
         row++;
@@ -341,12 +363,12 @@ function checkBalance(b) {
         console.log(b)
         let lhs = []
         let rhs = []
-        lhs[0] = b[0][0] === "" ||  b[0][0] === "" ? "" : b[0][1] !== "1" ? `${b[0][0]}/${b[0][1]}` : b[0][0],
-        lhs[1] = b[1][0] === "" ||  b[1][0] === "" ? "" : b[1][1] !== "1" ? `${b[1][0]}/${b[1][1]}` : b[1][0]
-        rhs[0] = b[2][0] === "" ||  b[2][0] === "" ? "" : b[2][1] !== "1" ? `${b[2][0]}/${b[2][1]}` : b[2][0]
-        rhs[1] = b[3][0] === "" ||  b[3][0] === "" ? "" : b[3][1] !== "1" ? `${b[3][0]}/${b[3][1]}` : b[3][0]
+        lhs[0] = b[0][0] === "" || b[0][0] === "" ? "" : b[0][1] !== "1" ? `${b[0][0]}/${b[0][1]}` : b[0][0],
+            lhs[1] = b[1][0] === "" || b[1][0] === "" ? "" : b[1][1] !== "1" ? `${b[1][0]}/${b[1][1]}` : b[1][0]
+        rhs[0] = b[2][0] === "" || b[2][0] === "" ? "" : b[2][1] !== "1" ? `${b[2][0]}/${b[2][1]}` : b[2][0]
+        rhs[1] = b[3][0] === "" || b[3][0] === "" ? "" : b[3][1] !== "1" ? `${b[3][0]}/${b[3][1]}` : b[3][0]
         console.log(lhs, rhs)
-        
+
         console.log("failed to balance", b.join(""), [b[0], b[1]].sort().join() !== [b[2], b[3]].sort().join())
         element("info-screen").innerHTML = `Du behöver göra samma sak på båda sidor! Just nu har du på vänster leden ${lhs.join("")} och på höger leden ${rhs.join("")} `
         return false
@@ -379,19 +401,19 @@ function checkXWithAddition(p, b) {
         if (b[x][0][0] === "+" || b[x][0][0] === "-") {
             if (b[x][0].includes("x") && !p[x][0].includes("x")) {
                 console.log("Fail: b contains 'x' but p does not");
-            alertText += `Vid position  ${(x+1)} måste båda termerna innehålla "x".`
+                alertText += `Vid position  ${(x + 1)} måste båda termerna innehålla "x".`
                 faults++;
             } else if (!b[x][0].includes("x") && p[x][0].includes("x")) {
                 console.log("Fail: p contains 'x' but b does not");
-                alertText += `Vid position  ${(x+1)} måste båda termerna innehålla "x".`
+                alertText += `Vid position  ${(x + 1)} måste båda termerna innehålla "x".`
                 faults++;
             } else if (b[x][1].includes("x") && !p[x][1].includes("x")) {
                 console.log("Fail: b denominator contains 'x' but p does not");
-                alertText += `Vid position  ${(x+1)} måste båda termerna innehålla "x".`
+                alertText += `Vid position  ${(x + 1)} måste båda termerna innehålla "x".`
                 faults++;
             } else if (!b[x][1].includes("x") && p[x][1].includes("x")) {
                 console.log("Fail: p denominator contains 'x' but b does not");
-                alertText += `Vid position  ${(x+1)} måste båda termerna innehålla "x".`
+                alertText += `Vid position  ${(x + 1)} måste båda termerna innehålla "x".`
                 faults++;
             } else {
                 positionsToAdd.push(x); // Add position to the list if valid
@@ -399,7 +421,7 @@ function checkXWithAddition(p, b) {
             console.log(`faults: ${faults}, positionsToAdd: ${positionsToAdd}`);
         } else {
             console.log("Fail: invalid sign in b", x);
-            alertText += `Vid position  ${(x+1)} det finns en ogiltig operation, antigen addera/subtrhera eller multiplicera/dividera men inte samtidig..`
+            alertText += `Vid position  ${(x + 1)} det finns en ogiltig operation, antigen addera/subtrhera eller multiplicera/dividera men inte samtidig..`
             faults++;
         }
     }
@@ -408,7 +430,7 @@ function checkXWithAddition(p, b) {
     for (let x of positionsToAdd) {
         if (p[x][1] !== b[x][1] && b[x][0] !== "") {
             console.log("Fail: mismatched denominators");
-            alertText += `Vid position  ${(x+1)} kan du inte addera bråk som har olika nämnare: du måste förlänga eller förkorta först.`
+            alertText += `Vid position  ${(x + 1)} kan du inte addera bråk som har olika nämnare: du måste förlänga eller förkorta först.`
             faults++;
         } else {
             fractionsToAdd.push(x); // Add position to the list if denominators match
