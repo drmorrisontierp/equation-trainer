@@ -3,7 +3,47 @@ let row = 1;
 let available = ["b11", "b12", "b13", "b14"]
 let index = 0
 let selected = available[index];
+let stopped = false
 
+
+const warningsText = (warning, args) => {
+    let warningsText = ""
+    if (warning = "x-fault") {
+        if (args.length === 1) {
+            warningsText = ""
+        } else if (args.length === 2) {
+            warningsText = ""
+        } else if (args.length === 3) {
+            warningsText = ""
+        } else if (args.length === 3) {
+            warningsText = ""
+        }
+    } else if (warning = "addition-fault") {
+        if (args.length === 1) {
+            warningsText = ""
+        } else if (args.length === 2) {
+            warningsText = ""
+        } else if (args.length === 3) {
+            warningsText = ""
+        } else if (args.length === 3) {
+            warningsText = ""
+        }
+    } else if (warning = "balance-fault") {
+        warningsText = ""
+    } else if (warning = "multiplication-fault") {
+        if (args.length === 1) {
+            warningsText = ""
+        } else if (args.length === 2) {
+            warningsText = ""
+        } else if (args.length === 3) {
+            warningsText = ""
+        } else if (args.length === 3) {
+            warningsText = ""
+        }
+    }
+    return warningsText
+
+}
 
 // Select the first available position in the first balance row
 select(available[0])
@@ -114,6 +154,7 @@ function gcd(a, b) {
  */
 function handleKeydown(event) {
     const key = event.key;
+    if (stopped) return
     if (key === "Backspace") {
         del();
     } else if (key === "Enter") {
@@ -140,6 +181,7 @@ function handleKeydown(event) {
 
 
 function enter(key) {
+    if (stopped) return
     let entered = element(selected).innerHTML
     const divChars = countChars(entered, "/")
     lastEntered = ""
@@ -155,6 +197,7 @@ function enter(key) {
     if (key === "x" && !"0123456789-/+*".includes(lastEntered)) return
     if ("0123456789".includes(key) && !"0123456789-/+*".includes(lastEntered)) return
     element(selected).innerHTML += key;
+    
 }
 
 
@@ -164,6 +207,7 @@ function enter(key) {
  * @param {string} selected - The ID of the selected element.
  */
 function del() {
+    if (stopped) return
     let expr = element(selected).innerHTML;
     element(selected).innerHTML = expr.slice(0, -1);
 }
@@ -173,9 +217,39 @@ function del() {
  * 
  * @param {string} selected - The ID of the selected element.
  */
-function clear() {
-    let expr = element(selected).innerHTML;
-    element(selected).innerHTML = expr.slice(0, -1);
+function back() {
+    if (stopped) {
+        return
+    } else {
+        if (row === 1) return
+        element(`bal-${row}`).remove()
+        element(`row-${row}`).remove()
+        row -- 
+        console.log(row)
+        element(`bal-${row}`).remove()
+        createBalanceRow()
+        available = []
+        for (let x = 1; x < 5; x ++) {
+            if (element(`p${row}${x}`).children[0].innerHTML !== "" && element(`p${row}${x}`).children[0].innerHTML !== "0" ) {
+                available.push(`b${row}${x}`)
+            } else {
+                element(`b${row}${x}`).style.display = "none"
+                if (x === 1 || x === 2) {
+                  element(`bal-${row}`).style.marginLeft = "80px"
+                  element(`b${row}${2}b`).style.display = "none"
+                } else {
+                    element(`b${row}${4}b`).style.display = "none"
+                }
+            }
+        }
+        console.log(available)
+        selected = available[0]
+        select(selected)
+        console.log(element(`bal-${row}`))
+
+
+    }
+    
 }
 
 
@@ -200,6 +274,7 @@ function setAvailable() {
  * @param {string} selected - The ID of the currently selected element (global variable).
  */
 function select(id) {
+    if (stopped) return
     let rowText = row.toString()
     if (id.slice(1, 1 + rowText.length) === rowText) {
         element(selected).style.borderColor = "black";
@@ -240,13 +315,16 @@ function checkWin() {
     // Process the current row's elements to populate the p array
     for (let x = 1; x < 3; x ++) {
         console.log(element(`p${row}${x}`).children[0].innerHTML)
-        if (element(`p${row+1}${x}`).children[0].innerHTML !== "0") plhs += element(`p${row+1}${x}`).children[0].innerHTML
-        if (element(`p${row+1}${x+2}`).children[0].innerHTML !== "0") prhs += element(`p${row+1}${x+2}`).children[0].innerHTML
+        if (element(`p${row}${x}`).children[0].innerHTML !== "0") plhs += element(`p${row}${x}`).children[0].innerHTML
+        if (element(`p${row}${x+2}`).children[0].innerHTML !== "0") prhs += element(`p${row}${x+2}`).children[0].innerHTML
         console.log(plhs, prhs)
     }
     
     if ((plhs === "x" && prhs !== "x") || (prhs === "x" && plhs !== "x") ) {
-        alert("YOU WON!")
+        element("info-screen").innerHTML = "YOU WON!"
+        element(`bal-${row}`).innerHTML = ""
+        stopped = true
+
         console.log("You won")
     } else {
         return
@@ -258,6 +336,7 @@ function checkWin() {
  * Checks the current row's equation, validates the inputs, and decides which operation to perform.
  */
 function check() {
+    if (stopped) return
     let p = []; // Array to hold the current row's numerator and denominator values
     let b = []; // Array to hold the balance operations and values
     let s = [
@@ -308,16 +387,17 @@ function check() {
      * setting available elements, and updating the UI.
      */
     function complete() {
-        checkWin()
+        
         element(selected).style.borderColor = "black";
-        createBalanceRow();
         row++;
+        createBalanceRow();
         setAvailable();
         selected = available[0];
         select(selected);
         hideUnused();
         updateRow();
         scrollToBottom("left");
+        checkWin()
     }
 
     // Perform the extend operation if valid
@@ -609,18 +689,18 @@ function updateRow() {
 function createBalanceRow() {
     let newRow = document.createElement("div");
     setAttributes(newRow, {
-        "id": `bal-${row + 1}`,
+        "id": `bal-${row}`,
         "class": "bal",
     });
 
     newRow.innerHTML = `
-        <div id="b${row + 1}1" class="blhs" onmousedown="select(id)"></div>
-        <div id="b${row + 1}2b" class="blank"></div>
-        <div id="b${row + 1}2" class="blhs" onmousedown="select(id)"></div>
-        <div id="b${row + 1}3b" class="blank"></div>
-        <div id="b${row + 1}3" class="brhs" onmousedown="select(id)"></div>
-        <div id="b${row + 1}4b" class="blank"></div>
-        <div id="b${row + 1}4" class="brhs" onmousedown="select(id)"></div>
+        <div id="b${row}1" class="blhs" onmousedown="select(id)"></div>
+        <div id="b${row}2b" class="blank"></div>
+        <div id="b${row}2" class="blhs" onmousedown="select(id)"></div>
+        <div id="b${row}3b" class="blank"></div>
+        <div id="b${row}3" class="brhs" onmousedown="select(id)"></div>
+        <div id="b${row}4b" class="blank"></div>
+        <div id="b${row}4" class="brhs" onmousedown="select(id)"></div>
     `;
 
     element("left").appendChild(newRow);
