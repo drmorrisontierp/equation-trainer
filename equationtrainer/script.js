@@ -197,7 +197,7 @@ function enter(key) {
     if (key === "x" && !"0123456789-/+*".includes(lastEntered)) return
     if ("0123456789".includes(key) && !"0123456789-/+*".includes(lastEntered)) return
     element(selected).innerHTML += key;
-    
+
 }
 
 
@@ -224,19 +224,19 @@ function back() {
         if (row === 1) return
         element(`bal-${row}`).remove()
         element(`row-${row}`).remove()
-        row -- 
+        row--
         console.log(row)
         element(`bal-${row}`).remove()
         createBalanceRow()
         available = []
-        for (let x = 1; x < 5; x ++) {
-            if (element(`p${row}${x}`).children[0].innerHTML !== "" && element(`p${row}${x}`).children[0].innerHTML !== "0" ) {
+        for (let x = 1; x < 5; x++) {
+            if (element(`p${row}${x}`).children[0].innerHTML !== "" && element(`p${row}${x}`).children[0].innerHTML !== "0") {
                 available.push(`b${row}${x}`)
             } else {
                 element(`b${row}${x}`).style.display = "none"
                 if (x === 1 || x === 2) {
-                  element(`bal-${row}`).style.marginLeft = "80px"
-                  element(`b${row}${2}b`).style.display = "none"
+                    element(`bal-${row}`).style.marginLeft = "80px"
+                    element(`b${row}${2}b`).style.display = "none"
                 } else {
                     element(`b${row}${4}b`).style.display = "none"
                 }
@@ -249,7 +249,7 @@ function back() {
 
 
     }
-    
+
 }
 
 
@@ -313,14 +313,14 @@ function checkWin() {
     let plhs = ""; // String to hold the current row's left-hand-sides values
     let prhs = ""; // String to hold the current row's right-hand-sides values
     // Process the current row's elements to populate the p array
-    for (let x = 1; x < 3; x ++) {
+    for (let x = 1; x < 3; x++) {
         console.log(element(`p${row}${x}`).children[0].innerHTML)
         if (element(`p${row}${x}`).children[0].innerHTML !== "0") plhs += element(`p${row}${x}`).children[0].innerHTML
-        if (element(`p${row}${x+2}`).children[0].innerHTML !== "0") prhs += element(`p${row}${x+2}`).children[0].innerHTML
+        if (element(`p${row}${x + 2}`).children[0].innerHTML !== "0") prhs += element(`p${row}${x + 2}`).children[0].innerHTML
         console.log(plhs, prhs)
     }
-    
-    if ((plhs === "x" && prhs !== "x") || (prhs === "x" && plhs !== "x") ) {
+
+    if ((plhs === "x" && prhs !== "x") || (prhs === "x" && plhs !== "x")) {
         element("info-screen").innerHTML = "YOU WON!"
         element(`bal-${row}`).innerHTML = ""
         stopped = true
@@ -387,7 +387,7 @@ function check() {
      * setting available elements, and updating the UI.
      */
     function complete() {
-        
+
         element(selected).style.borderColor = "black";
         row++;
         createBalanceRow();
@@ -587,6 +587,8 @@ function checkExtend(p, b) {
     console.log("check extend");
 
     let a = [];        // Stores indices of valid operations
+    let possibles = []
+    let additions = []
     let reduce = [];   // Stores whether to reduce (true) or extend (false)
     let ext = [];      // Stores the result array to be returned
 
@@ -596,11 +598,47 @@ function checkExtend(p, b) {
         if ("/*".includes(b[x][0][0]) && (b[x][0].slice(1) === b[x][1]) && (b[x][0].slice(1) !== "")) {
             a.push(x);
             reduce.push(b[x][0][0] === "*" ? false : true); // Determine if it's a reduction or extension
+        } else if ("/*".includes(b[x][0][0]) && (b[x][0].slice(1) !== b[x][1]) && (b[x][0].slice(1) !== "")) {
+            possibles.push(x)
+        } else if ("-+".includes(b[x][0][0])) {
+            additions.push(x)
+        }
+    }
+    console.log(a, possibles)
+
+    // If no valid operations are found, return null
+    if (a.length === 0) {
+        if (possibles.length === 1 && additions.length === 0) {
+            console.log("add warning: trying to reduce/expand with wrong method")
+            return null
+        } else if (possibles.length === 0) {
+            console.log("going forward to addition/subtraction")
+            return null
+        } else if (possibles.length >= 0 && additions.length === 0) {
+            let checkNum = b[possibles[0]][0]
+            let checkDen = b[possibles[0]][1]
+            for (let x = 0; x < possibles.length - 1; x++) {
+                if (checkNum === b[x][0] && checkDen === b[x][1]) {
+                    checkNum = b[possibles[x]][0]
+                    checkDen = b[possibles[x]][1]
+                } else {
+                    console.log("add warning: trying to expand/reduce with wrong method 2")
+                    return null
+                }
+                console.log("going forward to multiplication")
+                return null
+            }
+        };
+    } else if (a.length > 0) {
+        if (additions.length >= 1) {
+            console.log("add warning: mixed methods")
+            return null
+        } else if (possibles.length > 0) {
+            console.log("add warning: mixed methods")
+            return null
         }
     }
 
-    // If no valid operations are found, return null
-    if (a.length === 0) return null;
 
     // Prepare the `ext` array with the necessary details
     for (let x = 0; x < a.length; x++) {
