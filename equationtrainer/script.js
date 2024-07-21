@@ -179,6 +179,42 @@ function handleKeydown(event) {
     //console.log(key);
 }
 
+function addEquation() {
+    let element = element("left")
+    for (child of element.children) child.remove()
+    row = 1
+    let newRow = document.createElement("div")
+    setAttribute(newRow, {"id": "row-1"})
+    newRow.innerHTML = `    
+        <div id="p11" class="plhs">
+            <div id="p11a" class="num">2x</div>
+            <div id="p11b" class="int">3</div>
+        </div>
+        <div id="o12o" class="plhs">
+            <div id="o12oa" class="int"></div>
+        </div>
+        <div id="p12" class="plhs">
+            <div id="p12a" class="num"></div>
+            <div id="p12b" class="int"></div>
+        </div>
+        <div class="plhs">
+            <div class="int">=</div>
+            </div>
+        <div id="p13" class="prhs">
+            <div id="p13a" class="num"></div>
+            <div id="p13b" class="int"></div>
+        </div>
+        <div id="o14o" class="prhs">
+            <div id="o14oa" class="int"></div>
+        </div>
+        <div id="p14" class="prhs">
+            <div id="p14a" class="num"></div>
+            <div id="p14b "class="int"></div>
+        </div>
+    `
+    available = ["p11a", "p11b", "o12oa", "p12a", "p12b", "p13a", "p13b", "o14a", "p14a", "p14b"]
+    select(available[0])
+}
 
 function enter(key) {
     if (stopped) return
@@ -642,7 +678,7 @@ function checkExtend(p, b) {
                 }
             }
             console.log("going forward to multiplication")
-                return null
+            return null
         };
     } else if (a.length > 0) {
         if (additions.length >= 1) {
@@ -654,7 +690,7 @@ function checkExtend(p, b) {
         }
     }
 
-    
+
 
 
     // Prepare the `ext` array with the necessary details
@@ -913,8 +949,8 @@ function processIndex(index, p, b) {
  * @returns {number} - The processed p value.
  */
 function getPValue(index, p) {
-        return parseInt(p[index][0].replace("x", ""));
-    
+    return parseInt(p[index][0].replace("x", ""));
+
 }
 
 
