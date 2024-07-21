@@ -366,6 +366,8 @@ function check() {
             }
         }
 
+
+
         // Handle the b array
         let bSplit = element(`b${row}${x}`).innerHTML.slice(1).split("/");
         let sign = element(`b${row}${x}`).innerHTML.slice(0, 1);
@@ -376,10 +378,21 @@ function check() {
         b.push([sign + bSplit[0], bSplit[1]]);
     }
 
+    console.log(p)
+    let p1 = s[0] === "-" && p[1][0][0] !== "-" ? ["-" + p[1][0], p[1][1]] : p[1]
+    let p3 = s[1] === "-" && p[3][0][0] !== "-" ? ["-" + p[3][0], p[3][1]] : p[3]
+    let newP = [
+        p[0],
+        p1,
+        p[2],
+        p3
+    ]
+    console.log(newP)
+
     // Check for possible operations
-    let extendCheck = checkExtend(p, b, s);
-    let xCheck = checkXWithAddition(p, b);
-    let multiplicationCheck = checkMultiplication(p, b);
+    let extendCheck = checkExtend(newP, b);
+    let xCheck = checkXWithAddition(newP, b);
+    let multiplicationCheck = checkMultiplication(newP, b);
 
     /**
      * Completes the process after an operation is performed.
@@ -402,10 +415,10 @@ function check() {
 
     // Perform the extend operation if valid
     if (extendCheck) {
-        createNewRow(p, s);
+        createNewRow(newP);
         console.log(extendCheck)
         for (let e of extendCheck) {
-            
+
             extend(e[0], e[1], e[2], e[3]);
         }
         complete()
@@ -414,8 +427,8 @@ function check() {
 
     // Perform the multiplication operation if valid
     if (multiplicationCheck) {
-        createNewRow(p, s);
-        multiplication(p, b, s, multiplicationCheck[0]);
+        createNewRow(newP);
+        multiplication(newP, b, multiplicationCheck[0]);
         complete()
         return;
     }
@@ -424,8 +437,8 @@ function check() {
     if (!checkBalance(b)) return;
 
     if (xCheck) {
-        createNewRow(p, s);
-        addition(p, b, s, xCheck);
+        createNewRow(newP);
+        addition(newP, b, xCheck);
         complete()
         return;
     }
@@ -585,7 +598,7 @@ function checkMultiplication(p, b) {
  * @param {Array} b - The array containing the balance operations and values.
  * @returns {Array|null} - An array of details for extending/reducing the fractions or null if no such operations are found.
  */
-function checkExtend(p, b, s) {
+function checkExtend(p, b) {
     console.log("check extend");
 
     let a = [];        // Stores indices of valid operations
@@ -627,9 +640,9 @@ function checkExtend(p, b, s) {
                     console.log("add warning: trying to expand/reduce with wrong method 2")
                     return null
                 }
-                console.log("going forward to multiplication")
-                return null
             }
+            console.log("going forward to multiplication")
+                return null
         };
     } else if (a.length > 0) {
         if (additions.length >= 1) {
@@ -641,19 +654,12 @@ function checkExtend(p, b, s) {
         }
     }
 
-    let p1 =  s[0] === "-" && p[1][0][0] !== "-" ? ["-" + p[1][0], p[1][1]] : p[1]
-    let p3 =  s[0] === "-" && p[3][0][0] !== "-" ? ["-" + p[3][0], p[3][1]] : p[1]
-    let newP = [
-        p[0],
-        p1,
-        p[2],
-        p3
-    ]
+    
 
 
     // Prepare the `ext` array with the necessary details
     for (let x = 0; x < a.length; x++) {
-        ext.push([newP, b[a[x]][0].slice(1), a[x], reduce[x]]);
+        ext.push([p, b[a[x]][0].slice(1), a[x], reduce[x]]);
     }
 
     // Return the array of details for extending/reducing the fractions
@@ -666,7 +672,7 @@ function checkExtend(p, b, s) {
  * @param {Array} p - The array containing the positions to be added to the new row.
  * @param {Array} s - The array containing signs (not used in this function).
  */
-function createNewRow(p, s) {
+function createNewRow(p) {
     console.log("Creating new row");
 
     let newRow = document.createElement("div");
@@ -820,7 +826,7 @@ function parsePositions(positions, position) {
  * @param {boolean} reduce - Whether to reduce the fraction.
  * @returns {Object} - Object containing newNum and newDen.
  */
-function calculateNewValues(num, den, fraction, reduce, sign) {
+function calculateNewValues(num, den, fraction, reduce) {
     let newNum, newDen;
 
     if (!reduce) {
@@ -878,9 +884,9 @@ function updateElementWithExtend(newNum, newDen, hasXnum, hasXden, position) {
  * @param {Array} s - Array of signs.
  * @param {Array} a - Array of indices to process.
  */
-function addition(p, b, s, a) {
+function addition(p, b, a) {
     console.log("running addition");
-    a[0].forEach(index => processIndex(index, p, b, s));
+    a[0].forEach(index => processIndex(index, p, b));
 }
 
 
@@ -891,8 +897,8 @@ function addition(p, b, s, a) {
  * @param {Array} b - Array of balance terms.
  * @param {Array} s - Array of signs.
  */
-function processIndex(index, p, b, s) {
-    let pValue = getPValue(index, p, s);
+function processIndex(index, p, b) {
+    let pValue = getPValue(index, p);
     let bValue = parseInt(b[index][0].slice(1).replace("x", ""));
     let result = calculateResult(pValue, bValue, b[index][0][0]);
     updateElementWithAddition(result, index, p);
@@ -906,19 +912,9 @@ function processIndex(index, p, b, s) {
  * @param {Array} s - Array of signs.
  * @returns {number} - The processed p value.
  */
-function getPValue(index, p, s) {
-    if (index === 1 || index === 3) {
-        let signIndex = 0.5 * index - 0.5;
-        if (s[signIndex] === "-" && p[index][0][0] === "-") {
-            return parseInt(p[index][0].slice(1).replace("x", ""));
-        } else if (s[signIndex] === "-" && p[index][0][0] !== "-") {
-            return parseInt("-" + p[index][0].replace("x", ""));
-        } else {
-            return parseInt(p[index][0].replace("x", ""));
-        }
-    } else {
+function getPValue(index, p) {
         return parseInt(p[index][0].replace("x", ""));
-    }
+    
 }
 
 
@@ -978,10 +974,9 @@ function getResultString(result, original) {
  * @param {number} x - Index.
  * @param {HTMLElement} newRow - The new row element.
  */
-function setElementContent(p, b, s, x, newRow) {
+function setElementContent(p, b, x, newRow) {
     let numElement = document.createElement("div");
     let denElement = document.createElement("div");
-    let sign = s === "-" && p[0][0] !== "-" ? "-" : "";
 
     setAttributes(numElement, { "class": "num" });
     setAttributes(denElement, { "class": "int" });
@@ -989,11 +984,11 @@ function setElementContent(p, b, s, x, newRow) {
     let num, den;
     if (b[0][0] === "*") {
         console.log("running *");
-        num = parseInt(sign + p[0].replace("x", "")) * parseInt(b[0].slice(1).replace("x", ""));
+        num = parseInt(p[0].replace("x", "")) * parseInt(b[0].slice(1).replace("x", ""));
         den = parseInt(p[1].replace("x", "")) * parseInt(b[1].replace("x", ""));
     } else {
         console.log("running /");
-        num = parseInt(sign + p[0].replace("x", "")) * parseInt(b[1].replace("x", ""));
+        num = parseInt(p[0].replace("x", "")) * parseInt(b[1].replace("x", ""));
         den = parseInt(p[1].replace("x", "")) * parseInt(b[0].slice(1).replace("x", ""));
     }
 
@@ -1056,13 +1051,12 @@ function getVariablesStatus(b, p) {
  * @param {Array} s - Array of signs.
  * @param {Array} a - Array of indices.
  */
-function multiplication(p, b, s, a) {
+function multiplication(p, b, a) {
     console.log("running multiplication");
     let newRow = document.getElementById(`row-${row + 1}`);
     for (let x of a) {
         newRow.children[x * 2].innerHTML = "";
-        let sign = (x === 1 || x === 3) ? s[0.5 * x - 0.5] : "+";
-        setElementContent(p[x], b[x], sign, x, newRow);
+        setElementContent(p[x], b[x], x, newRow);
     }
 }
 
