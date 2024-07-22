@@ -21,6 +21,7 @@
     display: grid;
     grid-template-columns: repeat(7, 40px);
     grid-template-rows: 80px;
+    column-gap: 5px;
 }
 
 .bal {
@@ -66,6 +67,25 @@
     justify-content: center;
     text-align: center;
     width:40px
+}
+
+.a-num {
+    display: flex;
+    flex-direction: column;
+    border: solid black 1px;
+    justify-content: center;
+    text-align: center;
+    min-width: 40px;
+    min-height: 40px;
+}
+.a-int {
+    display: flex;
+    flex-direction: column;
+    border: solid black 1px;
+    justify-content: center;
+    text-align: center;
+    min-width: 40px;
+    min-height: 40px;
 }
 
 #keyboard {

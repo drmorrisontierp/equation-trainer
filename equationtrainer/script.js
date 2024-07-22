@@ -4,6 +4,7 @@ let available = ["b11", "b12", "b13", "b14"]
 let index = 0
 let selected = available[index];
 let stopped = false
+let creating = false
 
 
 const warningsText = (warning, args) => {
@@ -173,53 +174,66 @@ function handleKeydown(event) {
         enter("+");
     } else if (key === "x") {
         enter("x");
+    } else if (key === "Escape") {
+        addEquation();
     } else if (!isNaN(key)) {
         enter(key);
     }
-    //console.log(key);
+    console.log(key);
 }
 
 function addEquation() {
-    let element = element("left")
-    for (child of element.children) child.remove()
+    let target = element("left");  // returns an element with id "left"
+
+    // Convert HTMLCollection to an array
+    let childrenArray = Array.from(target.children);
+
+    // Iterate over the array and remove each child
+    for (let child of childrenArray) {
+        child.remove();
+    }
     row = 1
     let newRow = document.createElement("div")
-    setAttribute(newRow, {"id": "row-1"})
+    setAttributes(newRow, { "id": "row-1", "class": "row" })
     newRow.innerHTML = `    
         <div id="p11" class="plhs">
-            <div id="p11a" class="num">2x</div>
-            <div id="p11b" class="int">3</div>
+            <div id="p11a" class="a-num"></div>
+            <div id="p11b" class="a-int"></div>
         </div>
         <div id="o12o" class="plhs">
-            <div id="o12oa" class="int"></div>
+            <div id="o12oa" class="a-int"></div>
         </div>
         <div id="p12" class="plhs">
-            <div id="p12a" class="num"></div>
-            <div id="p12b" class="int"></div>
+            <div id="p12a" class="a-num"></div>
+            <div id="p12b" class="a-int"></div>
         </div>
         <div class="plhs">
             <div class="int">=</div>
             </div>
         <div id="p13" class="prhs">
-            <div id="p13a" class="num"></div>
-            <div id="p13b" class="int"></div>
+            <div id="p13a" class="a-num"></div>
+            <div id="p13b" class="a-int"></div>
         </div>
         <div id="o14o" class="prhs">
-            <div id="o14oa" class="int"></div>
+            <div id="o14oa" class="a-int"></div>
         </div>
         <div id="p14" class="prhs">
-            <div id="p14a" class="num"></div>
-            <div id="p14b "class="int"></div>
+            <div id="p14a" class="a-num"></div>
+            <div id="p14b" class="a-int"></div>
         </div>
     `
-    available = ["p11a", "p11b", "o12oa", "p12a", "p12b", "p13a", "p13b", "o14a", "p14a", "p14b"]
-    select(available[0])
+    target.appendChild(newRow)
+    creating = true
+    available = ["p11a", "p11b", "o12oa", "p12a", "p12b", "p13a", "p13b", "o14oa", "p14a", "p14b"]
+    selected = available[0]
+    select(selected)
 }
 
 function enter(key) {
     if (stopped) return
     let entered = element(selected).innerHTML
     const divChars = countChars(entered, "/")
+    const xChars = countChars(entered, "x")
     lastEntered = ""
     if (entered !== "") {
         lastEntered = entered[entered.length - 1]
@@ -227,11 +241,19 @@ function enter(key) {
         lastEntered = "m"
     }
     console.log(entered, lastEntered)
-    if (key === "/" && ("+-/".includes(lastEntered) || divChars > 1)) return
-    if (key === "*" && entered !== "") return
-    if ("+-".includes(key) && !("/*".includes(lastEntered) || entered === "")) return
-    if (key === "x" && !"0123456789-/+*".includes(lastEntered)) return
-    if ("0123456789".includes(key) && !"0123456789-/+*".includes(lastEntered)) return
+    if (!creating) {
+        if (key === "/" && ("+-/".includes(lastEntered) || divChars > 1)) return
+        if (key === "*" && entered !== "") return
+        if ("+-".includes(key) && !("/*".includes(lastEntered) || entered === "")) return
+        if (key === "x" && !"0123456789-/+*".includes(lastEntered)) return
+        if ("0123456789".includes(key) && !"0123456789-/+*".includes(lastEntered)) return
+    } else {
+        if ("/*".includes(key)) return
+        if ("+-".includes(key) && selected[0] !== "o") return
+        if ("123456789".includes(key) && (lastEntered === "x" || selected[0] === "o")) return
+        if (key === "0" && (entered === "m" || entered === "") && element(selected).className === "a-int") return
+        if (key === "x" && xChars > 1) return
+    }
     element(selected).innerHTML += key;
 
 }
@@ -335,6 +357,7 @@ function moveThrough(direction) {
     element(selected).style.borderColor = "black";
     if (direction === "right") {
         index = index < available.length - 1 ? index += 1 : 0;
+        console.log("index", index, available[index])
         selected = available[index]
     } else {
         index = index > 0 ? index -= 1 : available.length - 1;
@@ -373,110 +396,136 @@ function checkWin() {
  */
 function check() {
     if (stopped) return
-    let p = []; // Array to hold the current row's numerator and denominator values
-    let b = []; // Array to hold the balance operations and values
-    let s = [
-        element(`o${row}2o`).children[0].innerHTML,
-        element(`o${row}4o`).children[0].innerHTML
-    ];
 
-    // Process the current row's elements to populate the p array
-    for (let x = 1; x < 5; x++) {
-        if (element(`p${row}${x}`).children.length === 1) {
-            if (element(`p${row}${x}`).children[0].innerHTML === "x") {
-                p.push(["1x", "1"]);
-            } else {
-                p.push([element(`p${row}${x}`).children[0].innerHTML, "1"]);
-            }
-        } else {
-            if (element(`p${row}${x}`).children[0].innerHTML === "x") {
-                p.push([
-                    "1x",
-                    element(`p${row}${x}`).children[1].innerHTML === "x" ? "1x" : element(`p${row}${x}`).children[1].innerHTML
-                ]);
-            } else {
-                p.push([
-                    element(`p${row}${x}`).children[0].innerHTML,
-                    element(`p${row}${x}`).children[1].innerHTML === "x" ? "1x" : element(`p${row}${x}`).children[1].innerHTML
-                ]);
+    if (creating) {
+        for (let x of [0, 3, 5, 8]) {
+            if (element(available[x]).innerHTML === "" || element(available[x]).innerHTML === "0") {
+                element(available[x]).className = "int"
+                element(available[x]).innerHTML = "0"
+                element(available[x + 1]).remove()
+            } else if (element(available[x]).innerHTML !== "") {
+                if (element(available[x + 1]).innerHTML === "1" || element(available[x + 1]).innerHTML === "") {
+                    element(available[x]).className = "int"
+                    element(available[x + 1]).remove()
+                } else {
+                    element(available[x]).className = "num"
+                    element(available[x + 1]).className = "int"
+                }
             }
         }
+        element("o12oa").className = "int"
+        element("o12oa").innerHTML = element("o12oa").innerHTML === "-" ? "-" : "+";
+        element("o14oa").className = "int"
+        element("o14oa").innerHTML = element("o14oa").innerHTML === "-" ? "-" : "+";
+        createBalanceRow()
+        hideUnused()
+
+    } else {
+        let p = []; // Array to hold the current row's numerator and denominator values
+        let b = []; // Array to hold the balance operations and values
+        let s = [
+            element(`o${row}2o`).children[0].innerHTML,
+            element(`o${row}4o`).children[0].innerHTML
+        ];
+
+        // Process the current row's elements to populate the p array
+        for (let x = 1; x < 5; x++) {
+            if (element(`p${row}${x}`).children.length === 1) {
+                if (element(`p${row}${x}`).children[0].innerHTML === "x") {
+                    p.push(["1x", "1"]);
+                } else {
+                    p.push([element(`p${row}${x}`).children[0].innerHTML, "1"]);
+                }
+            } else {
+                if (element(`p${row}${x}`).children[0].innerHTML === "x") {
+                    p.push([
+                        "1x",
+                        element(`p${row}${x}`).children[1].innerHTML === "x" ? "1x" : element(`p${row}${x}`).children[1].innerHTML
+                    ]);
+                } else {
+                    p.push([
+                        element(`p${row}${x}`).children[0].innerHTML,
+                        element(`p${row}${x}`).children[1].innerHTML === "x" ? "1x" : element(`p${row}${x}`).children[1].innerHTML
+                    ]);
+                }
+            }
 
 
 
-        // Handle the b array
-        let bSplit = element(`b${row}${x}`).innerHTML.slice(1).split("/");
-        let sign = element(`b${row}${x}`).innerHTML.slice(0, 1);
-        if (bSplit.length === 1) bSplit.push("1");
-        if (bSplit[0] === "x") bSplit[0] = "1x";
-        if (bSplit[1] === "x") bSplit[1] = "1x";
-        if (bSplit[0] === "") bSplit[1] = "";
-        b.push([sign + bSplit[0], bSplit[1]]);
-    }
-
-    console.log(p)
-    let p1 = s[0] === "-" && p[1][0][0] !== "-" ? ["-" + p[1][0], p[1][1]] : p[1]
-    let p3 = s[1] === "-" && p[3][0][0] !== "-" ? ["-" + p[3][0], p[3][1]] : p[3]
-    let newP = [
-        p[0],
-        p1,
-        p[2],
-        p3
-    ]
-    console.log(newP)
-
-    // Check for possible operations
-    let extendCheck = checkExtend(newP, b);
-    let xCheck = checkXWithAddition(newP, b);
-    let multiplicationCheck = checkMultiplication(newP, b);
-
-    /**
-     * Completes the process after an operation is performed.
-     * This includes creating a new balance row, updating the row counter,
-     * setting available elements, and updating the UI.
-     */
-    function complete() {
-
-        element(selected).style.borderColor = "black";
-        row++;
-        createBalanceRow();
-        setAvailable();
-        selected = available[0];
-        select(selected);
-        hideUnused();
-        updateRow();
-        scrollToBottom("left");
-        checkWin()
-    }
-
-    // Perform the extend operation if valid
-    if (extendCheck) {
-        createNewRow(newP);
-        console.log(extendCheck)
-        for (let e of extendCheck) {
-
-            extend(e[0], e[1], e[2], e[3]);
+            // Handle the b array
+            let bSplit = element(`b${row}${x}`).innerHTML.slice(1).split("/");
+            let sign = element(`b${row}${x}`).innerHTML.slice(0, 1);
+            if (bSplit.length === 1) bSplit.push("1");
+            if (bSplit[0] === "x") bSplit[0] = "1x";
+            if (bSplit[1] === "x") bSplit[1] = "1x";
+            if (bSplit[0] === "") bSplit[1] = "";
+            b.push([sign + bSplit[0], bSplit[1]]);
         }
-        complete()
-        return;
-    }
 
-    // Perform the multiplication operation if valid
-    if (multiplicationCheck) {
-        createNewRow(newP);
-        multiplication(newP, b, multiplicationCheck[0]);
-        complete()
-        return;
-    }
+        console.log(p)
+        let p1 = s[0] === "-" && p[1][0][0] !== "-" ? ["-" + p[1][0], p[1][1]] : p[1]
+        let p3 = s[1] === "-" && p[3][0][0] !== "-" ? ["-" + p[3][0], p[3][1]] : p[3]
+        let newP = [
+            p[0],
+            p1,
+            p[2],
+            p3
+        ]
+        console.log(newP)
 
-    // Check the balance and perform the addition operation if valid
-    if (!checkBalance(b)) return;
+        // Check for possible operations
+        let extendCheck = checkExtend(newP, b);
+        let xCheck = checkXWithAddition(newP, b);
+        let multiplicationCheck = checkMultiplication(newP, b);
 
-    if (xCheck) {
-        createNewRow(newP);
-        addition(newP, b, xCheck);
-        complete()
-        return;
+        /**
+         * Completes the process after an operation is performed.
+         * This includes creating a new balance row, updating the row counter,
+         * setting available elements, and updating the UI.
+         */
+        function complete() {
+
+            element(selected).style.borderColor = "black";
+            row++;
+            createBalanceRow();
+            setAvailable();
+            selected = available[0];
+            select(selected);
+            hideUnused();
+            updateRow();
+            scrollToBottom("left");
+            checkWin()
+        }
+
+        // Perform the extend operation if valid
+        if (extendCheck) {
+            createNewRow(newP);
+            console.log(extendCheck)
+            for (let e of extendCheck) {
+
+                extend(e[0], e[1], e[2], e[3]);
+            }
+            complete()
+            return;
+        }
+
+        // Perform the multiplication operation if valid
+        if (multiplicationCheck) {
+            createNewRow(newP);
+            multiplication(newP, b, multiplicationCheck[0]);
+            complete()
+            return;
+        }
+
+        // Check the balance and perform the addition operation if valid
+        if (!checkBalance(b)) return;
+
+        if (xCheck) {
+            createNewRow(newP);
+            addition(newP, b, xCheck);
+            complete()
+            return;
+        }
     }
 }
 
