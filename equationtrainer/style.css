@@ -28,6 +28,7 @@
     display: grid;
     grid-template-columns: repeat(7, 40px);
     grid-template-rows: 40px;
+    column-gap: 5px;
 }
 
 .plhs {

@@ -333,6 +333,8 @@ function setAvailable() {
  */
 function select(id) {
     if (stopped) return
+    console.log(available)
+    console.log(selected)
     let rowText = row.toString()
     if (id.slice(1, 1 + rowText.length) === rowText) {
         element(selected).style.borderColor = "black";
@@ -354,6 +356,7 @@ function select(id) {
  * @param {string} selected - The ID of the currently selected element (global variable).
  */
 function moveThrough(direction) {
+    console.log(selected)
     element(selected).style.borderColor = "black";
     if (direction === "right") {
         index = index < available.length - 1 ? index += 1 : 0;
@@ -398,18 +401,23 @@ function check() {
     if (stopped) return
 
     if (creating) {
+        
         for (let x of [0, 3, 5, 8]) {
             if (element(available[x]).innerHTML === "" || element(available[x]).innerHTML === "0") {
                 element(available[x]).className = "int"
                 element(available[x]).innerHTML = "0"
+                element(available[x]).id = ""
                 element(available[x + 1]).remove()
             } else if (element(available[x]).innerHTML !== "") {
                 if (element(available[x + 1]).innerHTML === "1" || element(available[x + 1]).innerHTML === "") {
                     element(available[x]).className = "int"
                     element(available[x + 1]).remove()
+                    element(available[x]).id = ""
                 } else {
                     element(available[x]).className = "num"
                     element(available[x + 1]).className = "int"
+                    element(available[x]).id = ""
+                    element(available[x + 1]).id = ""
                 }
             }
         }
@@ -417,8 +425,19 @@ function check() {
         element("o12oa").innerHTML = element("o12oa").innerHTML === "-" ? "-" : "+";
         element("o14oa").className = "int"
         element("o14oa").innerHTML = element("o14oa").innerHTML === "-" ? "-" : "+";
+        creating = false
+        available = []
+        for (let x = 0; x < 4; x++) {
+            available[x] = `b1${x+1}`
+        }
+        row = 1
+        selected = available[0]
+        console.log(selected)
         createBalanceRow()
         hideUnused()
+        selected = available[0]
+        console.log(selected)
+        select(selected)
 
     } else {
         let p = []; // Array to hold the current row's numerator and denominator values
@@ -1200,6 +1219,8 @@ function hideElements(offset, index) {
  * @returns {Array} - Array of element content.
  */
 function getElementsContent(selector) {
+    console.log("selector", selector)
+    console.log(document.querySelectorAll(selector))
     let content = [];
     document.querySelectorAll(selector).forEach((e) => content.push(e.children[0].innerHTML));
     return content;
