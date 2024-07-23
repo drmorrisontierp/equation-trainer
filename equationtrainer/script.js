@@ -395,97 +395,123 @@ function checkWin() {
 }
 
 /**
+ * Checks the added equation for mathematical rules
+ */
+function checkEquation() {
+    let lhs = ""
+    let rhs = ""
+    let nums = []
+    let dens = []
+    for (let x of [0, 3, 5, 8]) {
+        if (element(available[x]).innerHTML.includes("x") && element(available[x + 1]).innerHTML.includes("x")) {
+            element(available[x]).innerHTML = element(available[x]).innerHTML.length > 1 ? element(available[x]).innerHTML.replace("x", "") : "1"
+            element(available[x + 1]).innerHTML = element(available[x + 1]).innerHTML.length > 1 ? element(available[x + 1]).innerHTML.replace("x", "") : "1"
+        }
+        nums.push(element(available[x]).innerHTML)
+        dens.push(element(available[x + 1]).innerHTML)
+        if (element(available[x]).innerHTML === "" || element(available[x]).innerHTML === "0") {
+            if (x === 0 || x === 3) {
+                lhs += "0"
+            } else {
+                rhs += "0"
+            }
+        } else if (element(available[x]).innerHTML !== "") {
+            if (element(available[x + 1]).innerHTML === "1" || element(available[x + 1]).innerHTML === "") {
+                if (x === 0 || x === 3) {
+                    lhs += element(available[x]).innerHTML
+                } else {
+                    rhs += element(available[x]).innerHTML
+                }
+
+            } else {
+                if (x === 0 || x === 3) {
+                    lhs += element(available[x]).innerHTML
+                    lhs += element(available[x + 1]).innerHTML
+                } else {
+                    rhs += element(available[x]).innerHTML
+                    rhs += element(available[x + 1]).innerHTML
+                }
+
+            }
+        }
+    }
+    return { lhs, rhs, nums, dens }
+}
+
+function checkForZeros() {
+    let zeros = []
+    for (let x = 1; x < 5; x++) {
+        if (element(`p1${x}`).children[0].innerHTML === "0" || element(`p1${x}`).children[0].innerHTML === "") {
+            element(`p1${x}`).children[0].innerHTML === "0"
+            element(`p1${x}`).children[1].innerHTML === "0"
+            zeros.push(`${x}`)
+        }
+    }
+    return zeros
+}
+
+function changeXToOneX(x) {
+    if (element(`p1${x}`).children[1].innerHTML === "") element(`p1${x}`).children[1].innerHTML = "1"
+    if (element(`p1${x}`).children[0].innerHTML === "x") element(`p1${x}`).children[0].innerHTML = "1x"
+    if (element(`p1${x}`).children[0].innerHTML === "-x") element(`p1${x}`).children[0].innerHTML = "-1x"
+    if (element(`p1${x}`).children[1].innerHTML === "x") element(`p1${x}`).children[1].innerHTML = "1x"
+}
+
+function completeCheckWithAddEquation() {
+    creating = false
+        available = []
+        for (let x = 0; x < 4; x++) {
+            available[x] = `b1${x + 1}`
+        }
+        row = 1
+        selected = available[0]
+        console.log(selected)
+        createBalanceRow()
+        hideUnused()
+        selected = available[0]
+        console.log(selected)
+        select(selected)
+}
+
+/**
+         * Completes the process after an operation is performed.
+         * This includes creating a new balance row, updating the row counter,
+         * setting available elements, and updating the UI.
+         */
+function completeCheck() {
+
+    element(selected).style.borderColor = "black";
+    row++;
+    createBalanceRow();
+    setAvailable();
+    selected = available[0];
+    select(selected);
+    hideUnused();
+    updateRow();
+    scrollToBottom("left");
+    checkWin()
+}
+
+/**
  * Checks the current row's equation, validates the inputs, and decides which operation to perform.
  */
+
 function check() {
     if (stopped) return
     if (creating) {
-        let lhs = ""
-        let rhs = ""
-        let nums = []
-        let dens = []
-        for (let x of [0, 3, 5, 8]) {
-            if (element(available[x]).innerHTML.includes("x") && element(available[x + 1]).innerHTML.includes("x")) {
-
-                element(available[x]).innerHTML = element(available[x]).innerHTML.length > 1 ? element(available[x]).innerHTML.replace("x", "") : "1"
-                element(available[x + 1]).innerHTML = element(available[x + 1]).innerHTML.length > 1 ? element(available[x + 1]).innerHTML.replace("x", "") : "1"
-            }
-            nums.push(element(available[x]).innerHTML)
-            dens.push(element(available[x + 1]).innerHTML)
-            if (element(available[x]).innerHTML === "" || element(available[x]).innerHTML === "0") {
-                if (x === 0 || x === 3) {
-                    lhs += ""
-                } else {
-                    rhs += ""
-                }
-            } else if (element(available[x]).innerHTML !== "") {
-                if (element(available[x + 1]).innerHTML === "1" || element(available[x + 1]).innerHTML === "") {
-                    if (x === 0 || x === 3) {
-                        lhs += element(available[x]).innerHTML
-                    } else {
-                        rhs += element(available[x]).innerHTML
-                    }
-
-                } else {
-                    if (x === 0 || x === 3) {
-                        lhs += element(available[x]).innerHTML
-                        lhs += element(available[x + 1]).innerHTML
-                    } else {
-                        rhs += element(available[x]).innerHTML
-                        rhs += element(available[x + 1]).innerHTML
-                    }
-
-                }
-            }
-            if (element(available[x]).innerHTML.includes("x") && element(available[x + 1]).innerHTML.includes("x")) {
-
-                element(available[x]).innerHTML = element(available[x]).innerHTML.length > 1 ? element(available[x]).innerHTML.replace("x", "") : "1"
-                element(available[x + 1]).innerHTML = element(available[x + 1]).innerHTML.length > 1 ? element(available[x + 1]).innerHTML.replace("x", "") : "1"
-            }
-            nums.push(element(available[x]).innerHTML)
-            dens.push(element(available[x + 1]).innerHTML)
-        }
-
+        const { lhs, rhs, nums, dens } = checkEquation()
         if (lhs.length === 0) return
         if (rhs.length === 0) return
         if (!lhs.includes("x") && !rhs.includes("x")) return
         if (nums.join().includes("x") && dens.join().includes("x")) return
 
-        let zeros = []
-        if (element("p11").children[0].innerHTML === "0" || element("p11").children[0].innerHTML === "") {
-            element("p11").children[0].innerHTML === "0"
-            element("p11").children[1].innerHTML === "0"
-            zeros.push("1")
-        }
-        if (element("p12").children[0].innerHTML === "0" || element("p12").children[0].innerHTML === "") {
-            element("p12").children[0].innerHTML === "0"
-            element("p12").children[1].innerHTML === "0"
-            zeros.push("2")
-        }
-        if (element("p13").children[0].innerHTML === "0" || element("p13").children[0].innerHTML === "") {
-            element("p13").children[0].innerHTML === "0"
-            element("p13").children[1].innerHTML === "0"
-            zeros.push("3")
-        }
-        if (element("p14").children[0].innerHTML === "0" || element("p14").children[0].innerHTML === "") {
-            element("p14").children[0].innerHTML === "0"
-            element("p14").children[1].innerHTML === "0"
-            zeros.push("4")
-        }
-        console.log(zeros)
+        const zeros = checkForZeros()
+        console.log("zeros", zeros)
         if (zeros.length > 2) return
-        if (element("p11").children[1].innerHTML === "") element("p11").children[1].innerHTML = "1"
-        if (element("p12").children[1].innerHTML === "") element("p12").children[1].innerHTML = "1"
-        if (element("p13").children[1].innerHTML === "") element("p13").children[1].innerHTML = "1"
-        if (element("p14").children[1].innerHTML === "") element("p14").children[1].innerHTML = "1"
-        if (element("p11").children[0].innerHTML === "x") element("p11").children[0].innerHTML = "1x"
-        if (element("p12").children[0].innerHTML === "x") element("p12").children[0].innerHTML = "1x"
-        if (element("p13").children[0].innerHTML === "x") element("p13").children[0].innerHTML = "1x"
-        if (element("p14").children[0].innerHTML === "x") element("p14").children[0].innerHTML = "1x"
-        if (element("p11").children[1].innerHTML === "x") element("p11").children[1].innerHTML = "1x"
-        if (element("p12").children[1].innerHTML === "x") element("p12").children[1].innerHTML = "1x"
-        if (element("p13").children[1].innerHTML === "x") element("p13").children[1].innerHTML = "1x"
-        if (element("p14").children[1].innerHTML === "x") element("p14").children[1].innerHTML = "1x"
+
+        for (let x = 1; x < 5; x++) {
+            changeXToOneX(x)
+        }
 
 
         // Check conditions
@@ -532,38 +558,29 @@ function check() {
 
 
         for (let x of [0, 3, 5, 8]) {
+            if (element(available[x]).innerHTML === "1x") element(available[x]).innerHTML = "x"
+            if (element(available[x]).innerHTML === "-1x") element(available[x]).innerHTML = "-x"
             if (element(available[x]).innerHTML === "" || element(available[x]).innerHTML === "0") {
-                element(available[x]).className = "int"
-                element(available[x]).innerHTML = "0"
-                element(available[x]).id = ""
+                setAttributes(element(available[x]), { "class": "int", "id": "", "innerHTML": "0" })
                 element(available[x + 1]).remove()
 
             } else if (element(available[x]).innerHTML !== "") {
                 if (element(available[x + 1]).innerHTML === "1" || element(available[x + 1]).innerHTML === "") {
-                    if (element(available[x]).innerHTML === "1x") element(available[x]).innerHTML = "x"
-                    if (element(available[x]).innerHTML === "-1x") element(available[x]).innerHTML = "-x"
-                    element(available[x]).className = "int"
+                    setAttributes(element(available[x]), { "class": "int", "id": "" })
                     element(available[x + 1]).remove()
-                    element(available[x]).id = ""
 
                 } else {
-                    if (element(available[x]).innerHTML === "1x") element(available[x]).innerHTML = "x"
-                    if (element(available[x+1]).innerHTML === "1x") element(available[x+1]).innerHTML = "x"
-                    if (element(available[x]).innerHTML === "-1x") element(available[x]).innerHTML = "-x"
-                    element(available[x]).className = "num"
-                    element(available[x + 1]).className = "int"
-                    element(available[x]).id = ""
-                    element(available[x + 1]).id = ""
+                    setAttributes(element(available[x]), { "class": "num", "id": "" })
+                    setAttributes(element(available[x + 1]), { "class": "int", "id": "" })
                 }
             }
         }
 
-
-
-        element("o12oa").className = "int"
-        element("o12oa").innerHTML = element("o12oa").innerHTML === "-" ? "-" : "+";
-        element("o14oa").className = "int"
-        element("o14oa").innerHTML = element("o14oa").innerHTML === "-" ? "-" : "+";
+        setAttributes(element("o12oa"), { "class": "int", "id": "", "innerHTML": `${element("o12oa").innerHTML === "-" ? "-" : "+"}` })
+        setAttributes(element("o14oa"), { "class": "int", "id": "", "innerHTML": `${element("o14oa").innerHTML === "-" ? "-" : "+"}` })
+        
+        //completeCheckWithAddEquation()
+        
         creating = false
         available = []
         for (let x = 0; x < 4; x++) {
@@ -577,6 +594,7 @@ function check() {
         selected = available[0]
         console.log(selected)
         select(selected)
+        
 
     } else {
         let p = []; // Array to hold the current row's numerator and denominator values
@@ -660,7 +678,6 @@ function check() {
             createNewRow(newP);
             console.log(extendCheck)
             for (let e of extendCheck) {
-
                 extend(e[0], e[1], e[2], e[3]);
             }
             complete()
