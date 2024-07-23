@@ -399,28 +399,245 @@ function checkWin() {
  */
 function check() {
     if (stopped) return
-
     if (creating) {
-        
+        let lhs = ""
+        let rhs = ""
+        let nums = []
+        let dens = []
+        for (let x of [0, 3, 5, 8]) {
+            if (element(available[x]).innerHTML.includes("x") && element(available[x + 1]).innerHTML.includes("x")) {
+
+                element(available[x]).innerHTML = element(available[x]).innerHTML.length > 1 ? element(available[x]).innerHTML.replace("x", "") : "1"
+                element(available[x + 1]).innerHTML = element(available[x + 1]).innerHTML.length > 1 ? element(available[x + 1]).innerHTML.replace("x", "") : "1"
+            }
+            nums.push(element(available[x]).innerHTML)
+            dens.push(element(available[x + 1]).innerHTML)
+            if (element(available[x]).innerHTML === "" || element(available[x]).innerHTML === "0") {
+                if (x === 0 || x === 3) {
+                    lhs += ""
+                } else {
+                    rhs += ""
+                }
+            } else if (element(available[x]).innerHTML !== "") {
+                if (element(available[x + 1]).innerHTML === "1" || element(available[x + 1]).innerHTML === "") {
+                    if (x === 0 || x === 3) {
+                        lhs += element(available[x]).innerHTML
+                    } else {
+                        rhs += element(available[x]).innerHTML
+                    }
+
+                } else {
+                    if (x === 0 || x === 3) {
+                        lhs += element(available[x]).innerHTML
+                        lhs += element(available[x + 1]).innerHTML
+                    } else {
+                        rhs += element(available[x]).innerHTML
+                        rhs += element(available[x + 1]).innerHTML
+                    }
+
+                }
+            }
+            if (element(available[x]).innerHTML.includes("x") && element(available[x + 1]).innerHTML.includes("x")) {
+
+                element(available[x]).innerHTML = element(available[x]).innerHTML.length > 1 ? element(available[x]).innerHTML.replace("x", "") : "1"
+                element(available[x + 1]).innerHTML = element(available[x + 1]).innerHTML.length > 1 ? element(available[x + 1]).innerHTML.replace("x", "") : "1"
+            }
+            nums.push(element(available[x]).innerHTML)
+            dens.push(element(available[x + 1]).innerHTML)
+        }
+
+
+
+        console.log(lhs)
+        console.log(rhs)
+        console.log(nums.join())
+        console.log(dens.join())
+
+        if (lhs.length === 0) return
+        if (rhs.length === 0) return
+        if (!lhs.includes("x") && !rhs.includes("x")) return
+        if (nums.join().includes("x") && dens.join().includes("x")) return
+
+        let zeros = []
+        if (element("p11").children[0].innerHTML === "0" || element("p11").children[0].innerHTML === "") {
+            element("p11").children[0].innerHTML === "0"
+            element("p11").children[1].innerHTML === "0"
+            zeros.push("1")
+        }
+        if (element("p12").children[0].innerHTML === "0" || element("p12").children[0].innerHTML === "") {
+            element("p12").children[0].innerHTML === "0"
+            element("p12").children[1].innerHTML === "0"
+            zeros.push("2")
+        }
+        if (element("p13").children[0].innerHTML === "0" || element("p13").children[0].innerHTML === "") {
+            element("p13").children[0].innerHTML === "0"
+            element("p13").children[1].innerHTML === "0"
+            zeros.push("3")
+        }
+        if (element("p14").children[0].innerHTML === "0" || element("p14").children[0].innerHTML === "") {
+            element("p14").children[0].innerHTML === "0"
+            element("p14").children[1].innerHTML === "0"
+            zeros.push("4")
+        }
+        console.log(zeros)
+        if (zeros.length > 2) return
+        if (element("p11").children[1].innerHTML === "") element("p11").children[1].innerHTML = "1"
+        if (element("p12").children[1].innerHTML === "") element("p12").children[1].innerHTML = "1"
+        if (element("p13").children[1].innerHTML === "") element("p13").children[1].innerHTML = "1"
+        if (element("p14").children[1].innerHTML === "") element("p14").children[1].innerHTML = "1"
+        if (element("p11").children[0].innerHTML === "x") element("p11").children[0].innerHTML = "1x"
+        if (element("p12").children[0].innerHTML === "x") element("p12").children[0].innerHTML = "1x"
+        if (element("p13").children[0].innerHTML === "x") element("p13").children[0].innerHTML = "1x"
+        if (element("p14").children[0].innerHTML === "x") element("p14").children[0].innerHTML = "1x"
+        if (element("p11").children[1].innerHTML === "x") element("p11").children[1].innerHTML = "1x"
+        if (element("p12").children[1].innerHTML === "x") element("p12").children[1].innerHTML = "1x"
+        if (element("p13").children[1].innerHTML === "x") element("p13").children[1].innerHTML = "1x"
+        if (element("p14").children[1].innerHTML === "x") element("p14").children[1].innerHTML = "1x"
+
+
+        // Check conditions
+        for (let x of [1, 3]) {
+
+            // Get raw innerHTML values
+            let p11a = element(`p1${x}`).children[0].innerHTML;
+            let p12a = element(`p1${x + 1}`).children[0].innerHTML;
+            let p11b = element(`p1${x}`).children[1].innerHTML;
+            let p12b = element(`p1${x + 1}`).children[1].innerHTML;
+            let o12o = element(`o1${x + 1}o`).children[0].innerHTML;
+
+            // Log raw values
+            console.log("Raw p11a:", p11a);
+            console.log("Raw p12a:", p12a);
+            console.log("Raw p11b:", p11b);
+            console.log("Raw p12b:", p12b);
+
+
+            if ((p11a.includes("x") && p12a.includes("x")) && (!p11b.includes("x") && !p12b.includes("x")) ||
+                (!p11a.includes("x") && !p12a.includes("x") && (p11a !== "" || p11a !== "") && (p12a !== "" || p12a !== "")) && (p11b.includes("x") && p12b.includes("x")) ||
+                (!p11a.includes("x") && !p12a.includes("x") && (p11a !== "" || p11a !== "") && (p12a !== "" || p12a !== "")) && (!p11b.includes("x") && !p12b.includes("x"))) {
+
+                console.log("running");
+
+                // Remove "x" and parse integers
+                let n1 = parseInt(p11a.replace("x", ""));
+                let n2 = parseInt(p12a.replace("x", ""));
+                let d1 = parseInt(p11b.replace("x", ""));
+                let d2 = parseInt(p12b.replace("x", ""));
+
+                // Log parsed values
+                console.log("Parsed n1:", n1);
+                console.log("Parsed n2:", n2);
+                console.log("Parsed d1:", d1);
+                console.log("Parsed d2:", d2);
+
+                // Calculate num and den
+                let num = o12o === "-" ? (n1 * d2 - n2 * d1) : (n1 * d2 + n2 * d1);
+                element(`o1${x + 1}o`).children[0].innerHTML = "+"
+                let den = d1 * d2;
+
+                // Log results
+                console.log("Calculated num:", num);
+                console.log("Calculated den:", den);
+
+                // Find gcd
+                let g = gcd(num, den);
+
+                // Log gcd
+                console.log("GCD:", g);
+
+                // Simplify fraction
+                num = num / g;
+                den = den / g;
+
+                // Log simplified results
+                console.log("Simplified num:", num);
+                console.log("Simplified den:", den);
+
+                // Update DOM
+                element(`p1${x}`).children[0].innerHTML = element(`p1${x}`).children[0].innerHTML.includes("x") ? num + "x" : num;
+                element(`p1${x}`).children[1].innerHTML = element(`p1${x}`).children[1].innerHTML.includes("x") ? den + "x" : den;
+                element(`p1${x + 1}`).children[0].innerHTML = "0";
+                element(`p1${x + 1}`).children[1].innerHTML = "0";
+            }
+        }
+
+        /*
+        let lhs = ""
+        let rhs = ""
         for (let x of [0, 3, 5, 8]) {
             if (element(available[x]).innerHTML === "" || element(available[x]).innerHTML === "0") {
+                if (x === 0 || x === 3) {
+                    lhs += ""
+                } else {
+                    rhs += ""
+                }
+            } else if (element(available[x]).innerHTML !== "") {
+                if (element(available[x + 1]).innerHTML === "1" || element(available[x + 1]).innerHTML === "") {
+                    if (x === 0 || x === 3) {
+                        lhs += element(available[x]).innerHTML
+                    } else {
+                        rhs += element(available[x]).innerHTML
+                    }
+
+                } else {
+                    if (x === 0 || x === 3) {
+                        lhs += element(available[x]).innerHTML
+                        lhs += element(available[x + 1]).innerHTML
+                    } else {
+                        rhs += element(available[x]).innerHTML
+                        rhs += element(available[x + 1]).innerHTML
+                    }
+
+                }
+            }
+        }
+
+
+        console.log(lhs)
+        console.log(rhs)
+        if (lhs.length === 0) return
+        if (rhs.length === 0) return
+        if (!lhs.includes("x") && !rhs.includes("x")) return
+        */
+        for (let x of [0, 3, 5, 8]) {
+            if (element(available[x]).innerHTML === "" || element(available[x]).innerHTML === "0") {
+                if (x === 0 || x === 3) {
+                    lhs += ""
+                } else {
+                    rhs += ""
+                }
                 element(available[x]).className = "int"
                 element(available[x]).innerHTML = "0"
                 element(available[x]).id = ""
                 element(available[x + 1]).remove()
+
             } else if (element(available[x]).innerHTML !== "") {
                 if (element(available[x + 1]).innerHTML === "1" || element(available[x + 1]).innerHTML === "") {
+                    if (x === 0 || x === 3) {
+                        lhs += element(available[x]).innerHTML
+                    } else {
+                        rhs += element(available[x]).innerHTML
+                    }
                     element(available[x]).className = "int"
                     element(available[x + 1]).remove()
                     element(available[x]).id = ""
+
                 } else {
                     element(available[x]).className = "num"
                     element(available[x + 1]).className = "int"
+                    if (x === 0 || x === 3) {
+                        lhs += element(available[x]).innerHTML
+                    } else {
+                        rhs += element(available[x + 1]).innerHTML
+                    }
                     element(available[x]).id = ""
                     element(available[x + 1]).id = ""
                 }
             }
         }
+
+
+
         element("o12oa").className = "int"
         element("o12oa").innerHTML = element("o12oa").innerHTML === "-" ? "-" : "+";
         element("o14oa").className = "int"
@@ -428,7 +645,7 @@ function check() {
         creating = false
         available = []
         for (let x = 0; x < 4; x++) {
-            available[x] = `b1${x+1}`
+            available[x] = `b1${x + 1}`
         }
         row = 1
         selected = available[0]

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ekvationlösningstränare</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="screen">
+        <div id="left">
+            <div id="row-1" class="row">
+                <div id="p11" class="plhs">
+                    <div class="int">4</div>
+                </div>
+                <div id="o12o" class="plhs">
+                    <div class="int">-</div>
+                </div>
+                <div id="p12" class="plhs">
+                    <div class="num">2x</div>
+                    <div class="int">3</div>
+                </div>
+                <div class="plhs">
+                    <div class="int">=</div>
+                </div>
+                <div id="p13" class="prhs">
+                    <div class="num">6x</div>
+                    <div class="int">3</div>
+                </div>
+                <div id="o14o" class="prhs">
+                    <div class="int">+</div>
+                </div>
+                <div id="p14" class="prhs">
+                    <div class="int">2</div>
+                </div>
+            </div>
+            <div id="bal-1" class="bal">
+                <div id="b11" class="blhs" onmousedown="select(id)">*4/4</div>
+                <div id="b12b" class="blank"></div>
+                <div id="b12" class="blhs" onmousedown="select(id)">*2</div>
+                <div id="b13b" class="blank"></div>
+                <div id="b13" class="brhs" onmousedown="select(id)">*2</div>
+                <div id="b14b" class="blank"></div>
+                <div id="b14" class="brhs" onmousedown="select(id)"></div>
+            </div>
+        </div>
+    
+    <div id="right">
+        <div id="display">
+            <div id="info-screen"></div>
+        </div>
+        <div id="keyboard">
+            <div id="keypad">
+                <div id="7" class="button" onclick="enter('7')">7</div>
+                <div id="8" class="button" onclick="enter('8')">8</div>
+                <div id="9" class="button" onclick="enter('9')">9</div>
+                <div id="4" class="button" onclick="enter('4')">4</div>
+                <div id="5" class="button" onclick="enter('5')">5</div>
+                <div id="6" class="button" onclick="enter('6')">6</div>
+                <div id="1" class="button" onclick="enter('1')">1</div>
+                <div id="2" class="button" onclick="enter('2')">2</div>
+                <div id="3" class="button" onclick="enter('3')">3</div>
+                <div id="x" class="button" onclick="enter('x')">x</div>
+                <div id="0" class="button" onclick="enter('0')">0</div>
+                <div id="dummy"></div>
+            </div>
+            <div id="operations">
+                <div id="plus" class="button" onclick="enter('+')">+</div>
+                <div id="minus" class="button" onclick="enter('-')">-</div>
+                <div id="times" class="button" onclick="enter('*')">*</div>
+                <div id="divided" class="button" onclick="enter('/')">/</div>
+                <div id="left-arrow" class="arrow-button" onclick="moveThrough('left')">&#8678</div>
+                <div id="right-arrow" class="arrow-button" onclick="moveThrough('right')">&#8680</div>
+                <div id="del" class="button" onclick="del()">del</div>
+                <div id="clear" class="button" onclick="back()">back</div>
+
+            </div>
+            <div id="check" class="check-button" onclick="check()">check</div>
+        </div>
+    </div>
+</div>
+
+    <script src="script.js"></script>
+</body>
+</html>
