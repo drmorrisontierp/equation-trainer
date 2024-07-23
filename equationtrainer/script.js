@@ -446,13 +446,6 @@ function check() {
             dens.push(element(available[x + 1]).innerHTML)
         }
 
-
-
-        console.log(lhs)
-        console.log(rhs)
-        console.log(nums.join())
-        console.log(dens.join())
-
         if (lhs.length === 0) return
         if (rhs.length === 0) return
         if (!lhs.includes("x") && !rhs.includes("x")) return
@@ -505,13 +498,6 @@ function check() {
             let p12b = element(`p1${x + 1}`).children[1].innerHTML;
             let o12o = element(`o1${x + 1}o`).children[0].innerHTML;
 
-            // Log raw values
-            console.log("Raw p11a:", p11a);
-            console.log("Raw p12a:", p12a);
-            console.log("Raw p11b:", p11b);
-            console.log("Raw p12b:", p12b);
-
-
             if ((p11a.includes("x") && p12a.includes("x")) && (!p11b.includes("x") && !p12b.includes("x")) ||
                 (!p11a.includes("x") && !p12a.includes("x") && (p11a !== "" || p11a !== "") && (p12a !== "" || p12a !== "")) && (p11b.includes("x") && p12b.includes("x")) ||
                 (!p11a.includes("x") && !p12a.includes("x") && (p11a !== "" || p11a !== "") && (p12a !== "" || p12a !== "")) && (!p11b.includes("x") && !p12b.includes("x"))) {
@@ -524,34 +510,17 @@ function check() {
                 let d1 = parseInt(p11b.replace("x", ""));
                 let d2 = parseInt(p12b.replace("x", ""));
 
-                // Log parsed values
-                console.log("Parsed n1:", n1);
-                console.log("Parsed n2:", n2);
-                console.log("Parsed d1:", d1);
-                console.log("Parsed d2:", d2);
-
                 // Calculate num and den
                 let num = o12o === "-" ? (n1 * d2 - n2 * d1) : (n1 * d2 + n2 * d1);
                 element(`o1${x + 1}o`).children[0].innerHTML = "+"
                 let den = d1 * d2;
 
-                // Log results
-                console.log("Calculated num:", num);
-                console.log("Calculated den:", den);
-
                 // Find gcd
                 let g = gcd(num, den);
-
-                // Log gcd
-                console.log("GCD:", g);
 
                 // Simplify fraction
                 num = num / g;
                 den = den / g;
-
-                // Log simplified results
-                console.log("Simplified num:", num);
-                console.log("Simplified den:", den);
 
                 // Update DOM
                 element(`p1${x}`).children[0].innerHTML = element(`p1${x}`).children[0].innerHTML.includes("x") ? num + "x" : num;
@@ -561,51 +530,9 @@ function check() {
             }
         }
 
-        /*
-        let lhs = ""
-        let rhs = ""
+
         for (let x of [0, 3, 5, 8]) {
             if (element(available[x]).innerHTML === "" || element(available[x]).innerHTML === "0") {
-                if (x === 0 || x === 3) {
-                    lhs += ""
-                } else {
-                    rhs += ""
-                }
-            } else if (element(available[x]).innerHTML !== "") {
-                if (element(available[x + 1]).innerHTML === "1" || element(available[x + 1]).innerHTML === "") {
-                    if (x === 0 || x === 3) {
-                        lhs += element(available[x]).innerHTML
-                    } else {
-                        rhs += element(available[x]).innerHTML
-                    }
-
-                } else {
-                    if (x === 0 || x === 3) {
-                        lhs += element(available[x]).innerHTML
-                        lhs += element(available[x + 1]).innerHTML
-                    } else {
-                        rhs += element(available[x]).innerHTML
-                        rhs += element(available[x + 1]).innerHTML
-                    }
-
-                }
-            }
-        }
-
-
-        console.log(lhs)
-        console.log(rhs)
-        if (lhs.length === 0) return
-        if (rhs.length === 0) return
-        if (!lhs.includes("x") && !rhs.includes("x")) return
-        */
-        for (let x of [0, 3, 5, 8]) {
-            if (element(available[x]).innerHTML === "" || element(available[x]).innerHTML === "0") {
-                if (x === 0 || x === 3) {
-                    lhs += ""
-                } else {
-                    rhs += ""
-                }
                 element(available[x]).className = "int"
                 element(available[x]).innerHTML = "0"
                 element(available[x]).id = ""
@@ -613,23 +540,18 @@ function check() {
 
             } else if (element(available[x]).innerHTML !== "") {
                 if (element(available[x + 1]).innerHTML === "1" || element(available[x + 1]).innerHTML === "") {
-                    if (x === 0 || x === 3) {
-                        lhs += element(available[x]).innerHTML
-                    } else {
-                        rhs += element(available[x]).innerHTML
-                    }
+                    if (element(available[x]).innerHTML === "1x") element(available[x]).innerHTML = "x"
+                    if (element(available[x]).innerHTML === "-1x") element(available[x]).innerHTML = "-x"
                     element(available[x]).className = "int"
                     element(available[x + 1]).remove()
                     element(available[x]).id = ""
 
                 } else {
+                    if (element(available[x]).innerHTML === "1x") element(available[x]).innerHTML = "x"
+                    if (element(available[x+1]).innerHTML === "1x") element(available[x+1]).innerHTML = "x"
+                    if (element(available[x]).innerHTML === "-1x") element(available[x]).innerHTML = "-x"
                     element(available[x]).className = "num"
                     element(available[x + 1]).className = "int"
-                    if (x === 0 || x === 3) {
-                        lhs += element(available[x]).innerHTML
-                    } else {
-                        rhs += element(available[x + 1]).innerHTML
-                    }
                     element(available[x]).id = ""
                     element(available[x + 1]).id = ""
                 }
