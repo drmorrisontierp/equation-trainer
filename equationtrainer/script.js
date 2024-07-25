@@ -58,8 +58,8 @@ select(available[0])
 document.addEventListener("keydown", handleKeydown);
 
 function createEquation() {
-    let x1 = Math.round(Math.random()*8+1).toString() + "x"
-    let x2 = Math.round(Math.random()*8+1).toString() + "x"
+    let x1 = Math.round(Math.random()*8+1)
+    let x2 = Math.round(Math.random()*8+1)
     let x1b = Math.round(Math.random()*8+1)
     let x2b = Math.round(Math.random()*8+1)
     let nox1 = Math.round(Math.random()*99+1)
@@ -67,8 +67,14 @@ function createEquation() {
     let nox1b = Math.round(Math.random()*8+1)
     let nox2b = Math.round(Math.random()*8+1)
 
+    let gx1 = gcd(x1, x1b)
+    let gx2 = gcd(x2, x2b)
     let g1 = gcd(nox1, nox1b)
     let g2 = gcd(nox2, nox2b)
+    x1 = (x1/gx1).toString() + "x"
+    x1b = x1b/gx1
+    x2 = (x2/gx2).toString() + "x"
+    x2b = x2b/gx2
     nox1 = nox1/g1
     nox1b = nox1b/g1
     nox2 = nox2/g2
