@@ -5,6 +5,10 @@ let index = 0
 let selected = available[index];
 let stopped = false
 let creating = false
+let emptyArray = ["", "", "", "", "", "", "", "", "", ""]
+let testArray = ["2x", "3", "-", "5", "1", "4", "5", "+", "2x", "1"]
+let newArray = []
+let level = 3
 
 
 const warningsText = (warning, args) => {
@@ -53,6 +57,42 @@ select(available[0])
 // Add event listeners
 document.addEventListener("keydown", handleKeydown);
 
+function createEquation() {
+    let x1 = Math.round(Math.random()*8+1).toString() + "x"
+    let x2 = Math.round(Math.random()*8+1).toString() + "x"
+    let x1b = Math.round(Math.random()*8+1)
+    let x2b = Math.round(Math.random()*8+1)
+    let nox1 = Math.round(Math.random()*99+1)
+    let nox2 = Math.round(Math.random()*99+1)
+    let nox1b = Math.round(Math.random()*8+1)
+    let nox2b = Math.round(Math.random()*8+1)
+
+    let g1 = gcd(nox1, nox1b)
+    let g2 = gcd(nox2, nox2b)
+    nox1 = nox1/g1
+    nox1b = nox1b/g1
+    nox2 = nox2/g2
+    nox2b = nox2b/g2
+
+    let opp1 = Math.round(Math.random()*100) < 50 ? "+" : "-" ;
+    let opp2 = Math.round(Math.random()*100) < 50 ? "+" : "-" ;
+
+    if (level === 3) {
+        let xNumOrDen = Math.round(Math.random()*100) < 50 ? true : false;
+        newArray[0] = xNumOrDen ?  x1 : x1b
+        newArray[1] = xNumOrDen ?  x1b : x1
+        newArray[2] = opp1
+        newArray[3] = nox1
+        newArray[4] = nox1b
+        newArray[5] = xNumOrDen ?  x2 : x2b
+        newArray[6] = xNumOrDen ?  x2b : x2
+        newArray[7] = opp2
+        newArray[8] = nox2
+        newArray[9] = nox2b
+    }
+}
+ createEquation()
+ console.log(newArray)
 
 /**
  * Helper function to replace document.getElementById(id).
@@ -175,14 +215,16 @@ function handleKeydown(event) {
     } else if (key === "x") {
         enter("x");
     } else if (key === "Escape") {
-        addEquation();
+        addEquation(true, emptyArray);
+    } else if (key === "Delete") {
+        addEquation(false, newArray);
     } else if (!isNaN(key)) {
         enter(key);
     }
     console.log(key);
 }
 
-function addEquation() {
+function addEquation(flag, arr) {
     let target = element("left");  // returns an element with id "left"
 
     // Convert HTMLCollection to an array
@@ -197,29 +239,29 @@ function addEquation() {
     setAttributes(newRow, { "id": "row-1", "class": "row" })
     newRow.innerHTML = `    
         <div id="p11" class="plhs">
-            <div id="p11a" class="a-num"></div>
-            <div id="p11b" class="a-int"></div>
+            <div id="p11a" class="a-num">${arr[0]}</div>
+            <div id="p11b" class="a-int">${arr[1]}</div>
         </div>
         <div id="o12o" class="plhs">
-            <div id="o12oa" class="a-int"></div>
+            <div id="o12oa" class="a-int">${arr[2]}</div>
         </div>
         <div id="p12" class="plhs">
-            <div id="p12a" class="a-num"></div>
-            <div id="p12b" class="a-int"></div>
+            <div id="p12a" class="a-num">${arr[3]}</div>
+            <div id="p12b" class="a-int">${arr[4]}</div>
         </div>
         <div class="plhs">
             <div class="int">=</div>
             </div>
         <div id="p13" class="prhs">
-            <div id="p13a" class="a-num"></div>
-            <div id="p13b" class="a-int"></div>
+            <div id="p13a" class="a-num">${arr[5]}</div>
+            <div id="p13b" class="a-int">${arr[6]}</div>
         </div>
         <div id="o14o" class="prhs">
-            <div id="o14oa" class="a-int"></div>
+            <div id="o14oa" class="a-int">${arr[7]}</div>
         </div>
         <div id="p14" class="prhs">
-            <div id="p14a" class="a-num"></div>
-            <div id="p14b" class="a-int"></div>
+            <div id="p14a" class="a-num">${arr[8]}</div>
+            <div id="p14b" class="a-int">${arr[9]}</div>
         </div>
     `
     target.appendChild(newRow)
@@ -227,6 +269,7 @@ function addEquation() {
     available = ["p11a", "p11b", "o12oa", "p12a", "p12b", "p13a", "p13b", "o14oa", "p14a", "p14b"]
     selected = available[0]
     select(selected)
+    if (!flag) check()  
 }
 
 function enter(key) {
@@ -459,18 +502,18 @@ function changeXToOneX(x) {
 
 function completeCheckWithAddEquation() {
     creating = false
-        available = []
-        for (let x = 0; x < 4; x++) {
-            available[x] = `b1${x + 1}`
-        }
-        row = 1
-        selected = available[0]
-        console.log(selected)
-        createBalanceRow()
-        hideUnused()
-        selected = available[0]
-        console.log(selected)
-        select(selected)
+    available = []
+    for (let x = 0; x < 4; x++) {
+        available[x] = `b1${x + 1}`
+    }
+    row = 1
+    selected = available[0]
+    console.log(selected)
+    createBalanceRow()
+    hideUnused()
+    selected = available[0]
+    console.log(selected)
+    select(selected)
 }
 
 /**
@@ -561,8 +604,9 @@ function check() {
             if (element(available[x]).innerHTML === "1x") element(available[x]).innerHTML = "x"
             if (element(available[x]).innerHTML === "-1x") element(available[x]).innerHTML = "-x"
             if (element(available[x]).innerHTML === "" || element(available[x]).innerHTML === "0") {
-                setAttributes(element(available[x]), { "class": "int", "id": "", "innerHTML": "0" })
+                element(available[x]).innerHTML = "0"
                 element(available[x + 1]).remove()
+                setAttributes(element(available[x]), { "class": "int", "id": "" })
 
             } else if (element(available[x]).innerHTML !== "") {
                 if (element(available[x + 1]).innerHTML === "1" || element(available[x + 1]).innerHTML === "") {
@@ -576,25 +620,12 @@ function check() {
             }
         }
 
-        setAttributes(element("o12oa"), { "class": "int", "id": "", "innerHTML": `${element("o12oa").innerHTML === "-" ? "-" : "+"}` })
-        setAttributes(element("o14oa"), { "class": "int", "id": "", "innerHTML": `${element("o14oa").innerHTML === "-" ? "-" : "+"}` })
+        element("o12oa").innerHTML = `${element("o12oa").innerHTML === "-" ? "-" : "+"}`
+        element("o14oa").innerHTML = `${element("o14oa").innerHTML === "-" ? "-" : "+"}`
+        setAttributes(element("o12oa"), { "class": "int", "id": "" })
+        setAttributes(element("o14oa"), { "class": "int", "id": "" })
         
-        //completeCheckWithAddEquation()
-        
-        creating = false
-        available = []
-        for (let x = 0; x < 4; x++) {
-            available[x] = `b1${x + 1}`
-        }
-        row = 1
-        selected = available[0]
-        console.log(selected)
-        createBalanceRow()
-        hideUnused()
-        selected = available[0]
-        console.log(selected)
-        select(selected)
-        
+        completeCheckWithAddEquation()
 
     } else {
         let p = []; // Array to hold the current row's numerator and denominator values
@@ -654,25 +685,6 @@ function check() {
         let xCheck = checkXWithAddition(newP, b);
         let multiplicationCheck = checkMultiplication(newP, b);
 
-        /**
-         * Completes the process after an operation is performed.
-         * This includes creating a new balance row, updating the row counter,
-         * setting available elements, and updating the UI.
-         */
-        function complete() {
-
-            element(selected).style.borderColor = "black";
-            row++;
-            createBalanceRow();
-            setAvailable();
-            selected = available[0];
-            select(selected);
-            hideUnused();
-            updateRow();
-            scrollToBottom("left");
-            checkWin()
-        }
-
         // Perform the extend operation if valid
         if (extendCheck) {
             createNewRow(newP);
@@ -680,7 +692,7 @@ function check() {
             for (let e of extendCheck) {
                 extend(e[0], e[1], e[2], e[3]);
             }
-            complete()
+            completeCheck()
             return;
         }
 
@@ -688,7 +700,7 @@ function check() {
         if (multiplicationCheck) {
             createNewRow(newP);
             multiplication(newP, b, multiplicationCheck[0]);
-            complete()
+            completeCheck()
             return;
         }
 
@@ -698,7 +710,7 @@ function check() {
         if (xCheck) {
             createNewRow(newP);
             addition(newP, b, xCheck);
-            complete()
+            completeCheck()
             return;
         }
     }
