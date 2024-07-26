@@ -7,8 +7,8 @@ let stopped = false
 let creating = false
 let emptyArray = ["", "", "", "", "", "", "", "", "", ""]
 let testArray = ["2x", "3", "-", "5", "1", "4", "5", "+", "2x", "1"]
-let newArray = []
-let level = 3
+let newArray = ["", "", "", "", "", "", "", "", "", ""]
+let level = 9
 
 
 const warningsText = (warning, args) => {
@@ -71,10 +71,10 @@ function createEquation() {
     let gx2 = gcd(x2, x2b)
     let g1 = gcd(nox1, nox1b)
     let g2 = gcd(nox2, nox2b)
-    x1 = (x1/gx1).toString() + "x"
-    x1b = x1b/gx1
-    x2 = (x2/gx2).toString() + "x"
-    x2b = x2b/gx2
+    let x1n = (x1/gx1).toString() + "x"
+    let x1d = x1b/gx1
+    let x2n = (x2/gx2).toString() + "x"
+    let x2d = x2b/gx2
     nox1 = nox1/g1
     nox1b = nox1b/g1
     nox2 = nox2/g2
@@ -82,21 +82,232 @@ function createEquation() {
 
     let opp1 = Math.round(Math.random()*100) < 50 ? "+" : "-" ;
     let opp2 = Math.round(Math.random()*100) < 50 ? "+" : "-" ;
+    let xOneNum
+    let xOneZero
+    let xTwoFive
+    let noxOneNum
+    let noxTwoNum
 
+    if (level === 1) {
+        newArray[0] = x1n
+        newArray[1] = 1
+        newArray[2] = opp1
+        newArray[3] = nox1
+        newArray[4] = 1
+        newArray[5] = nox2
+        newArray[6] = 1
+        newArray[7] = ""
+        newArray[8] = ""
+        newArray[9] = ""
+    }
+    if (level === 2) {
+        xOneZero = Math.round(Math.random()*100) < 50 ? true : false;
+        newArray[0] = xOneZero ? x1n : nox1
+        newArray[1] = 1
+        newArray[2] = opp1
+        newArray[3] = xOneZero ? nox1 : x1n
+        newArray[4] = 1
+        newArray[5] = nox2
+        newArray[6] = 1
+        newArray[7] = ""
+        newArray[8] = ""
+        newArray[9] = ""
+    }
     if (level === 3) {
-        let xNumOrDen = Math.round(Math.random()*100) < 50 ? true : false;
-        newArray[0] = xNumOrDen ?  x1 : x1b
-        newArray[1] = xNumOrDen ?  x1b : x1
+        newArray[0] = "x"
+        newArray[1] = x1b
+        newArray[2] = opp1
+        newArray[3] = nox1
+        newArray[4] = 1
+        newArray[5] = nox2
+        newArray[6] = 1
+        newArray[7] = ""
+        newArray[8] = ""
+        newArray[9] = ""
+    }
+    if (level === 4) {
+        newArray[0] = x1n
+        newArray[1] = 1
+        newArray[2] = opp1
+        newArray[3] = nox1
+        newArray[4] = 1
+        newArray[5] = nox2
+        newArray[6] = 1
+        newArray[7] = opp2
+        newArray[8] = x2n
+        newArray[9] = 1
+    }
+    if (level === 5) {
+        newArray[0] = x1n
+        newArray[1] = x1d
         newArray[2] = opp1
         newArray[3] = nox1
         newArray[4] = nox1b
-        newArray[5] = xNumOrDen ?  x2 : x2b
-        newArray[6] = xNumOrDen ?  x2b : x2
+        newArray[5] = nox2
+        newArray[6] = nox2b
         newArray[7] = opp2
-        newArray[8] = nox2
-        newArray[9] = nox2b
+        newArray[8] = x2n
+        newArray[9] = x2d
+    }
+    if (level === 6) {
+        xOneNum = Math.round(Math.random()*100) < 50 ? true : false;
+        newArray[0] = xOneNum ?  x1n : x1d
+        newArray[1] = xOneNum ?  x1d : x1n
+        newArray[2] = opp1
+        newArray[3] = nox1
+        newArray[4] = 1
+        newArray[5] = nox2
+        newArray[6] = 1
+        newArray[7] = ""
+        newArray[8] = ""
+        newArray[9] = ""
+    }
+    if (level === 7) {
+        xOneNum = Math.round(Math.random()*100) < 50 ? true : false;
+        newArray[0] = xOneNum ?  x1n : x1d
+        newArray[1] = xOneNum ?  x1d : x1n
+        newArray[2] = opp1
+        newArray[3] = nox1
+        newArray[4] = nox1b
+        newArray[5] = nox2
+        newArray[6] = nox2b
+        newArray[7] = ""
+        newArray[8] = ""
+        newArray[9] = ""
+    }
+
+    if (level === 8) {
+        xOneNum = Math.round(Math.random()*100) < 50 ? true : false;
+        newArray[0] = xOneNum ?  x1n : x1d
+        newArray[1] = xOneNum ?  x1d : x1n
+        newArray[2] = opp1
+        newArray[3] = nox1
+        newArray[4] = nox1b
+        newArray[5] = nox2
+        newArray[6] = nox2b
+        newArray[7] = opp2
+        newArray[8] = xOneNum ?  x2n : x2d
+        newArray[9] = xOneNum ?  x2d : x2n
+    }
+    if (level === 9) {
+        xOneNum = Math.round(Math.random()*100) < 50 ? true : false;
+        noxOneNum = Math.round(Math.random()*100) < 50 ? true : false;
+        noxTwoNum = Math.round(Math.random()*100) < 50 ? true : false;
+        xOneZero = Math.round(Math.random()*100) < 50 ? true : false;
+        xTwoFive = Math.round(Math.random()*100) < 50 ? true : false;
+        if (xOneNum) {
+            if (noxOneNum) {
+                if (xOneZero) {
+                    newArray[0] = x1n
+                    newArray[1] = x1d
+                    newArray[3] = nox1
+                    newArray[4] = nox1b
+                } else {
+                    newArray[0] = nox1
+                    newArray[1] = nox1b
+                    newArray[3] = x1n
+                    newArray[4] = x1d 
+                }
+            } else {
+                if (xOneZero) {
+                    newArray[0] = x1n
+                    newArray[1] = x1d
+                    newArray[3] = nox1b
+                    newArray[4] = nox1
+                } else {
+                    newArray[0] = nox1b
+                    newArray[1] = nox1
+                    newArray[3] = x1n
+                    newArray[4] = x1d 
+                }
+            }
+        } else {
+            if (noxOneNum) {
+                if (xOneZero) {
+                    newArray[0] = nox1
+                    newArray[1] = nox1b
+                    newArray[3] = x1d
+                    newArray[4] = x1n
+                } else {
+                    newArray[0] = x1d
+                    newArray[1] = x1n
+                    newArray[3] = nox1
+                    newArray[4] = nox1b
+                }
+            } else {
+                if (xOneZero) {
+                    newArray[0] = x1d
+                    newArray[1] = x1n
+                    newArray[3] = nox1b
+                    newArray[4] = nox1
+                } else {
+                    newArray[0] = nox1b
+                    newArray[1] = nox1
+                    newArray[3] = x1n
+                    newArray[4] = x1d 
+                }
+            }
+            
+        }
+        newArray[2] = opp1
+        if (xOneNum) {
+            if (noxTwoNum) {
+                if (xTwoFive) {
+                    newArray[5] = x2n
+                    newArray[6] = x2d
+                    newArray[8] = nox2
+                    newArray[9] = nox2b
+                } else {
+                    newArray[5] = nox2
+                    newArray[6] = nox2b
+                    newArray[8] = x2n
+                    newArray[9] = x2d 
+                }
+            } else {
+                if (xTwoFive) {
+                    newArray[5] = x2n
+                    newArray[6] = x2d
+                    newArray[8] = nox2b
+                    newArray[9] = nox2
+                } else {
+                    newArray[5] = nox2b
+                    newArray[6] = nox2
+                    newArray[8] = x2n
+                    newArray[9] = x2d 
+                }
+            }
+        } else {
+            if (noxTwoNum) {
+                if (xTwoFive) {
+                    newArray[5] = nox2
+                    newArray[6] = nox2b
+                    newArray[8] = x2d
+                    newArray[9] = x2n
+                } else {
+                    newArray[5] = x2d
+                    newArray[6] = x2n
+                    newArray[8] = nox2
+                    newArray[9] = nox2b
+                }
+            } else {
+                if (xTwoFive) {
+                    newArray[0] = x2d
+                    newArray[1] = x2n
+                    newArray[3] = nox2b
+                    newArray[4] = nox2
+                } else {
+                    newArray[0] = nox2b
+                    newArray[1] = nox2
+                    newArray[3] = x2n
+                    newArray[4] = x2d 
+                }
+            }
+            
+        }
+        newArray[7] = opp2
     }
 }
+
  createEquation()
  console.log(newArray)
 
