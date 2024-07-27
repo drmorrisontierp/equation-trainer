@@ -326,8 +326,6 @@ function createEquation() {
     }
 }
 
-//createEquation()
-//console.log(newArray)
 
 /**
  * Helper function to replace document.getElementById(id).
