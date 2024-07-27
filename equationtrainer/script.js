@@ -477,8 +477,12 @@ function addEquation(flag, arr) {
         child.remove();
     }
     row = 1
+    let newRowGroup = document.createElement("div")
     let newRow = document.createElement("div")
+    let newRowInfo = document.createElement("div")
+    setAttributes(newRowGroup, { "id": "row-group-1", "class": "row-group"})
     setAttributes(newRow, { "id": "row-1", "class": "row" })
+    setAttributes(newRowInfo, { "id": "row-info-1", "class": "row-info" })
     newRow.innerHTML = `    
         <div id="p11" class="plhs">
             <div id="p11a" class="a-num">${arr[0]}</div>
@@ -506,7 +510,9 @@ function addEquation(flag, arr) {
             <div id="p14b" class="a-int">${arr[9]}</div>
         </div>
     `
-    target.appendChild(newRow)
+    newRowGroup.appendChild(newRow)
+    newRowGroup.appendChild(newRowInfo)
+    target.appendChild(newRowGroup)
     creating = true
     available = ["p11a", "p11b", "o12oa", "p12a", "p12b", "p13a", "p13b", "o14oa", "p14a", "p14b"]
     selected = available[0]
@@ -973,7 +979,7 @@ function checkBalance(b) {
         let lhs = []
         let rhs = []
         lhs[0] = b[0][0] === "" || b[0][0] === "" ? "" : b[0][1] !== "1" ? `${b[0][0]}/${b[0][1]}` : b[0][0],
-            lhs[1] = b[1][0] === "" || b[1][0] === "" ? "" : b[1][1] !== "1" ? `${b[1][0]}/${b[1][1]}` : b[1][0]
+        lhs[1] = b[1][0] === "" || b[1][0] === "" ? "" : b[1][1] !== "1" ? `${b[1][0]}/${b[1][1]}` : b[1][0]
         rhs[0] = b[2][0] === "" || b[2][0] === "" ? "" : b[2][1] !== "1" ? `${b[2][0]}/${b[2][1]}` : b[2][0]
         rhs[1] = b[3][0] === "" || b[3][0] === "" ? "" : b[3][1] !== "1" ? `${b[3][0]}/${b[3][1]}` : b[3][0]
         //console.log(lhs, rhs)
@@ -1184,16 +1190,18 @@ function checkExtend(p, b) {
 /**
  * Creates a new row in the document with the given positions and signs.
  * @param {Array} p - The array containing the positions to be added to the new row.
- * @param {Array} s - The array containing signs (not used in this function).
  */
 function createNewRow(p) {
     console.log("Creating new row");
 
+    let newRowGroup = document.createElement("div")
     let newRow = document.createElement("div");
-    setAttributes(newRow, {
-        "id": `row-${row + 1}`,
-        "class": "row",
-    });
+    let newRowInfo = document.createElement("div")
+    setAttributes(newRowGroup, { "id": `row-group-${row + 1}`, "class": "row-group" });
+    setAttributes(newRow, { "id": `row-${row + 1}`, "class": "row", });
+    setAttributes(newRowInfo, { "id": `row-info-${row + 1}`, "class": "row-info" });
+
+    newRowInfo.innerHTML = `Ekvationen som ska lösas för "x"`
 
     let oldText = [];
     let signOne = `<div class="int">+</div>`;
@@ -1222,7 +1230,9 @@ function createNewRow(p) {
     `;
 
     //console.log("Appending new row to document");
-    element("left").appendChild(newRow);
+    newRowGroup.appendChild(newRow)
+    newRowGroup.appendChild(newRowInfo)
+    element("left").appendChild(newRowGroup);
 }
 
 
@@ -1256,11 +1266,15 @@ function updateRow() {
  * Creates a balance row in the document.
  */
 function createBalanceRow() {
+
+    let newRowGroup = document.createElement("div")
     let newRow = document.createElement("div");
-    setAttributes(newRow, {
-        "id": `bal-${row}`,
-        "class": "bal",
-    });
+    let newRowInfo = document.createElement("div")
+    setAttributes(newRowGroup, { "id": `bal-group-${row + 1}`, "class": "bal-group", });
+    setAttributes(newRow, { "id": `bal-${row}`, "class": "bal" });
+    setAttributes(newRowInfo, { "id": `bal-info-${row + 1}`, "class": "bal-info", });
+
+    newRowInfo.innerHTML = `Ekvationen som ska lösas för "x"`
 
     newRow.innerHTML = `
         <div id="b${row}1" class="blhs" onmousedown="select(id)"></div>
@@ -1272,7 +1286,9 @@ function createBalanceRow() {
         <div id="b${row}4" class="brhs" onmousedown="select(id)"></div>
     `;
 
-    element("left").appendChild(newRow);
+    newRowGroup.appendChild(newRow)
+    newRowGroup.appendChild(newRowInfo)
+    element("left").appendChild(newRowGroup);
 }
 
 

@@ -1,6 +1,6 @@
 #screen {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns:  60vw 40vw;
     grid-template-rows: 100vh;
 }
 
@@ -17,18 +17,51 @@
     border: solid black 1px;
 }
 
+.row-group {
+    display: grid;
+    grid-template-columns: 280px 280px;
+    grid-template-rows: 80px;
+    column-gap: 40px;
+}
+
+
 .row {
+    grid-area: 1/1/2/2;
     display: grid;
     grid-template-columns: repeat(7, 40px);
     grid-template-rows: 80px;
     column-gap: 5px;
 }
 
+.row-info {
+    grid-area: 1/2/2/3;
+    border: solid black 1px;
+    min-width: 280px;
+    max-height: 60px;
+}
+
+.bal-group {
+    display: grid;
+    grid-template-columns: 280px 280px;
+    grid-template-rows: 80px;
+    column-gap: 40px;
+}
+
 .bal {
+    grid-area: 1/1/2/2;
     display: grid;
     grid-template-columns: repeat(7, 40px);
     grid-template-rows: 40px;
+    padding-top: 10px;
+    padding-bottom: 10px;
     column-gap: 5px;
+}
+
+.bal-info {
+    grid-area: 1/2/2/3;
+    border: solid black 1px;
+    min-width: 280px;
+    max-height: 60px;
 }
 
 .plhs {
