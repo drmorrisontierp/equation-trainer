@@ -7,8 +7,11 @@ let stopped = false
 let creating = false
 let emptyArray = ["", "", "", "", "", "", "", "", "", ""]
 let testArray = ["2x", "3", "-", "5", "1", "4", "5", "+", "2x", "1"]
-let newArray = ["", "", "", "", "", "", "", "", "", ""]
+let newArray = ["2x", "3", "-", "5", "1", "4", "5", "+", "2x", "1"]
 let level = 1
+
+createEquation()
+addEquation(1, newArray)
 
 
 const warningsText = (warning, args) => {
@@ -76,6 +79,7 @@ function changeLevel(direction) {
 
 function createEquation() {
     console.log("level:", level)
+    newArray = ["", "", "", "", "", "", "", "", "", ""]
     let x1 = Math.round(Math.random() * 8 + 1)
     let x2 = Math.round(Math.random() * 8 + 1)
     let x1b = Math.round(Math.random() * 8 + 1)
@@ -448,17 +452,21 @@ function handleKeydown(event) {
     } else if (key === "x") {
         enter("x");
     } else if (key === "Escape") {
-        addEquation(true, emptyArray);
+        addEquation(2, emptyArray);
     } else if (key === "Delete") {
-        addEquation(false, newArray);
+        addEquation(1, newArray);
     } else if (!isNaN(key)) {
         enter(key);
     }
-    console.log(key);
+    //console.log(key);
 }
 
 function addEquation(flag, arr) {
-    if (!flag) createEquation()
+    console.log("running", flag, arr)
+    if (flag === 1) { 
+        createEquation()
+        console.log("running", flag, arr) 
+    }
     let target = element("left");  // returns an element with id "left"
 
     // Convert HTMLCollection to an array
@@ -503,7 +511,7 @@ function addEquation(flag, arr) {
     available = ["p11a", "p11b", "o12oa", "p12a", "p12b", "p13a", "p13b", "o14oa", "p14a", "p14b"]
     selected = available[0]
     select(selected)
-    if (!flag) check()
+    if (1 || 3) check()
 }
 
 function enter(key) {
@@ -560,7 +568,7 @@ function back() {
         element(`bal-${row}`).remove()
         element(`row-${row}`).remove()
         row--
-        console.log(row)
+        //console.log(row)
         element(`bal-${row}`).remove()
         createBalanceRow()
         available = []
@@ -577,10 +585,10 @@ function back() {
                 }
             }
         }
-        console.log(available)
+        //console.log(available)
         selected = available[0]
         select(selected)
-        console.log(element(`bal-${row}`))
+        //console.log(element(`bal-${row}`))
 
 
     }
@@ -610,8 +618,8 @@ function setAvailable() {
  */
 function select(id) {
     if (stopped) return
-    console.log(available)
-    console.log(selected)
+    //console.log(available)
+    //console.log(selected)
     let rowText = row.toString()
     if (id.slice(1, 1 + rowText.length) === rowText) {
         element(selected).style.borderColor = "black";
@@ -633,11 +641,11 @@ function select(id) {
  * @param {string} selected - The ID of the currently selected element (global variable).
  */
 function moveThrough(direction) {
-    console.log(selected)
+    //console.log(selected)
     element(selected).style.borderColor = "black";
     if (direction === "right") {
         index = index < available.length - 1 ? index += 1 : 0;
-        console.log("index", index, available[index])
+        //console.log("index", index, available[index])
         selected = available[index]
     } else {
         index = index > 0 ? index -= 1 : available.length - 1;
@@ -653,10 +661,10 @@ function checkWin() {
     let prhs = ""; // String to hold the current row's right-hand-sides values
     // Process the current row's elements to populate the p array
     for (let x = 1; x < 3; x++) {
-        console.log(element(`p${row}${x}`).children[0].innerHTML)
+        //console.log(element(`p${row}${x}`).children[0].innerHTML)
         if (element(`p${row}${x}`).children[0].innerHTML !== "0") plhs += element(`p${row}${x}`).children[0].innerHTML
         if (element(`p${row}${x + 2}`).children[0].innerHTML !== "0") prhs += element(`p${row}${x + 2}`).children[0].innerHTML
-        console.log(plhs, prhs)
+        //console.log(plhs, prhs)
     }
 
     if ((plhs === "x" && prhs !== "x") || (prhs === "x" && plhs !== "x")) {
@@ -742,11 +750,11 @@ function completeCheckWithAddEquation() {
     }
     row = 1
     selected = available[0]
-    console.log(selected)
+    //console.log(selected)
     createBalanceRow()
     hideUnused()
     selected = available[0]
-    console.log(selected)
+    //console.log(selected)
     select(selected)
 }
 
@@ -783,7 +791,7 @@ function check() {
         if (nums.join().includes("x") && dens.join().includes("x")) return
 
         const zeros = checkForZeros()
-        console.log("zeros", zeros)
+        //console.log("zeros", zeros)
         if (zeros.length > 2) return
 
         for (let x = 1; x < 5; x++) {
@@ -805,7 +813,7 @@ function check() {
                 (!p11a.includes("x") && !p12a.includes("x") && (p11a !== "" || p11a !== "") && (p12a !== "" || p12a !== "")) && (p11b.includes("x") && p12b.includes("x")) ||
                 (!p11a.includes("x") && !p12a.includes("x") && (p11a !== "" || p11a !== "") && (p12a !== "" || p12a !== "")) && (!p11b.includes("x") && !p12b.includes("x"))) {
 
-                console.log("running");
+                //console.log("running");
 
                 // Remove "x" and parse integers
                 let n1 = parseInt(p11a.replace("x", ""));
@@ -903,7 +911,7 @@ function check() {
             b.push([sign + bSplit[0], bSplit[1]]);
         }
 
-        console.log(p)
+        //console.log(p)
         let p1 = s[0] === "-" && p[1][0][0] !== "-" ? ["-" + p[1][0], p[1][1]] : p[1]
         let p3 = s[1] === "-" && p[3][0][0] !== "-" ? ["-" + p[3][0], p[3][1]] : p[3]
         let newP = [
@@ -922,7 +930,7 @@ function check() {
         // Perform the extend operation if valid
         if (extendCheck) {
             createNewRow(newP);
-            console.log(extendCheck)
+            //console.log(extendCheck)
             for (let e of extendCheck) {
                 extend(e[0], e[1], e[2], e[3]);
             }
@@ -961,20 +969,20 @@ function check() {
 function checkBalance(b) {
     console.log("checkBalance")
     if ([b[0], b[1]].sort().join() !== [b[2], b[3]].sort().join() || b.join("") === "") {
-        console.log(b)
+        //console.log(b)
         let lhs = []
         let rhs = []
         lhs[0] = b[0][0] === "" || b[0][0] === "" ? "" : b[0][1] !== "1" ? `${b[0][0]}/${b[0][1]}` : b[0][0],
             lhs[1] = b[1][0] === "" || b[1][0] === "" ? "" : b[1][1] !== "1" ? `${b[1][0]}/${b[1][1]}` : b[1][0]
         rhs[0] = b[2][0] === "" || b[2][0] === "" ? "" : b[2][1] !== "1" ? `${b[2][0]}/${b[2][1]}` : b[2][0]
         rhs[1] = b[3][0] === "" || b[3][0] === "" ? "" : b[3][1] !== "1" ? `${b[3][0]}/${b[3][1]}` : b[3][0]
-        console.log(lhs, rhs)
+        //console.log(lhs, rhs)
 
-        console.log("failed to balance", b.join(""), [b[0], b[1]].sort().join() !== [b[2], b[3]].sort().join())
+        //console.log("failed to balance", b.join(""), [b[0], b[1]].sort().join() !== [b[2], b[3]].sort().join())
         element("info-screen").innerHTML = `Du behöver göra samma sak på båda sidor! Just nu har du på vänster leden ${lhs.join("")} och på höger leden ${rhs.join("")} `
         return false
     }
-    console.log("no problems with balance", b.join(""))
+    //console.log("no problems with balance", b.join(""))
     return true
 }
 
@@ -1019,9 +1027,9 @@ function checkXWithAddition(p, b) {
             } else {
                 positionsToAdd.push(x); // Add position to the list if valid
             }
-            console.log(`faults: ${faults}, positionsToAdd: ${positionsToAdd}`);
+            //console.log(`faults: ${faults}, positionsToAdd: ${positionsToAdd}`);
         } else {
-            console.log("Fail: invalid sign in b", x);
+            //console.log("Fail: invalid sign in b", x);
             alertText += `Vid position  ${(x + 1)} det finns en ogiltig operation, antigen addera/subtrhera eller multiplicera/dividera men inte samtidig..`
             faults++;
         }
@@ -1030,22 +1038,22 @@ function checkXWithAddition(p, b) {
     // Validate denominators and prepare final positions for addition/subtraction
     for (let x of positionsToAdd) {
         if (p[x][1] !== b[x][1] && b[x][0] !== "") {
-            console.log("Fail: mismatched denominators");
+            //console.log("Fail: mismatched denominators");
             alertText += `Vid position  ${(x + 1)} kan du inte addera bråk som har olika nämnare: du måste förlänga eller förkorta först.`
             faults++;
         } else {
             fractionsToAdd.push(x); // Add position to the list if denominators match
         }
-        console.log(`faults: ${faults}, fractionsToAdd: ${fractionsToAdd}`);
+        //console.log(`faults: ${faults}, fractionsToAdd: ${fractionsToAdd}`);
     }
 
     // Return null if faults are found, else return positions for addition/subtraction
     if (faults > 0) {
         element("info-screen").innerHTML = alertText
-        console.log("Returning null due to faults");
+        //console.log("Returning null due to faults");
         return null;
     } else {
-        console.log("No problems with x and addition/subtraction");
+        //console.log("No problems with x and addition/subtraction");
         return [fractionsToAdd];
     }
 }
@@ -1093,7 +1101,7 @@ function checkMultiplication(p, b) {
         return null;
     }
 
-    console.log("No problems with multiplication/division");
+    //console.log("No problems with multiplication/division");
     return [filledPosition, emptyPosition, mx];
 }
 
@@ -1125,7 +1133,7 @@ function checkExtend(p, b) {
             additions.push(x)
         }
     }
-    console.log(a, possibles)
+    //console.log(a, possibles)
 
     // If no valid operations are found, return null
     if (a.length === 0) {
@@ -1213,7 +1221,7 @@ function createNewRow(p) {
         <div id="p${row + 1}4" class="prhs">${oldText[3]}</div>
     `;
 
-    console.log("Appending new row to document");
+    //console.log("Appending new row to document");
     element("left").appendChild(newRow);
 }
 
@@ -1621,8 +1629,8 @@ function hideElements(offset, index) {
  * @returns {Array} - Array of element content.
  */
 function getElementsContent(selector) {
-    console.log("selector", selector)
-    console.log(document.querySelectorAll(selector))
+    //console.log("selector", selector)
+    //console.log(document.querySelectorAll(selector))
     let content = [];
     document.querySelectorAll(selector).forEach((e) => content.push(e.children[0].innerHTML));
     return content;
