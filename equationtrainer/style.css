@@ -35,7 +35,6 @@
 
 .row-info {
     grid-area: 1/2/2/3;
-    border: solid black 1px;
     min-width: 280px;
     max-height: 60px;
 }
@@ -59,7 +58,6 @@
 
 .bal-info {
     grid-area: 1/2/2/3;
-    border: solid black 1px;
     min-width: 280px;
     max-height: 60px;
 }

@@ -483,6 +483,13 @@ function addEquation(flag, arr) {
     setAttributes(newRowGroup, { "id": "row-group-1", "class": "row-group"})
     setAttributes(newRow, { "id": "row-1", "class": "row" })
     setAttributes(newRowInfo, { "id": "row-info-1", "class": "row-info" })
+
+    newRowInfo.innerHTML = `<svg width="280px" height="60px" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L270 5 Q280 5 280 15 L280 45 Q 280 55 270 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
+    <text X="37" Y="25" >the equation that should be solved</text>
+    <text X="37" Y="45" >for "x" using the balance method</text>
+</svg>`
+
     newRow.innerHTML = `    
         <div id="p11" class="plhs">
             <div id="p11a" class="a-num">${arr[0]}</div>
@@ -571,11 +578,12 @@ function back() {
         return
     } else {
         if (row === 1) return
-        element(`bal-${row}`).remove()
-        element(`row-${row}`).remove()
+        element(`bal-group-${row}`).remove()
+        element(`row-group-${row}`).remove()
         row--
         //console.log(row)
-        element(`bal-${row}`).remove()
+        element(`row-info-${row}`).style.display = "grid"
+        element(`bal-group-${row}`).remove()
         createBalanceRow()
         available = []
         for (let x = 1; x < 5; x++) {
@@ -1201,7 +1209,11 @@ function createNewRow(p) {
     setAttributes(newRow, { "id": `row-${row + 1}`, "class": "row", });
     setAttributes(newRowInfo, { "id": `row-info-${row + 1}`, "class": "row-info" });
 
-    newRowInfo.innerHTML = `Ekvationen som ska lösas för "x"`
+    newRowInfo.innerHTML = `<svg width="280px" height="60px" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L270 5 Q280 5 280 15 L280 45 Q 280 55 270 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
+    <text X="37" Y="25" >the equation that should be solved</text>
+    <text X="37" Y="45" >for "x" using the balance method</text>
+</svg>`
 
     let oldText = [];
     let signOne = `<div class="int">+</div>`;
@@ -1233,6 +1245,7 @@ function createNewRow(p) {
     newRowGroup.appendChild(newRow)
     newRowGroup.appendChild(newRowInfo)
     element("left").appendChild(newRowGroup);
+    element(`row-info-${row}`).style.display = "none"
 }
 
 
@@ -1270,11 +1283,15 @@ function createBalanceRow() {
     let newRowGroup = document.createElement("div")
     let newRow = document.createElement("div");
     let newRowInfo = document.createElement("div")
-    setAttributes(newRowGroup, { "id": `bal-group-${row + 1}`, "class": "bal-group", });
+    setAttributes(newRowGroup, { "id": `bal-group-${row}`, "class": "bal-group", });
     setAttributes(newRow, { "id": `bal-${row}`, "class": "bal" });
-    setAttributes(newRowInfo, { "id": `bal-info-${row + 1}`, "class": "bal-info", });
+    setAttributes(newRowInfo, { "id": `bal-info-${row}`, "class": "bal-info", });
 
-    newRowInfo.innerHTML = `Ekvationen som ska lösas för "x"`
+    newRowInfo.innerHTML = `<svg width="280px" height="60px" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L270 5 Q280 5 280 15 L280 45 Q 280 55 270 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
+    <text X="37" Y="25" >enter an operation in the box under</text>
+    <text X="37" Y="45" >the term that you want to manipulate</text>
+</svg>`
 
     newRow.innerHTML = `
         <div id="b${row}1" class="blhs" onmousedown="select(id)"></div>
@@ -1289,6 +1306,7 @@ function createBalanceRow() {
     newRowGroup.appendChild(newRow)
     newRowGroup.appendChild(newRowInfo)
     element("left").appendChild(newRowGroup);
+    if (row > 1) element(`bal-info-${row-1}`).style.display = "none"
 }
 
 
