@@ -8,7 +8,7 @@ let creating = false
 let emptyArray = ["", "", "", "", "", "", "", "", "", ""]
 let testArray = ["2x", "3", "-", "5", "1", "4", "5", "+", "2x", "1"]
 let newArray = ["", "", "", "", "", "", "", "", "", ""]
-let level = 9
+let level = 1
 
 
 const warningsText = (warning, args) => {
@@ -57,31 +57,49 @@ select(available[0])
 // Add event listeners
 document.addEventListener("keydown", handleKeydown);
 
+function changeLevel(direction) {
+    if (direction === "up") {
+        if (level < 9) {
+            level ++
+        } else {
+            level = 9
+        }
+    } else {
+        if (level > 1) {
+            level --
+        } else {
+            level = 1
+        }
+    }
+    element("level-display").innerHTML = level
+}
+
 function createEquation() {
-    let x1 = Math.round(Math.random()*8+1)
-    let x2 = Math.round(Math.random()*8+1)
-    let x1b = Math.round(Math.random()*8+1)
-    let x2b = Math.round(Math.random()*8+1)
-    let nox1 = Math.round(Math.random()*99+1)
-    let nox2 = Math.round(Math.random()*99+1)
-    let nox1b = Math.round(Math.random()*8+1)
-    let nox2b = Math.round(Math.random()*8+1)
+    console.log("level:", level)
+    let x1 = Math.round(Math.random() * 8 + 1)
+    let x2 = Math.round(Math.random() * 8 + 1)
+    let x1b = Math.round(Math.random() * 8 + 1)
+    let x2b = Math.round(Math.random() * 8 + 1)
+    let nox1 = Math.round(Math.random() * 99 + 1)
+    let nox2 = Math.round(Math.random() * 99 + 1)
+    let nox1b = Math.round(Math.random() * 8 + 1)
+    let nox2b = Math.round(Math.random() * 8 + 1)
 
     let gx1 = gcd(x1, x1b)
     let gx2 = gcd(x2, x2b)
     let g1 = gcd(nox1, nox1b)
     let g2 = gcd(nox2, nox2b)
-    let x1n = (x1/gx1).toString() + "x"
-    let x1d = x1b/gx1
-    let x2n = (x2/gx2).toString() + "x"
-    let x2d = x2b/gx2
-    nox1 = nox1/g1
-    nox1b = nox1b/g1
-    nox2 = nox2/g2
-    nox2b = nox2b/g2
+    let x1n = (x1 / gx1).toString() + "x"
+    let x1d = x1b / gx1
+    let x2n = (x2 / gx2).toString() + "x"
+    let x2d = x2b / gx2
+    nox1 = nox1 / g1
+    nox1b = nox1b / g1
+    nox2 = nox2 / g2
+    nox2b = nox2b / g2
 
-    let opp1 = Math.round(Math.random()*100) < 50 ? "+" : "-" ;
-    let opp2 = Math.round(Math.random()*100) < 50 ? "+" : "-" ;
+    let opp1 = Math.round(Math.random() * 100) < 50 ? "+" : "-";
+    let opp2 = Math.round(Math.random() * 100) < 50 ? "+" : "-";
     let xOneNum
     let xOneZero
     let xTwoFive
@@ -101,7 +119,7 @@ function createEquation() {
         newArray[9] = ""
     }
     if (level === 2) {
-        xOneZero = Math.round(Math.random()*100) < 50 ? true : false;
+        xOneZero = Math.round(Math.random() * 100) < 50 ? true : false;
         newArray[0] = xOneZero ? x1n : nox1
         newArray[1] = 1
         newArray[2] = opp1
@@ -150,9 +168,9 @@ function createEquation() {
         newArray[9] = x2d
     }
     if (level === 6) {
-        xOneNum = Math.round(Math.random()*100) < 50 ? true : false;
-        newArray[0] = xOneNum ?  x1n : x1d
-        newArray[1] = xOneNum ?  x1d : x1n
+        xOneNum = Math.round(Math.random() * 100) < 50 ? true : false;
+        newArray[0] = xOneNum ? x1n : x1d
+        newArray[1] = xOneNum ? x1d : x1n
         newArray[2] = opp1
         newArray[3] = nox1
         newArray[4] = 1
@@ -163,9 +181,9 @@ function createEquation() {
         newArray[9] = ""
     }
     if (level === 7) {
-        xOneNum = Math.round(Math.random()*100) < 50 ? true : false;
-        newArray[0] = xOneNum ?  x1n : x1d
-        newArray[1] = xOneNum ?  x1d : x1n
+        xOneNum = Math.round(Math.random() * 100) < 50 ? true : false;
+        newArray[0] = xOneNum ? x1n : x1d
+        newArray[1] = xOneNum ? x1d : x1n
         newArray[2] = opp1
         newArray[3] = nox1
         newArray[4] = nox1b
@@ -177,24 +195,24 @@ function createEquation() {
     }
 
     if (level === 8) {
-        xOneNum = Math.round(Math.random()*100) < 50 ? true : false;
-        newArray[0] = xOneNum ?  x1n : x1d
-        newArray[1] = xOneNum ?  x1d : x1n
+        xOneNum = Math.round(Math.random() * 100) < 50 ? true : false;
+        newArray[0] = xOneNum ? x1n : x1d
+        newArray[1] = xOneNum ? x1d : x1n
         newArray[2] = opp1
         newArray[3] = nox1
         newArray[4] = nox1b
         newArray[5] = nox2
         newArray[6] = nox2b
         newArray[7] = opp2
-        newArray[8] = xOneNum ?  x2n : x2d
-        newArray[9] = xOneNum ?  x2d : x2n
+        newArray[8] = xOneNum ? x2n : x2d
+        newArray[9] = xOneNum ? x2d : x2n
     }
     if (level === 9) {
-        xOneNum = Math.round(Math.random()*100) < 50 ? true : false;
-        noxOneNum = Math.round(Math.random()*100) < 50 ? true : false;
-        noxTwoNum = Math.round(Math.random()*100) < 50 ? true : false;
-        xOneZero = Math.round(Math.random()*100) < 50 ? true : false;
-        xTwoFive = Math.round(Math.random()*100) < 50 ? true : false;
+        xOneNum = Math.round(Math.random() * 100) < 50 ? true : false;
+        noxOneNum = Math.round(Math.random() * 100) < 50 ? true : false;
+        noxTwoNum = Math.round(Math.random() * 100) < 50 ? true : false;
+        xOneZero = Math.round(Math.random() * 100) < 50 ? true : false;
+        xTwoFive = Math.round(Math.random() * 100) < 50 ? true : false;
         if (xOneNum) {
             if (noxOneNum) {
                 if (xOneZero) {
@@ -206,7 +224,7 @@ function createEquation() {
                     newArray[0] = nox1
                     newArray[1] = nox1b
                     newArray[3] = x1n
-                    newArray[4] = x1d 
+                    newArray[4] = x1d
                 }
             } else {
                 if (xOneZero) {
@@ -218,7 +236,7 @@ function createEquation() {
                     newArray[0] = nox1b
                     newArray[1] = nox1
                     newArray[3] = x1n
-                    newArray[4] = x1d 
+                    newArray[4] = x1d
                 }
             }
         } else {
@@ -244,10 +262,10 @@ function createEquation() {
                     newArray[0] = nox1b
                     newArray[1] = nox1
                     newArray[3] = x1n
-                    newArray[4] = x1d 
+                    newArray[4] = x1d
                 }
             }
-            
+
         }
         newArray[2] = opp1
         if (xOneNum) {
@@ -261,7 +279,7 @@ function createEquation() {
                     newArray[5] = nox2
                     newArray[6] = nox2b
                     newArray[8] = x2n
-                    newArray[9] = x2d 
+                    newArray[9] = x2d
                 }
             } else {
                 if (xTwoFive) {
@@ -273,7 +291,7 @@ function createEquation() {
                     newArray[5] = nox2b
                     newArray[6] = nox2
                     newArray[8] = x2n
-                    newArray[9] = x2d 
+                    newArray[9] = x2d
                 }
             }
         } else {
@@ -299,17 +317,17 @@ function createEquation() {
                     newArray[0] = nox2b
                     newArray[1] = nox2
                     newArray[3] = x2n
-                    newArray[4] = x2d 
+                    newArray[4] = x2d
                 }
             }
-            
+
         }
         newArray[7] = opp2
     }
 }
 
- createEquation()
- console.log(newArray)
+//createEquation()
+//console.log(newArray)
 
 /**
  * Helper function to replace document.getElementById(id).
@@ -442,6 +460,7 @@ function handleKeydown(event) {
 }
 
 function addEquation(flag, arr) {
+    if (!flag) createEquation()
     let target = element("left");  // returns an element with id "left"
 
     // Convert HTMLCollection to an array
@@ -486,7 +505,7 @@ function addEquation(flag, arr) {
     available = ["p11a", "p11b", "o12oa", "p12a", "p12b", "p13a", "p13b", "o14oa", "p14a", "p14b"]
     selected = available[0]
     select(selected)
-    if (!flag) check()  
+    if (!flag) check()
 }
 
 function enter(key) {
@@ -841,7 +860,7 @@ function check() {
         element("o14oa").innerHTML = `${element("o14oa").innerHTML === "-" ? "-" : "+"}`
         setAttributes(element("o12oa"), { "class": "int", "id": "" })
         setAttributes(element("o14oa"), { "class": "int", "id": "" })
-        
+
         completeCheckWithAddEquation()
 
     } else {

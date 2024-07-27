@@ -91,7 +91,7 @@
 
 #keyboard {
     display: grid;
-    grid-template-columns: 150px 150px;
+    grid-template-columns: 130px 130px 130px;
     grid-template-rows: 200px 50px;
     gap: 40px;
 }
@@ -162,4 +162,26 @@
 #info-screen {
     min-width: 300px;
     min-height: 200px;
+}
+#reset-etc {
+    display: grid;
+    grid-template-rows: 50px 50px 50px;
+    grid-template-columns: 150px;
+    row-gap: 5px;
+}
+#level-row {
+    display: grid;
+    grid-template-columns: 50px 50px 50px;
+    grid-template-rows: 50px;
+    column-gap: 5px;
+}
+.reset-button {
+    border: solid black 1px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    margin-left: 20px;
+    min-height: 50px;
+    max-width: 120px;
 }
