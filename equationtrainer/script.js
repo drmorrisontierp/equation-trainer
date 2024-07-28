@@ -29,6 +29,8 @@ const warningsText = (warning, args) => {
             warningsText += `Please look at positions ${args[0]}, ${args[1]} and ${args[2]}.`
         } else if (args.length === 3) {
             warningsText += `Please look at positions ${args[0]}, ${args[1]}, ${args[2]} and ${args[3]}.`
+        } else if (args.length === 4) {
+            warningsText += `Please look at all the positions.`
         }
     } else if (warning === "addition-fault") {
         if (args.length === 1) {
@@ -1003,7 +1005,7 @@ function checkXWithAddition(p, b) {
     let faults = 0;               // Counter for faults
     let positionsToAdd = [];      // Positions to be considered for addition
     let fractionsToAdd = [];      // Positions for valid addition/subtraction
-    let faultCode = {"x-fault": []}
+    let faultCode = {"x-fault": [], "invalidSign": [], "noCommonDenominator": []}
 
     // Iterate through the positions
     let alertText = ""
@@ -1012,21 +1014,38 @@ function checkXWithAddition(p, b) {
 
         // Check if the balance has a valid sign and validate 'x' presence
         if (b[x][0][0] === "+" || b[x][0][0] === "-") {
+            let faultPosition
+            if (x === 0 || x ===1) {
+                let target = element(`p${row}1`).children[0].innerHTML
+                if (target === "0" || target === "") {
+                    faultPosition = 1
+                } else {
+                    faultPosition = x+1
+                }
+            }
+            if (x === 2 || x === 3) {
+                let target = element(`p${row}2`).children[0].innerHTML
+                if (target === "0" || target === "") {
+                    faultPosition = 2
+                } else {
+                    faultPosition = x+1
+                }
+            }
             if (b[x][0].includes("x") && !p[x][0].includes("x")) {
                 console.log("Fail: b contains 'x' but p does not");
-                faultCode["x-fault"].push(x)
+                faultCode["x-fault"].push(faultPosition)
                 faults++;
             } else if (!b[x][0].includes("x") && p[x][0].includes("x")) {
                 console.log("Fail: p contains 'x' but b does not");
-                faultCode["x-fault"].push(x)
+                faultCode["x-fault"].push(faultPosition)
                 faults++;
             } else if (b[x][1].includes("x") && !p[x][1].includes("x")) {
                 console.log("Fail: b denominator contains 'x' but p does not");
-                faultCode["x-fault"].push(x)
+                faultCode["x-fault"].push(faultPosition)
                 faults++;
             } else if (!b[x][1].includes("x") && p[x][1].includes("x")) {
                 console.log("Fail: p denominator contains 'x' but b does not");
-                faultCode["x-fault"].push(x)
+                faultCode["x-fault"].push(faultPosition)
                 faults++;
             } else {
                 positionsToAdd.push(x); // Add position to the list if valid
@@ -1035,7 +1054,7 @@ function checkXWithAddition(p, b) {
             //console.log(`faults: ${faults}, positionsToAdd: ${positionsToAdd}`);
         } else {
             //console.log("Fail: invalid sign in b", x);
-            alertText += `Vid position  ${(x + 1)} det finns en ogiltig operation, antigen addera/subtrhera eller multiplicera/dividera men inte samtidig..`
+            faultCode["invalidSign"].push(x) //TODO position can be wrong +1
             faults++;
         }
     }
@@ -1044,7 +1063,7 @@ function checkXWithAddition(p, b) {
     for (let x of positionsToAdd) {
         if (p[x][1] !== b[x][1] && b[x][0] !== "") {
             //console.log("Fail: mismatched denominators");
-            alertText += `Vid position  ${(x + 1)} kan du inte addera bråk som har olika nämnare: du måste förlänga eller förkorta först.`
+            faultCode["noCommonDenominator"].push(x) //TODO position can be wrong +1
             faults++;
         } else {
             fractionsToAdd.push(x); // Add position to the list if denominators match
@@ -1054,7 +1073,15 @@ function checkXWithAddition(p, b) {
 
     // Return null if faults are found, else return positions for addition/subtraction
     if (faults > 0) {
-        element("info-screen").innerHTML = warningsText("x-fault", faultCode["x-fault"])
+        let warning = ""
+        if (faultCode["x-fault"].join("") !== "") {
+            warning = warningsText("x-fault", faultCode["x-fault"])
+        } else if (faultCode["invalidSign"].join("") !== "") {
+            warning = warningsText("x-fault", faultCode["invalidSign"])
+        } else if (faultCode["noCommonDenominator"].join("") !== "") {
+            warning = warningsText("x-fault", faultCode["noCommonDenominator"])
+        }
+        element("info-screen").innerHTML = warning
         //console.log("Returning null due to faults");
         return null;
     } else {
