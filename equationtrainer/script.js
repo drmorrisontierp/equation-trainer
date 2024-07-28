@@ -60,6 +60,13 @@ select(available[0])
 // Add event listeners
 document.addEventListener("keydown", handleKeydown);
 
+function restart() {
+    stopped = false
+    creating = false
+    createEquation()
+    addEquation(1, newArray)
+}
+
 function changeLevel(direction) {
     if (direction === "up") {
         if (level < 9) {
@@ -78,7 +85,6 @@ function changeLevel(direction) {
 }
 
 function createEquation() {
-    console.log("level:", level)
     newArray = ["", "", "", "", "", "", "", "", "", ""]
     let x1 = Math.round(Math.random() * 8 + 1)
     let x2 = Math.round(Math.random() * 8 + 1)
@@ -462,10 +468,8 @@ function handleKeydown(event) {
 }
 
 function addEquation(flag, arr) {
-    console.log("running", flag, arr)
     if (flag === 1) { 
         createEquation()
-        console.log("running", flag, arr) 
     }
     let target = element("left");  // returns an element with id "left"
 
@@ -538,7 +542,7 @@ function enter(key) {
     } else {
         lastEntered = "m"
     }
-    console.log(entered, lastEntered)
+    //console.log(entered, lastEntered)
     if (!creating) {
         if (key === "/" && ("+-/".includes(lastEntered) || divChars > 1)) return
         if (key === "*" && entered !== "") return
@@ -581,7 +585,6 @@ function back() {
         element(`bal-group-${row}`).remove()
         element(`row-group-${row}`).remove()
         row--
-        //console.log(row)
         element(`row-info-${row}`).style.display = "grid"
         element(`bal-group-${row}`).remove()
         createBalanceRow()
@@ -599,14 +602,9 @@ function back() {
                 }
             }
         }
-        //console.log(available)
         selected = available[0]
         select(selected)
-        //console.log(element(`bal-${row}`))
-
-
     }
-
 }
 
 
@@ -632,8 +630,6 @@ function setAvailable() {
  */
 function select(id) {
     if (stopped) return
-    //console.log(available)
-    //console.log(selected)
     let rowText = row.toString()
     if (id.slice(1, 1 + rowText.length) === rowText) {
         element(selected).style.borderColor = "black";
@@ -655,11 +651,9 @@ function select(id) {
  * @param {string} selected - The ID of the currently selected element (global variable).
  */
 function moveThrough(direction) {
-    //console.log(selected)
     element(selected).style.borderColor = "black";
     if (direction === "right") {
         index = index < available.length - 1 ? index += 1 : 0;
-        //console.log("index", index, available[index])
         selected = available[index]
     } else {
         index = index > 0 ? index -= 1 : available.length - 1;
@@ -675,15 +669,15 @@ function checkWin() {
     let prhs = ""; // String to hold the current row's right-hand-sides values
     // Process the current row's elements to populate the p array
     for (let x = 1; x < 3; x++) {
-        //console.log(element(`p${row}${x}`).children[0].innerHTML)
         if (element(`p${row}${x}`).children[0].innerHTML !== "0") plhs += element(`p${row}${x}`).children[0].innerHTML
         if (element(`p${row}${x + 2}`).children[0].innerHTML !== "0") prhs += element(`p${row}${x + 2}`).children[0].innerHTML
-        //console.log(plhs, prhs)
     }
 
-    if ((plhs === "x" && prhs !== "x") || (prhs === "x" && plhs !== "x")) {
-        element("info-screen").innerHTML = "YOU WON!"
+    if (((plhs === "x" && prhs !== "x") || (plhs === "1x" && prhs !== "1x")) || ((prhs === "x" && plhs !== "x") || (prhs === "1x" && plhs !== "1x"))) {
+        element("info-screen").innerHTML = `YOU WON! <button onclick="restart()">re-start</button>`
         element(`bal-${row}`).innerHTML = ""
+        element(`row-info-${row}`).style.display = "none"
+        element(`bal-info-${row}`).style.display = "none"
         stopped = true
 
         console.log("You won")
@@ -764,11 +758,9 @@ function completeCheckWithAddEquation() {
     }
     row = 1
     selected = available[0]
-    //console.log(selected)
     createBalanceRow()
     hideUnused()
     selected = available[0]
-    //console.log(selected)
     select(selected)
 }
 
@@ -805,13 +797,10 @@ function check() {
         if (nums.join().includes("x") && dens.join().includes("x")) return
 
         const zeros = checkForZeros()
-        //console.log("zeros", zeros)
         if (zeros.length > 2) return
-
         for (let x = 1; x < 5; x++) {
             changeXToOneX(x)
         }
-
 
         // Check conditions
         for (let x of [1, 3]) {
@@ -826,8 +815,6 @@ function check() {
             if ((p11a.includes("x") && p12a.includes("x")) && (!p11b.includes("x") && !p12b.includes("x")) ||
                 (!p11a.includes("x") && !p12a.includes("x") && (p11a !== "" || p11a !== "") && (p12a !== "" || p12a !== "")) && (p11b.includes("x") && p12b.includes("x")) ||
                 (!p11a.includes("x") && !p12a.includes("x") && (p11a !== "" || p11a !== "") && (p12a !== "" || p12a !== "")) && (!p11b.includes("x") && !p12b.includes("x"))) {
-
-                //console.log("running");
 
                 // Remove "x" and parse integers
                 let n1 = parseInt(p11a.replace("x", ""));
@@ -925,7 +912,6 @@ function check() {
             b.push([sign + bSplit[0], bSplit[1]]);
         }
 
-        //console.log(p)
         let p1 = s[0] === "-" && p[1][0][0] !== "-" ? ["-" + p[1][0], p[1][1]] : p[1]
         let p3 = s[1] === "-" && p[3][0][0] !== "-" ? ["-" + p[3][0], p[3][1]] : p[3]
         let newP = [
@@ -944,7 +930,6 @@ function check() {
         // Perform the extend operation if valid
         if (extendCheck) {
             createNewRow(newP);
-            //console.log(extendCheck)
             for (let e of extendCheck) {
                 extend(e[0], e[1], e[2], e[3]);
             }
@@ -983,20 +968,17 @@ function check() {
 function checkBalance(b) {
     console.log("checkBalance")
     if ([b[0], b[1]].sort().join() !== [b[2], b[3]].sort().join() || b.join("") === "") {
-        //console.log(b)
         let lhs = []
         let rhs = []
         lhs[0] = b[0][0] === "" || b[0][0] === "" ? "" : b[0][1] !== "1" ? `${b[0][0]}/${b[0][1]}` : b[0][0],
         lhs[1] = b[1][0] === "" || b[1][0] === "" ? "" : b[1][1] !== "1" ? `${b[1][0]}/${b[1][1]}` : b[1][0]
         rhs[0] = b[2][0] === "" || b[2][0] === "" ? "" : b[2][1] !== "1" ? `${b[2][0]}/${b[2][1]}` : b[2][0]
         rhs[1] = b[3][0] === "" || b[3][0] === "" ? "" : b[3][1] !== "1" ? `${b[3][0]}/${b[3][1]}` : b[3][0]
-        //console.log(lhs, rhs)
 
         //console.log("failed to balance", b.join(""), [b[0], b[1]].sort().join() !== [b[2], b[3]].sort().join())
         element("info-screen").innerHTML = `Du behöver göra samma sak på båda sidor! Just nu har du på vänster leden ${lhs.join("")} och på höger leden ${rhs.join("")} `
         return false
     }
-    //console.log("no problems with balance", b.join(""))
     return true
 }
 
@@ -1147,7 +1129,6 @@ function checkExtend(p, b) {
             additions.push(x)
         }
     }
-    //console.log(a, possibles)
 
     // If no valid operations are found, return null
     if (a.length === 0) {
@@ -1241,7 +1222,6 @@ function createNewRow(p) {
         <div id="p${row + 1}4" class="prhs">${oldText[3]}</div>
     `;
 
-    //console.log("Appending new row to document");
     newRowGroup.appendChild(newRow)
     newRowGroup.appendChild(newRowInfo)
     element("left").appendChild(newRowGroup);
@@ -1663,8 +1643,6 @@ function hideElements(offset, index) {
  * @returns {Array} - Array of element content.
  */
 function getElementsContent(selector) {
-    //console.log("selector", selector)
-    //console.log(document.querySelectorAll(selector))
     let content = [];
     document.querySelectorAll(selector).forEach((e) => content.push(e.children[0].innerHTML));
     return content;
