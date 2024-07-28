@@ -16,7 +16,21 @@ addEquation(1, newArray)
 
 const warningsText = (warning, args) => {
     let warningsText = ""
-    if (warning = "x-fault") {
+    if (warning === "x-fault") {
+        warningsText = `When manipulating an expression by addition or subtraction,
+            it is important that the terms have a similar value.<br><br>Terms that contain "x"
+            hav an unknown value in them and thus one cannot add or subtract with a pure
+            number and vice-versa.<br><br>`
+        if (args.length === 1) {
+            warningsText += `Please look at position ${args[0]}.`
+        } else if (args.length === 2) {
+            warningsText += `Please look at positions ${args[0]} and ${args[1]}.`
+        } else if (args.length === 3) {
+            warningsText += `Please look at positions ${args[0]}, ${args[1]} and ${args[2]}.`
+        } else if (args.length === 3) {
+            warningsText += `Please look at positions ${args[0]}, ${args[1]}, ${args[2]} and ${args[3]}.`
+        }
+    } else if (warning === "addition-fault") {
         if (args.length === 1) {
             warningsText = ""
         } else if (args.length === 2) {
@@ -26,19 +40,12 @@ const warningsText = (warning, args) => {
         } else if (args.length === 3) {
             warningsText = ""
         }
-    } else if (warning = "addition-fault") {
-        if (args.length === 1) {
-            warningsText = ""
-        } else if (args.length === 2) {
-            warningsText = ""
-        } else if (args.length === 3) {
-            warningsText = ""
-        } else if (args.length === 3) {
-            warningsText = ""
-        }
-    } else if (warning = "balance-fault") {
-        warningsText = ""
-    } else if (warning = "multiplication-fault") {
+    } else if (warning === "balance-fault") {
+        console.log("running")
+        warningsText = `When balancing an equation, one needs to have exactly the same operations
+         manipulating expressions on both sides of the equation.<br><br> I see you have the equivalent of 
+         ${args[0]} on the left hand side and ${args[1]} on the right: they are not the same.`
+    } else if (warning === "multiplication-fault") {
         if (args.length === 1) {
             warningsText = ""
         } else if (args.length === 2) {
@@ -976,7 +983,7 @@ function checkBalance(b) {
         rhs[1] = b[3][0] === "" || b[3][0] === "" ? "" : b[3][1] !== "1" ? `${b[3][0]}/${b[3][1]}` : b[3][0]
 
         //console.log("failed to balance", b.join(""), [b[0], b[1]].sort().join() !== [b[2], b[3]].sort().join())
-        element("info-screen").innerHTML = `Du behöver göra samma sak på båda sidor! Just nu har du på vänster leden ${lhs.join("")} och på höger leden ${rhs.join("")} `
+        element("info-screen").innerHTML = warningsText("balance-fault", [lhs.join(""), rhs.join("")])
         return false
     }
     return true
@@ -996,6 +1003,7 @@ function checkXWithAddition(p, b) {
     let faults = 0;               // Counter for faults
     let positionsToAdd = [];      // Positions to be considered for addition
     let fractionsToAdd = [];      // Positions for valid addition/subtraction
+    let faultCode = {"x-fault": []}
 
     // Iterate through the positions
     let alertText = ""
@@ -1006,23 +1014,24 @@ function checkXWithAddition(p, b) {
         if (b[x][0][0] === "+" || b[x][0][0] === "-") {
             if (b[x][0].includes("x") && !p[x][0].includes("x")) {
                 console.log("Fail: b contains 'x' but p does not");
-                alertText += `Vid position  ${(x + 1)} måste båda termerna innehålla "x".`
+                faultCode["x-fault"].push(x)
                 faults++;
             } else if (!b[x][0].includes("x") && p[x][0].includes("x")) {
                 console.log("Fail: p contains 'x' but b does not");
-                alertText += `Vid position  ${(x + 1)} måste båda termerna innehålla "x".`
+                faultCode["x-fault"].push(x)
                 faults++;
             } else if (b[x][1].includes("x") && !p[x][1].includes("x")) {
                 console.log("Fail: b denominator contains 'x' but p does not");
-                alertText += `Vid position  ${(x + 1)} måste båda termerna innehålla "x".`
+                faultCode["x-fault"].push(x)
                 faults++;
             } else if (!b[x][1].includes("x") && p[x][1].includes("x")) {
                 console.log("Fail: p denominator contains 'x' but b does not");
-                alertText += `Vid position  ${(x + 1)} måste båda termerna innehålla "x".`
+                faultCode["x-fault"].push(x)
                 faults++;
             } else {
                 positionsToAdd.push(x); // Add position to the list if valid
             }
+            console.log(faultCode)
             //console.log(`faults: ${faults}, positionsToAdd: ${positionsToAdd}`);
         } else {
             //console.log("Fail: invalid sign in b", x);
@@ -1045,7 +1054,7 @@ function checkXWithAddition(p, b) {
 
     // Return null if faults are found, else return positions for addition/subtraction
     if (faults > 0) {
-        element("info-screen").innerHTML = alertText
+        element("info-screen").innerHTML = warningsText("x-fault", faultCode["x-fault"])
         //console.log("Returning null due to faults");
         return null;
     } else {
