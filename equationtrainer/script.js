@@ -476,6 +476,7 @@ function handleKeydown(event) {
     //console.log(key);
 }
 
+
 function addEquation(flag, arr) {
     if (flag === 1) { 
         createEquation()
@@ -1240,9 +1241,10 @@ function createNewRow(p) {
         if (p[x][0] === "0") {
             oldText.push(`<div class="int">${p[x][0]}</div>`);
         } else if (p[x][1] === "1") {
-            oldText.push(`<div class="int">${p[x][0]}</div>`);
+            (p[x][0] !== "1x" && p[x][0] !== "-1x") ? oldText.push(`<div class="int">${p[x][0]}</div>`) : p[x][0] !== "1x" ? oldText.push(`<div class="int">-x</div>`) : oldText.push(`<div class="int">x</div>`);
         } else {
-            oldText.push(`<div class="num">${p[x][0]}</div><div class="int">${p[x][1]}</div>`);
+            (p[x][0] !== "1x" || p[x][1] !== "1x" || p[x][0] !== "-1x") ? oldText.push(`<div class="num">${p[x][0]}</div><div class="int">${p[x][1]}</div>`) : (p[x][0] !== "1x" && p[x][0] !== "-1x") ? oldText.push(`<div class="num">${p[x][0]}</div><div class="int">x</div>`) : (p[x][0] !== "-1x") ? oldText.push(`<div class="num">x</div><div class="int">${p[x][1]}</div>`) : oldText.push(`<div class="num">-x</div><div class="int">${p[x][1]}</div>`);
+            //oldText.push(`<div class="num">${p[x][0]}</div><div class="int">${p[x][1]}</div>`);
         }
     }
 
