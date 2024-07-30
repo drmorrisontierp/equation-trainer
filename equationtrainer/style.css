@@ -150,21 +150,32 @@
     justify-content: center;
     text-align: center;
     border: solid black 1px;
+    background-color: rgb(240, 255, 250);
     width: 250px;
     height: 50px;
     margin-left: 45px;
     
 }
 
+#check:hover {
+    background-color: aquamarine;
+}
+
+
 .button {
     border: solid black 1px;
     width: 50px;
     height: 50px;
     display: flex;
+    background-color: aliceblue;
     flex-direction: column;
     justify-content: center;
     text-align: center;
 }
+.button:hover {
+    background-color: aqua;
+}
+
 #dummy {
     width: 50px;
     height: 50px;
@@ -184,8 +195,14 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    background-color: antiquewhite;
     text-align: center;
 }
+
+.arrow-button:hover {
+    background-color: rgb(225, 181, 68);
+}
+
 #display {
     border: solid black 1px;
 }
@@ -211,8 +228,46 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
+    background-color: antiquewhite;
     text-align: center;
     margin-left: 20px;
     min-height: 50px;
     max-width: 120px;
+}
+
+
+.reset-button:hover {
+    background-color: rgb(225, 181, 68); 
+}
+
+#del {
+    background-color: rgb(250, 224, 215);
+}
+
+#del:hover {
+    background-color: lightcoral;
+}
+
+#clear {
+    background-color: rgb(250, 224, 215);
+}
+
+#clear:hover {
+    background-color: lightcoral;
+}
+
+#reset {
+    background-color: rgb(250, 224, 215);
+}
+
+#reset:hover {
+    background-color: lightcoral;
+}
+
+#level-minus, #level-plus {
+    background-color: antiquewhite;
+}
+
+#level-minus:hover, #level-plus:hover {
+    background-color: rgb(225, 181, 68);
 }
