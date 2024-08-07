@@ -42,6 +42,21 @@ const warningsText = (warning, args) => {
         } else if (args.length === 3) {
             warningsText = ""
         }
+    }  else if (warning === "extend-fault") {
+        let operation = args[0]
+        if (args.length === 1) {
+            warningsText = ""
+        } else if (args.length === 2) {
+            warningsText = ""
+        } else if (args.length === 3) {
+            warningsText = ""
+        } else if (args.length === 3) {
+            warningsText = ""
+        }
+        warningsText = `When you ${operation ? 'extend' : 'reduce'} a fraction,
+        you should be ${operation ? 'multiplying' : 'dividing'} by a fraction that
+        is equivalent to one: i.e. ${args[1]}/${args[1]} or ${args[2]}/${args[2]}`
+
     } else if (warning === "balance-fault") {
         console.log("running")
         warningsText = `When balancing an equation, one needs to have exactly the same operations
@@ -785,6 +800,7 @@ function completeCheck() {
     row++;
     createBalanceRow();
     setAvailable();
+    element("info-screne").innerHTML = ""
     selected = available[0];
     select(selected);
     hideUnused();
