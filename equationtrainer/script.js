@@ -42,7 +42,7 @@ const warningsText = (warning, args) => {
         } else if (args.length === 3) {
             warningsText = ""
         }
-    }  else if (warning === "extend-fault") {
+    } else if (warning === "extend-fault") {
         let operation = args[0]
         if (args.length === 1) {
             warningsText = ""
@@ -94,13 +94,13 @@ function restart() {
 function changeLevel(direction) {
     if (direction === "up") {
         if (level < 9) {
-            level ++
+            level++
         } else {
             level = 9
         }
     } else {
         if (level > 1) {
-            level --
+            level--
         } else {
             level = 1
         }
@@ -493,7 +493,7 @@ function handleKeydown(event) {
 
 
 function addEquation(flag, arr) {
-    if (flag === 1) { 
+    if (flag === 1) {
         createEquation()
     }
     let target = element("left");  // returns an element with id "left"
@@ -509,7 +509,7 @@ function addEquation(flag, arr) {
     let newRowGroup = document.createElement("div")
     let newRow = document.createElement("div")
     let newRowInfo = document.createElement("div")
-    setAttributes(newRowGroup, { "id": "row-group-1", "class": "row-group"})
+    setAttributes(newRowGroup, { "id": "row-group-1", "class": "row-group" })
     setAttributes(newRow, { "id": "row-1", "class": "row" })
     setAttributes(newRowInfo, { "id": "row-info-1", "class": "row-info" })
 
@@ -800,7 +800,7 @@ function completeCheck() {
     row++;
     createBalanceRow();
     setAvailable();
-    element("info-screne").innerHTML = ""
+    element("info-screen").innerHTML = ""
     selected = available[0];
     select(selected);
     hideUnused();
@@ -952,11 +952,12 @@ function check() {
         let extendCheck = checkExtend(newP, b);
         let xCheck = checkXWithAddition(newP, b);
         let multiplicationCheck = checkMultiplication(newP, b);
+        let balanceCheck = checkBalance(b)
 
         // Perform the extend operation if valid
-        if (extendCheck) {
+        if (!extendCheck.faults) {
             createNewRow(newP);
-            for (let e of extendCheck) {
+            for (let e of extendCheck.extentions) {
                 extend(e[0], e[1], e[2], e[3]);
             }
             completeCheck()
@@ -964,21 +965,53 @@ function check() {
         }
 
         // Perform the multiplication operation if valid
-        if (multiplicationCheck) {
+        if (!multiplicationCheck.faults) {
             createNewRow(newP);
-            multiplication(newP, b, multiplicationCheck[0]);
+            multiplication(newP, b, multiplicationCheck.multiplications[0]);
             completeCheck()
             return;
         }
 
         // Check the balance and perform the addition operation if valid
-        if (!checkBalance(b)) return;
+        //if (!checkBalance(b)) return;
 
-        if (xCheck) {
+        if (!xCheck.faults && !balanceCheck.faults) {
             createNewRow(newP);
-            addition(newP, b, xCheck);
+            addition(newP, b, xCheck.fractions);
             completeCheck()
             return;
+        }
+
+
+        if (extendCheck.faults) {
+            console.log("extendCheck.faults")
+            if (extendCheck.warning === "addition") {
+                if (balanceCheck.faults) {
+                    console.log("balanceCheck.faults")
+                    element("info-screen").innerHTML = warningsText("balance-fault", [balanceCheck.warning[0], balanceCheck.warning[1]])
+                    return
+                } else if (xCheck.faults) {
+                    let warning = ""
+                    if (xCheck["x-fault"].join("") !== "") {
+                        warning = warningsText("x-fault", xCheck["x-fault"])
+                    } else if (xCheck["invalidSign"].join("") !== "") {
+                        warning = warningsText("x-fault", xCheck["invalidSign"])
+                    } else if (xCheck["noCommonDenominator"].join("") !== "") {
+                        warning = warningsText("x-fault", xCheck["noCommonDenominator"])
+                    }
+                    element("info-screen").innerHTML = warning
+                    return;
+                }
+            } else if (extendCheck.warning === "multiplication") {
+                if (multiplicationCheck.faults) {
+                    console.log("multiplicationCheck.faults")
+                    element("info-screen").innerHTML = "multiplication faults"
+                    return
+                }
+            } else {
+                element("info-screen").innerHTML = "extention faults"
+                return
+            }
         }
     }
 }
@@ -997,15 +1030,15 @@ function checkBalance(b) {
         let lhs = []
         let rhs = []
         lhs[0] = b[0][0] === "" || b[0][0] === "" ? "" : b[0][1] !== "1" ? `${b[0][0]}/${b[0][1]}` : b[0][0],
-        lhs[1] = b[1][0] === "" || b[1][0] === "" ? "" : b[1][1] !== "1" ? `${b[1][0]}/${b[1][1]}` : b[1][0]
+            lhs[1] = b[1][0] === "" || b[1][0] === "" ? "" : b[1][1] !== "1" ? `${b[1][0]}/${b[1][1]}` : b[1][0]
         rhs[0] = b[2][0] === "" || b[2][0] === "" ? "" : b[2][1] !== "1" ? `${b[2][0]}/${b[2][1]}` : b[2][0]
         rhs[1] = b[3][0] === "" || b[3][0] === "" ? "" : b[3][1] !== "1" ? `${b[3][0]}/${b[3][1]}` : b[3][0]
 
         //console.log("failed to balance", b.join(""), [b[0], b[1]].sort().join() !== [b[2], b[3]].sort().join())
-        element("info-screen").innerHTML = warningsText("balance-fault", [lhs.join(""), rhs.join("")])
-        return false
+        //element("info-screen").innerHTML = warningsText("balance-fault", [lhs.join(""), rhs.join("")])
+        return {"faults": true, "warning": [lhs.join(""), rhs.join("")]}
     }
-    return true
+    return {"faults": false, }
 }
 
 
@@ -1022,7 +1055,7 @@ function checkXWithAddition(p, b) {
     let faults = 0;               // Counter for faults
     let positionsToAdd = [];      // Positions to be considered for addition
     let fractionsToAdd = [];      // Positions for valid addition/subtraction
-    let faultCode = {"x-fault": [], "invalidSign": [], "noCommonDenominator": []}
+    let faultCode = { "faults": true, "x-fault": [], "invalidSign": [], "noCommonDenominator": [] }
 
     // Iterate through the positions
     let alertText = ""
@@ -1032,12 +1065,12 @@ function checkXWithAddition(p, b) {
         // Check if the balance has a valid sign and validate 'x' presence
         if (b[x][0][0] === "+" || b[x][0][0] === "-") {
             let faultPosition
-            if (x === 0 || x ===1) {
+            if (x === 0 || x === 1) {
                 let target = element(`p${row}1`).children[0].innerHTML
                 if (target === "0" || target === "") {
                     faultPosition = 1
                 } else {
-                    faultPosition = x+1
+                    faultPosition = x + 1
                 }
             }
             if (x === 2 || x === 3) {
@@ -1045,7 +1078,7 @@ function checkXWithAddition(p, b) {
                 if (target === "0" || target === "") {
                     faultPosition = 2
                 } else {
-                    faultPosition = x+1
+                    faultPosition = x + 1
                 }
             }
             if (b[x][0].includes("x") && !p[x][0].includes("x")) {
@@ -1090,7 +1123,7 @@ function checkXWithAddition(p, b) {
 
     // Return null if faults are found, else return positions for addition/subtraction
     if (faults > 0) {
-        let warning = ""
+        /* let warning = ""
         if (faultCode["x-fault"].join("") !== "") {
             warning = warningsText("x-fault", faultCode["x-fault"])
         } else if (faultCode["invalidSign"].join("") !== "") {
@@ -1098,12 +1131,13 @@ function checkXWithAddition(p, b) {
         } else if (faultCode["noCommonDenominator"].join("") !== "") {
             warning = warningsText("x-fault", faultCode["noCommonDenominator"])
         }
-        element("info-screen").innerHTML = warning
+        element("info-screen").innerHTML = warning */
         //console.log("Returning null due to faults");
-        return null;
+        // return null;
+        return faultCode
     } else {
         //console.log("No problems with x and addition/subtraction");
-        return [fractionsToAdd];
+        return { "faults": false, "fractions": [fractionsToAdd] };
     }
 }
 
@@ -1136,22 +1170,33 @@ function checkMultiplication(p, b) {
 
 
     // Ensure all filled positions have the same operation
-    let lastPosition = b[filledPosition[0]][0];
+    let lastPositionNum = b[filledPosition[0]][0];
+    let lastPositionDen = b[filledPosition[0]][1];
+    let extentionOrMultiplication = 0
     for (let x of filledPosition) {
-        if (b[x][0] !== lastPosition || b[x][0] === "" || b[x][0] === "0") {
-            return null;
+        if ((b[x][0] !== lastPositionNum || b[x][0] === "" || b[x][0] === "0") || (b[x][1] !== lastPositionDen)) {
+            //return {"faults": true, "warning": "all positions must have same value"};
+            extentionOrMultiplication ++;
         }
-        lastPosition = b[x][0];
+        lastPositionNum = b[x][0];
+        lastPositionDen = b[x][0];
     }
+    console.log("exOrM", extentionOrMultiplication, "FP", filledPosition.length)
+    if (extentionOrMultiplication > 0) {
+            return {"faults": true, "warning": "all positions must have same value"};
+        }
+    
+
 
     // Check for valid x-squared positions
     let mx = checkForXSquared(p, b);
     if (!mx) {
-        return null;
+
+        return {"faults": true, "warning": "cant process x-squared"};
     }
 
     //console.log("No problems with multiplication/division");
-    return [filledPosition, emptyPosition, mx];
+    return {"faults": false, "multiplications": [filledPosition, emptyPosition, mx]};
 }
 
 
@@ -1187,10 +1232,10 @@ function checkExtend(p, b) {
     if (a.length === 0) {
         if (possibles.length === 1 && additions.length === 0) {
             console.log("add warning: trying to reduce/expand with wrong method")
-            return null
+            return {"faults": true, "warning": "trying to expand/reduce with wrong method"};
         } else if (possibles.length === 0) {
             console.log("going forward to addition/subtraction")
-            return null
+            return {"faults": true, "warning": "addition"};
         } else if (possibles.length >= 0 && additions.length === 0) {
             let checkNum = b[possibles[0]][0]
             let checkDen = b[possibles[0]][1]
@@ -1200,19 +1245,19 @@ function checkExtend(p, b) {
                     checkDen = b[possibles[x]][1]
                 } else {
                     console.log("add warning: trying to expand/reduce with wrong method 2")
-                    return null
+                    return {"faults": true, "warning": "trying to expand/reduce with wrong method 2"};
                 }
             }
             console.log("going forward to multiplication")
-            return null
+            return {"faults": true, "warning": "multiplication"};
         };
     } else if (a.length > 0) {
         if (additions.length >= 1) {
             console.log("add warning: mixed methods")
-            return null
+            return {"faults": true, "warning": "mixed methods"};
         } else if (possibles.length > 0) {
             console.log("add warning: mixed methods")
-            return null
+            return {"faults": true, "warning": "mixed methods"};
         }
     }
 
@@ -1225,7 +1270,7 @@ function checkExtend(p, b) {
     }
 
     // Return the array of details for extending/reducing the fractions
-    return ext;
+    return {"faults": false, "extentions": ext};
 }
 
 
@@ -1340,7 +1385,7 @@ function createBalanceRow() {
     newRowGroup.appendChild(newRow)
     newRowGroup.appendChild(newRowInfo)
     element("left").appendChild(newRowGroup);
-    if (row > 1) element(`bal-info-${row-1}`).style.display = "none"
+    if (row > 1) element(`bal-info-${row - 1}`).style.display = "none"
 }
 
 
