@@ -1009,7 +1009,7 @@ function check() {
                     return
                 }
             } else {
-                element("info-screen").innerHTML = "extention faults"
+                element("info-screen").innerHTML = extendCheck.warning
                 return
             }
         }
@@ -1030,7 +1030,7 @@ function checkBalance(b) {
         let lhs = []
         let rhs = []
         lhs[0] = b[0][0] === "" || b[0][0] === "" ? "" : b[0][1] !== "1" ? `${b[0][0]}/${b[0][1]}` : b[0][0],
-            lhs[1] = b[1][0] === "" || b[1][0] === "" ? "" : b[1][1] !== "1" ? `${b[1][0]}/${b[1][1]}` : b[1][0]
+        lhs[1] = b[1][0] === "" || b[1][0] === "" ? "" : b[1][1] !== "1" ? `${b[1][0]}/${b[1][1]}` : b[1][0]
         rhs[0] = b[2][0] === "" || b[2][0] === "" ? "" : b[2][1] !== "1" ? `${b[2][0]}/${b[2][1]}` : b[2][0]
         rhs[1] = b[3][0] === "" || b[3][0] === "" ? "" : b[3][1] !== "1" ? `${b[3][0]}/${b[3][1]}` : b[3][0]
 
@@ -1232,7 +1232,12 @@ function checkExtend(p, b) {
     if (a.length === 0) {
         if (possibles.length === 1 && additions.length === 0) {
             console.log("add warning: trying to reduce/expand with wrong method")
-            return {"faults": true, "warning": "trying to expand/reduce with wrong method"};
+            if (b[possibles[0]][0][0] === "*") {
+                return {"faults": true, "warning": "extensionFault"};
+            } else {
+                return {"faults": true, "warning": "reductionFault"};
+            }
+            
         } else if (possibles.length === 0) {
             console.log("going forward to addition/subtraction")
             return {"faults": true, "warning": "addition"};
@@ -1245,7 +1250,7 @@ function checkExtend(p, b) {
                     checkDen = b[possibles[x]][1]
                 } else {
                     console.log("add warning: trying to expand/reduce with wrong method 2")
-                    return {"faults": true, "warning": "trying to expand/reduce with wrong method 2"};
+                    return {"faults": true, "warning": "extention-multiplication"};
                 }
             }
             console.log("going forward to multiplication")
@@ -1254,10 +1259,15 @@ function checkExtend(p, b) {
     } else if (a.length > 0) {
         if (additions.length >= 1) {
             console.log("add warning: mixed methods")
-            return {"faults": true, "warning": "mixed methods"};
+            return {"faults": true, "warning": "mixed-operations"};
         } else if (possibles.length > 0) {
             console.log("add warning: mixed methods")
-            return {"faults": true, "warning": "mixed methods"};
+            if (a.length >= possibles.length) {
+                return {"faults": true, "warning": "mixed-multiplications"}; 
+            } else {
+               return {"faults": true, "warning": "multiplication"}; 
+            }
+            
         }
     }
 
