@@ -948,6 +948,23 @@ function check() {
         ]
         console.log(newP)
 
+        let initialRow = element(`row-${row}`)
+        console.log("initialRow", initialRow)
+
+function checkRows(initial, final) {
+    console.log(initial.children.length, final.children.length)
+    if (initial.children.length !== final.children.length) return;
+    let dissimilar = 0
+    for (let index = 0; index < initial.children.length; index++) {
+        if (initial.children[index].children[0].innerHTML !== final.children[index].children[0].innerHTML) {
+            console.log(initial.children[index].children[0].innerHTML , final.children[index].children[0].innerHTML )
+            dissimilar++
+        }
+    }
+    console.log(dissimilar)
+    if (dissimilar === 0) back()
+}
+
         // Check for possible operations
         let extendCheck = checkExtend(newP, b);
         let xCheck = checkXWithAddition(newP, b);
@@ -961,6 +978,8 @@ function check() {
                 extend(e[0], e[1], e[2], e[3]);
             }
             completeCheck()
+            let finalRow = element(`row-${row}`)
+            checkRows(initialRow, finalRow)
             return;
         }
 
@@ -969,6 +988,8 @@ function check() {
             createNewRow(newP);
             multiplication(newP, b, multiplicationCheck.multiplications[0]);
             completeCheck()
+            let finalRow = element(`row-${row}`)
+            checkRows(initialRow, finalRow)
             return;
         }
 
@@ -979,9 +1000,13 @@ function check() {
             createNewRow(newP);
             addition(newP, b, xCheck.fractions);
             completeCheck()
+            let finalRow = element(`row-${row}`)
+            checkRows(initialRow, finalRow)
             return;
         }
 
+        
+        
 
         if (extendCheck.faults) {
             console.log("extendCheck.faults")
@@ -1271,15 +1296,13 @@ function checkExtend(p, b) {
         }
     }
 
-
-
-
     // Prepare the `ext` array with the necessary details
     for (let x = 0; x < a.length; x++) {
         ext.push([p, b[a[x]][0].slice(1), a[x], reduce[x]]);
     }
 
     // Return the array of details for extending/reducing the fractions
+    console.log("ext", ext)
     return {"faults": false, "extentions": ext};
 }
 
@@ -1470,6 +1493,7 @@ function calculateNewValues(num, den, fraction, reduce) {
         newNum = parseInt(fraction) * num;
         newDen = parseInt(fraction) * den;
     } else {
+        console.log("reduce")
         if (num % parseInt(fraction) === 0 && den % parseInt(fraction) === 0) {
             newNum = num / parseInt(fraction);
             newDen = den / parseInt(fraction);
