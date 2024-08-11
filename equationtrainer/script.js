@@ -19,16 +19,14 @@ const warningsText = (warning, args) => {
     if (warning === "x-fault") {
         warningsText = `When manipulating an expression by addition or subtraction,
             it is important that the terms have a similar value.<br><br>Terms that contain "x"
-            hav an unknown value in them and thus one cannot add or subtract with a pure
-            number and vice-versa.<br><br>`
+            have an unknown value and thus one cannot add or subtract them with a known
+            value and vice-versa.<br><br>`
         if (args.length === 1) {
             warningsText += `Please look at position ${args[0]}.`
         } else if (args.length === 2) {
             warningsText += `Please look at positions ${args[0]} and ${args[1]}.`
         } else if (args.length === 3) {
             warningsText += `Please look at positions ${args[0]}, ${args[1]} and ${args[2]}.`
-        } else if (args.length === 3) {
-            warningsText += `Please look at positions ${args[0]}, ${args[1]}, ${args[2]} and ${args[3]}.`
         } else if (args.length === 4) {
             warningsText += `Please look at all the positions.`
         }
@@ -1030,7 +1028,7 @@ function checkRows(initial, final) {
             } else if (extendCheck.warning === "multiplication") {
                 if (multiplicationCheck.faults) {
                     console.log("multiplicationCheck.faults")
-                    element("info-screen").innerHTML = "multiplication faults"
+                    element("info-screen").innerHTML = multiplicationCheck.warning
                     return
                 }
             } else {
@@ -1148,17 +1146,6 @@ function checkXWithAddition(p, b) {
 
     // Return null if faults are found, else return positions for addition/subtraction
     if (faults > 0) {
-        /* let warning = ""
-        if (faultCode["x-fault"].join("") !== "") {
-            warning = warningsText("x-fault", faultCode["x-fault"])
-        } else if (faultCode["invalidSign"].join("") !== "") {
-            warning = warningsText("x-fault", faultCode["invalidSign"])
-        } else if (faultCode["noCommonDenominator"].join("") !== "") {
-            warning = warningsText("x-fault", faultCode["noCommonDenominator"])
-        }
-        element("info-screen").innerHTML = warning */
-        //console.log("Returning null due to faults");
-        // return null;
         return faultCode
     } else {
         //console.log("No problems with x and addition/subtraction");
@@ -1195,16 +1182,18 @@ function checkMultiplication(p, b) {
 
 
     // Ensure all filled positions have the same operation
+    console.log(b)
     let lastPositionNum = b[filledPosition[0]][0];
     let lastPositionDen = b[filledPosition[0]][1];
     let extentionOrMultiplication = 0
     for (let x of filledPosition) {
+        console.log("LP1:", lastPositionNum, "bx0", b[x][0], "LP2:", lastPositionDen, "bx1", b[x][1])
         if ((b[x][0] !== lastPositionNum || b[x][0] === "" || b[x][0] === "0") || (b[x][1] !== lastPositionDen)) {
             //return {"faults": true, "warning": "all positions must have same value"};
             extentionOrMultiplication ++;
         }
         lastPositionNum = b[x][0];
-        lastPositionDen = b[x][0];
+        lastPositionDen = b[x][1];
     }
     console.log("exOrM", extentionOrMultiplication, "FP", filledPosition.length)
     if (extentionOrMultiplication > 0) {
