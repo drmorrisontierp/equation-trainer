@@ -87,6 +87,11 @@ function restart() {
     creating = false
     createEquation()
     addEquation(1, newArray)
+    element("row-info-1").innerHTML = `<svg width="280px" height="60px" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L270 5 Q280 5 280 15 L280 45 Q 280 55 270 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
+    <text X="37" Y="25" >the equation that should be solved</text>
+    <text X="37" Y="45" >for "x" using the balance method</text>
+</svg>`
 }
 
 function changeLevel(direction) {
@@ -697,10 +702,13 @@ function checkWin() {
     }
 
     if (((plhs === "x" && prhs !== "x") || (plhs === "1x" && prhs !== "1x")) || ((prhs === "x" && plhs !== "x") || (prhs === "1x" && plhs !== "1x"))) {
-        element("info-screen").innerHTML = `YOU WON! <button onclick="restart()">re-start</button>`
+        element("info-screen").innerHTML = ""
         element(`bal-${row}`).innerHTML = ""
-        element(`row-info-${row}`).style.display = "none"
+        element(`row-${row}`).style.borderBottom = "double"
+        element(`row-${row}`).style.marginRight = "70px"
+        element(`row-info-${row}`).innerHTML = `<div id="restart" onclick="restart()">click here for a new equation</div>`
         element(`bal-info-${row}`).style.display = "none"
+
         stopped = true
 
         console.log("You won")

@@ -1,3 +1,8 @@
+* {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+}
+
 #screen {
     display: grid;
     grid-template-columns:  59vw 39vw;
@@ -293,4 +298,20 @@
 #level-display {
     background-color: rgb(255, 255, 255);
     
+}
+
+#restart {
+    margin-top: 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    height: 80%;
+    width: 80%;
+    border: solid black 1px;
+    background-color: rgb(240, 255, 250);
+}
+
+#restart:hover {
+    background-color: aquamarine;
 }
