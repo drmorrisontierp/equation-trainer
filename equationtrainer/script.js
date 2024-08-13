@@ -121,6 +121,11 @@ function createEquation() {
     let nox2 = Math.round(Math.random() * 99 + 1)
     let nox1b = Math.round(Math.random() * 8 + 1)
     let nox2b = Math.round(Math.random() * 8 + 1)
+    let opp1 = Math.round(Math.random() * 100) < 50 ? "+" : "-";
+    let opp2 = Math.round(Math.random() * 100) < 50 ? "+" : "-";
+
+
+
 
     let gx1 = gcd(x1, x1b)
     let gx2 = gcd(x2, x2b)
@@ -135,8 +140,18 @@ function createEquation() {
     nox2 = nox2 / g2
     nox2b = nox2b / g2
 
-    let opp1 = Math.round(Math.random() * 100) < 50 ? "+" : "-";
-    let opp2 = Math.round(Math.random() * 100) < 50 ? "+" : "-";
+    let final = Math.round(Math.random() * 20 + 1)
+    let numbers = level === 1 ? final * (x1 / gx1) : Math.round(Math.random() * 100) < 50 ? final * (x1 / gx1) : final * (x1 / gx1) * (-1)
+    let num2 = 0    
+    let num1 = Math.round(Math.random() * numbers + 1)
+    
+    while (num2 === 0) {
+        num1 = Math.round(Math.random() * numbers + 1); // Regenerate num1
+        num2 = opp1 === "+" ? numbers + num1 : numbers - num1;
+    }
+    num1 = num1.toString()
+
+    console.log(final, numbers, num1, num2)
     let xOneNum
     let xOneZero
     let xTwoFive
@@ -147,9 +162,9 @@ function createEquation() {
         newArray[0] = x1n
         newArray[1] = 1
         newArray[2] = opp1
-        newArray[3] = nox1
+        newArray[3] = num1
         newArray[4] = 1
-        newArray[5] = nox2
+        newArray[5] = num2
         newArray[6] = 1
         newArray[7] = ""
         newArray[8] = ""
@@ -157,12 +172,14 @@ function createEquation() {
     }
     if (level === 2) {
         xOneZero = Math.round(Math.random() * 100) < 50 ? true : false;
-        newArray[0] = xOneZero ? x1n : nox1
+        numOneMinus = Math.round(Math.random() * 100) < 50 ? true : false;
+        numTwoMinus = Math.round(Math.random() * 100) < 50 ? true : false;
+        newArray[0] = xOneZero ? x1n : opp1 === "+" ? num1 : num1[0] === "-" ? num1.replace("-", "") : "-" + num1
         newArray[1] = 1
-        newArray[2] = opp1
-        newArray[3] = xOneZero ? nox1 : x1n
+        newArray[2] = !xOneZero ? opp2 : opp1 === "-" && num1[0] === "-" ? "+" : opp1 === "+" && num1[0] !== "-"? "+" : "-"
+        newArray[3] = !xOneZero ? x1n : opp1 === "-" && num1[0] === "-"? num1.replace("-", "") : opp1 === "+" && num1[0] !== "-"? num1 : num1.replace("-", "")
         newArray[4] = 1
-        newArray[5] = nox2
+        newArray[5] = num2
         newArray[6] = 1
         newArray[7] = ""
         newArray[8] = ""
@@ -516,8 +533,8 @@ function addEquation(flag, arr) {
     setAttributes(newRow, { "id": "row-1", "class": "row" })
     setAttributes(newRowInfo, { "id": "row-info-1", "class": "row-info" })
 
-    newRowInfo.innerHTML = `<svg width="280px" height="60px" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L270 5 Q280 5 280 15 L280 45 Q 280 55 270 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
+    newRowInfo.innerHTML = `<svg width="400px" height="60px" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L390 5 Q400 5 400 15 L400 45 Q 400 55 390 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
     <text X="37" Y="25" >the equation that should be solved</text>
     <text X="37" Y="45" >for "x" using the balance method</text>
 </svg>`
@@ -957,19 +974,19 @@ function check() {
         let initialRow = element(`row-${row}`)
         console.log("initialRow", initialRow)
 
-function checkRows(initial, final) {
-    console.log(initial.children.length, final.children.length)
-    if (initial.children.length !== final.children.length) return;
-    let dissimilar = 0
-    for (let index = 0; index < initial.children.length; index++) {
-        if (initial.children[index].children[0].innerHTML !== final.children[index].children[0].innerHTML) {
-            console.log(initial.children[index].children[0].innerHTML , final.children[index].children[0].innerHTML )
-            dissimilar++
+        function checkRows(initial, final) {
+            console.log(initial.children.length, final.children.length)
+            if (initial.children.length !== final.children.length) return;
+            let dissimilar = 0
+            for (let index = 0; index < initial.children.length; index++) {
+                if (initial.children[index].children[0].innerHTML !== final.children[index].children[0].innerHTML) {
+                    console.log(initial.children[index].children[0].innerHTML, final.children[index].children[0].innerHTML)
+                    dissimilar++
+                }
+            }
+            console.log(dissimilar)
+            if (dissimilar === 0) back()
         }
-    }
-    console.log(dissimilar)
-    if (dissimilar === 0) back()
-}
 
         // Check for possible operations
         let extendCheck = checkExtend(newP, b);
@@ -1011,8 +1028,8 @@ function checkRows(initial, final) {
             return;
         }
 
-        
-        
+
+
 
         if (extendCheck.faults) {
             console.log("extendCheck.faults")
@@ -1061,15 +1078,15 @@ function checkBalance(b) {
         let lhs = []
         let rhs = []
         lhs[0] = b[0][0] === "" || b[0][0] === "" ? "" : b[0][1] !== "1" ? `${b[0][0]}/${b[0][1]}` : b[0][0],
-        lhs[1] = b[1][0] === "" || b[1][0] === "" ? "" : b[1][1] !== "1" ? `${b[1][0]}/${b[1][1]}` : b[1][0]
+            lhs[1] = b[1][0] === "" || b[1][0] === "" ? "" : b[1][1] !== "1" ? `${b[1][0]}/${b[1][1]}` : b[1][0]
         rhs[0] = b[2][0] === "" || b[2][0] === "" ? "" : b[2][1] !== "1" ? `${b[2][0]}/${b[2][1]}` : b[2][0]
         rhs[1] = b[3][0] === "" || b[3][0] === "" ? "" : b[3][1] !== "1" ? `${b[3][0]}/${b[3][1]}` : b[3][0]
 
         //console.log("failed to balance", b.join(""), [b[0], b[1]].sort().join() !== [b[2], b[3]].sort().join())
         //element("info-screen").innerHTML = warningsText("balance-fault", [lhs.join(""), rhs.join("")])
-        return {"faults": true, "warning": [lhs.join(""), rhs.join("")]}
+        return { "faults": true, "warning": [lhs.join(""), rhs.join("")] }
     }
-    return {"faults": false, }
+    return { "faults": false, }
 }
 
 
@@ -1198,27 +1215,27 @@ function checkMultiplication(p, b) {
         console.log("LP1:", lastPositionNum, "bx0", b[x][0], "LP2:", lastPositionDen, "bx1", b[x][1])
         if ((b[x][0] !== lastPositionNum || b[x][0] === "" || b[x][0] === "0") || (b[x][1] !== lastPositionDen)) {
             //return {"faults": true, "warning": "all positions must have same value"};
-            extentionOrMultiplication ++;
+            extentionOrMultiplication++;
         }
         lastPositionNum = b[x][0];
         lastPositionDen = b[x][1];
     }
     console.log("exOrM", extentionOrMultiplication, "FP", filledPosition.length)
     if (extentionOrMultiplication > 0) {
-            return {"faults": true, "warning": "all positions must have same value"};
-        }
-    
+        return { "faults": true, "warning": "all positions must have same value" };
+    }
+
 
 
     // Check for valid x-squared positions
     let mx = checkForXSquared(p, b);
     if (!mx) {
 
-        return {"faults": true, "warning": "cant process x-squared"};
+        return { "faults": true, "warning": "cant process x-squared" };
     }
 
     //console.log("No problems with multiplication/division");
-    return {"faults": false, "multiplications": [filledPosition, emptyPosition, mx]};
+    return { "faults": false, "multiplications": [filledPosition, emptyPosition, mx] };
 }
 
 
@@ -1255,14 +1272,14 @@ function checkExtend(p, b) {
         if (possibles.length === 1 && additions.length === 0) {
             console.log("add warning: trying to reduce/expand with wrong method")
             if (b[possibles[0]][0][0] === "*") {
-                return {"faults": true, "warning": "extensionFault"};
+                return { "faults": true, "warning": "extensionFault" };
             } else {
-                return {"faults": true, "warning": "reductionFault"};
+                return { "faults": true, "warning": "reductionFault" };
             }
-            
+
         } else if (possibles.length === 0) {
             console.log("going forward to addition/subtraction")
-            return {"faults": true, "warning": "addition"};
+            return { "faults": true, "warning": "addition" };
         } else if (possibles.length >= 0 && additions.length === 0) {
             let checkNum = b[possibles[0]][0]
             let checkDen = b[possibles[0]][1]
@@ -1272,24 +1289,24 @@ function checkExtend(p, b) {
                     checkDen = b[possibles[x]][1]
                 } else {
                     console.log("add warning: trying to expand/reduce with wrong method 2")
-                    return {"faults": true, "warning": "extention-multiplication"};
+                    return { "faults": true, "warning": "extention-multiplication" };
                 }
             }
             console.log("going forward to multiplication")
-            return {"faults": true, "warning": "multiplication"};
+            return { "faults": true, "warning": "multiplication" };
         };
     } else if (a.length > 0) {
         if (additions.length >= 1) {
             console.log("add warning: mixed methods")
-            return {"faults": true, "warning": "mixed-operations"};
+            return { "faults": true, "warning": "mixed-operations" };
         } else if (possibles.length > 0) {
             console.log("add warning: mixed methods")
             if (a.length >= possibles.length) {
-                return {"faults": true, "warning": "mixed-multiplications"}; 
+                return { "faults": true, "warning": "mixed-multiplications" };
             } else {
-               return {"faults": true, "warning": "multiplication"}; 
+                return { "faults": true, "warning": "multiplication" };
             }
-            
+
         }
     }
 
@@ -1300,7 +1317,7 @@ function checkExtend(p, b) {
 
     // Return the array of details for extending/reducing the fractions
     console.log("ext", ext)
-    return {"faults": false, "extentions": ext};
+    return { "faults": false, "extentions": ext };
 }
 
 
@@ -1318,8 +1335,8 @@ function createNewRow(p) {
     setAttributes(newRow, { "id": `row-${row + 1}`, "class": "row", });
     setAttributes(newRowInfo, { "id": `row-info-${row + 1}`, "class": "row-info" });
 
-    newRowInfo.innerHTML = `<svg width="280px" height="60px" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L270 5 Q280 5 280 15 L280 45 Q 280 55 270 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
+    newRowInfo.innerHTML = `<svg width="400px" height="60px" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L390 5 Q400 5 400 15 L400 45 Q 400 55 390 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
     <text X="37" Y="25" >the equation that should be solved</text>
     <text X="37" Y="45" >for "x" using the balance method</text>
 </svg>`
@@ -1396,8 +1413,8 @@ function createBalanceRow() {
     setAttributes(newRow, { "id": `bal-${row}`, "class": "bal" });
     setAttributes(newRowInfo, { "id": `bal-info-${row}`, "class": "bal-info", });
 
-    newRowInfo.innerHTML = `<svg width="280px" height="60px" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L270 5 Q280 5 280 15 L280 45 Q 280 55 270 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
+    newRowInfo.innerHTML = `<svg width="400px" height="60px" xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L390 5 Q400 5 400 15 L400 45 Q 400 55 390 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
     <text X="37" Y="25" >enter an operation in the box under</text>
     <text X="37" Y="45" >the term that you want to manipulate</text>
 </svg>`
