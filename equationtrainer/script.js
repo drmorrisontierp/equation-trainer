@@ -623,6 +623,7 @@ function del() {
  * @param {string} selected - The ID of the selected element.
  */
 function back() {
+    "running back"
     if (stopped) {
         return
     } else {
@@ -1002,7 +1003,7 @@ function check() {
             }
             completeCheck()
             let finalRow = element(`row-${row}`)
-            checkRows(initialRow, finalRow)
+            //checkRows(initialRow, finalRow)
             return;
         }
 
@@ -1012,7 +1013,7 @@ function check() {
             multiplication(newP, b, multiplicationCheck.multiplications[0]);
             completeCheck()
             let finalRow = element(`row-${row}`)
-            checkRows(initialRow, finalRow)
+            //checkRows(initialRow, finalRow)
             return;
         }
 
@@ -1650,6 +1651,7 @@ function getResultString(result, original) {
  * @param {HTMLElement} newRow - The new row element.
  */
 function setElementContent(p, b, x, newRow) {
+    console.log("set contents")
     let numElement = document.createElement("div");
     let denElement = document.createElement("div");
 
@@ -1661,17 +1663,31 @@ function setElementContent(p, b, x, newRow) {
         console.log("running *");
         num = parseInt(p[0].replace("x", "")) * parseInt(b[0].slice(1).replace("x", ""));
         den = parseInt(p[1].replace("x", "")) * parseInt(b[1].replace("x", ""));
+        if (den < 0) {
+            num = num*(-1)
+            den = den*(-1)
+        }
     } else {
         console.log("running /");
         num = parseInt(p[0].replace("x", "")) * parseInt(b[1].replace("x", ""));
         den = parseInt(p[1].replace("x", "")) * parseInt(b[0].slice(1).replace("x", ""));
+        if (den < 0) {
+            num = num*(-1)
+            den = den*(-1)
+        }
     }
+
+    console.log("created", num, den)
 
     let g = gcd(num, den);
     num = num / g;
     den = den / g;
-
+    
+    console.log("gcd", num, den)
+    
     let [numHasX, denHasX] = getVariablesStatus(b, p);
+
+    console.log("after get variable status")
 
     if (den === 1 && !denHasX) {
         denElement.innerHTML = Math.abs(num) !== 1 ? (numHasX ? num + "x" : num) : (numHasX ? "x" : num);
