@@ -513,6 +513,7 @@ function handleKeydown(event) {
 
 
 function addEquation(flag, arr) {
+    stopped = false
     if (flag === 1) {
         createEquation()
     }
@@ -711,15 +712,25 @@ function moveThrough(direction) {
 
 function checkWin() {
     console.log("check win")
-    let plhs = ""; // String to hold the current row's left-hand-sides values
-    let prhs = ""; // String to hold the current row's right-hand-sides values
+    let plhsNum = ""; // String to hold the current row's left-hand-sides values
+    let plhsDen = ""; // String to hold the current row's left-hand-sides values
+    let prhsNum = ""; // String to hold the current row's right-hand-sides values
+    let prhsDen = ""; // String to hold the current row's right-hand-sides values
     // Process the current row's elements to populate the p array
     for (let x = 1; x < 3; x++) {
-        if (element(`p${row}${x}`).children[0].innerHTML !== "0") plhs += element(`p${row}${x}`).children[0].innerHTML
-        if (element(`p${row}${x + 2}`).children[0].innerHTML !== "0") prhs += element(`p${row}${x + 2}`).children[0].innerHTML
+        if (element(`p${row}${x}`).children[0].innerHTML !== "0") plhsNum += element(`p${row}${x}`).children[0].innerHTML
+        if (element(`p${row}${x}`).children.length > 1) {
+           if (element(`p${row}${x}`).children[1].innerHTML !== "0") plhsDen += element(`p${row}${x}`).children[1].innerHTML 
+        }
+        if (element(`p${row}${x + 2}`).children[0].innerHTML !== "0") prhsNum += element(`p${row}${x + 2}`).children[0].innerHTML
+        if (element(`p${row}${x + 2}`).children.length > 1) {
+            if (element(`p${row}${x + 2}`).children[1].innerHTML !== "0") prhsDen += element(`p${row}${x + 2}`).children[1].innerHTML
+        }
     }
+    console.log(plhsNum, plhsDen, prhsNum, prhsDen)
 
-    if (((plhs === "x" && prhs !== "x") || (plhs === "1x" && prhs !== "1x")) || ((prhs === "x" && plhs !== "x") || (prhs === "1x" && plhs !== "1x"))) {
+    if ((((plhsNum === "x" && prhsNum !== "x") || (plhsNum === "1x" && prhsNum !== "1x")) && (plhsDen === "" || plhsDen === "1"))
+         || ((prhsNum === "x" && plhsNum !== "x") || (prhsNum === "1x" && plhsNum !== "1x")) && (prhsDen === "" || prhsDen === "1")) {
         element("info-screen").innerHTML = ""
         element(`bal-${row}`).innerHTML = ""
         element(`row-${row}`).style.borderBottom = "double"
@@ -921,6 +932,18 @@ function check() {
         completeCheckWithAddEquation()
 
     } else {
+        //stop it working for empty balance row
+        let balance = document.querySelectorAll(`[id^="b${row}"]`)
+        let balanceString = ""
+        balance.forEach((e) => {
+            balanceString += e.innerHTML
+        })
+        console.log(balance)
+        
+        if (balanceString === "") {
+            console.log("nothing")
+            return
+        }
         let p = []; // Array to hold the current row's numerator and denominator values
         let b = []; // Array to hold the balance operations and values
         let s = [
@@ -1107,8 +1130,8 @@ function checkXWithAddition(p, b) {
     let faultCode = { "faults": true, "x-fault": [], "invalidSign": [], "noCommonDenominator": [] }
 
     // Iterate through the positions
-    let alertText = ""
     for (let x = 0; x < 4; x++) {
+        
         if (b[x][0] === "") continue; // Skip empty balance entries
 
         // Check if the balance has a valid sign and validate 'x' presence
@@ -1130,7 +1153,7 @@ function checkXWithAddition(p, b) {
                     faultPosition = x + 1
                 }
             }
-            if (b[x][0].includes("x") && !p[x][0].includes("x")) {
+            if (b[x][0].includes("x") && !(p[x][0].includes("x") || p[x][0] === "0")) {
                 console.log("Fail: b contains 'x' but p does not");
                 faultCode["x-fault"].push(faultPosition)
                 faults++;
@@ -1138,7 +1161,7 @@ function checkXWithAddition(p, b) {
                 console.log("Fail: p contains 'x' but b does not");
                 faultCode["x-fault"].push(faultPosition)
                 faults++;
-            } else if (b[x][1].includes("x") && !p[x][1].includes("x")) {
+            } else if (b[x][1].includes("x") && !(p[x][1].includes("x") || p[x][0] === "0")) {
                 console.log("Fail: b denominator contains 'x' but p does not");
                 faultCode["x-fault"].push(faultPosition)
                 faults++;
@@ -1577,7 +1600,7 @@ function processIndex(index, p, b) {
     let pValue = getPValue(index, p);
     let bValue = parseInt(b[index][0].slice(1).replace("x", ""));
     let result = calculateResult(pValue, bValue, b[index][0][0]);
-    updateElementWithAddition(result, index, p);
+    updateElementWithAddition(result, index, p, b);
 }
 
 
@@ -1616,8 +1639,8 @@ function calculateResult(pValue, bValue, operation) {
  * @param {number} index - The index to update.
  * @param {Array} p - Array of terms.
  */
-function updateElementWithAddition(result, index, p) {
-    let resultString = getResultString(result, p[index][0]);
+function updateElementWithAddition(result, index, p, b) {
+    let resultString = getResultString(result, p[index][0], b[index][0]);
     let elementId = `p${row + 1}${index + 1}`;
     if (result === 0) {
         element(elementId).innerHTML = '<div class="int">0</div>';
@@ -1633,11 +1656,11 @@ function updateElementWithAddition(result, index, p) {
  * @param {string} original - The original value.
  * @returns {string} - The result string.
  */
-function getResultString(result, original) {
+function getResultString(result, original, balance) {
     if (result === 0) {
         return "0";
     } else {
-        return original.includes("x") ? result + "x" : result.toString();
+        return original.includes("x") || balance.includes("x") ? result + "x" :  result.toString();
     }
 }
 
