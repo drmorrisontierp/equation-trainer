@@ -123,10 +123,6 @@ function createEquation() {
     let nox2b = Math.round(Math.random() * 8 + 1)
     let opp1 = Math.round(Math.random() * 100) < 50 ? "+" : "-";
     let opp2 = Math.round(Math.random() * 100) < 50 ? "+" : "-";
-
-
-
-
     let gx1 = gcd(x1, x1b)
     let gx2 = gcd(x2, x2b)
     let g1 = gcd(nox1, nox1b)
@@ -514,6 +510,7 @@ function handleKeydown(event) {
 
 function addEquation(flag, arr) {
     stopped = false
+    element("info-screen").innerHTML = ""
     if (flag === 1) {
         createEquation()
     }
@@ -628,6 +625,7 @@ function back() {
     if (stopped) {
         return
     } else {
+        element("info-screen").innerHTML = ""
         if (row === 1) return
         element(`bal-group-${row}`).remove()
         element(`row-group-${row}`).remove()
@@ -835,7 +833,7 @@ function completeCheck() {
     row++;
     createBalanceRow();
     setAvailable();
-    element("info-screen").innerHTML = ""
+    //element("info-screen").innerHTML = ""
     selected = available[0];
     select(selected);
     hideUnused();
@@ -850,6 +848,7 @@ function completeCheck() {
 
 function check() {
     if (stopped) return
+    element("info-screen").innerHTML = ""
     if (creating) {
         const { lhs, rhs, nums, dens } = checkEquation()
         if (lhs.length === 0) return
@@ -865,7 +864,6 @@ function check() {
 
         // Check conditions
         for (let x of [1, 3]) {
-
             // Get raw innerHTML values
             let p11a = element(`p1${x}`).children[0].innerHTML;
             let p12a = element(`p1${x + 1}`).children[0].innerHTML;
@@ -933,6 +931,7 @@ function check() {
 
     } else {
         //stop it working for empty balance row
+        
         let balance = document.querySelectorAll(`[id^="b${row}"]`)
         let balanceString = ""
         balance.forEach((e) => {
@@ -1051,8 +1050,6 @@ function check() {
             checkRows(initialRow, finalRow)
             return;
         }
-
-
 
 
         if (extendCheck.faults) {
@@ -1369,16 +1366,6 @@ function createNewRow(p) {
     let signOne = `<div class="int">+</div>`;
     let signTwo = `<div class="int">+</div>`;
 
-    /*for (let x = 0; x < 4; x++) {
-        if (p[x][0] === "0") {
-            oldText.push(`<div class="int">${p[x][0]}</div>`);
-        } else if (p[x][1] === "1") {
-            (p[x][0] !== "1x" && p[x][0] !== "-1x") ? oldText.push(`<div class="int">${p[x][0]}</div>`) : p[x][0] !== "1x" ? oldText.push(`<div class="int">-x</div>`) : oldText.push(`<div class="int">x</div>`);
-        } else {
-            (p[x][0] !== "1x" || p[x][1] !== "1x" || p[x][0] !== "-1x") ? oldText.push(`<div class="num">${p[x][0]}</div><div class="int">${p[x][1]}</div>`) : (p[x][0] !== "1x" && p[x][0] !== "-1x") ? oldText.push(`<div class="num">${p[x][0]}</div><div class="int">x</div>`) : (p[x][0] !== "-1x") ? oldText.push(`<div class="num">x</div><div class="int">${p[x][1]}</div>`) : oldText.push(`<div class="num">-x</div><div class="int">${p[x][1]}</div>`);
-            //oldText.push(`<div class="num">${p[x][0]}</div><div class="int">${p[x][1]}</div>`);
-        }
-    }*/
     for (let x = 0; x < 4; x++) {
         if (p[x][0] === "0") {
             oldText.push(`<div class="int">${p[x][0]}</div>`);
