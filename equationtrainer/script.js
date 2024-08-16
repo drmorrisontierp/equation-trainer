@@ -142,9 +142,9 @@ function createEquation() {
 
     let final = Math.round(Math.random() * 20 + 1)
     let numbers = level === 1 ? final * (x1 / gx1) : Math.round(Math.random() * 100) < 50 ? final * (x1 / gx1) : final * (x1 / gx1) * (-1)
-    let num2 = 0    
+    let num2 = 0
     let num1 = Math.round(Math.random() * numbers + 1)
-    
+
     while (num2 === 0) {
         num1 = Math.round(Math.random() * numbers + 1); // Regenerate num1
         num2 = opp1 === "+" ? numbers + num1 : numbers - num1;
@@ -176,8 +176,8 @@ function createEquation() {
         numTwoMinus = Math.round(Math.random() * 100) < 50 ? true : false;
         newArray[0] = xOneZero ? x1n : opp1 === "+" ? num1 : num1[0] === "-" ? num1.replace("-", "") : "-" + num1
         newArray[1] = 1
-        newArray[2] = !xOneZero ? opp2 : opp1 === "-" && num1[0] === "-" ? "+" : opp1 === "+" && num1[0] !== "-"? "+" : "-"
-        newArray[3] = !xOneZero ? x1n : opp1 === "-" && num1[0] === "-"? num1.replace("-", "") : opp1 === "+" && num1[0] !== "-"? num1 : num1.replace("-", "")
+        newArray[2] = !xOneZero ? opp2 : opp1 === "-" && num1[0] === "-" ? "+" : opp1 === "+" && num1[0] !== "-" ? "+" : "-"
+        newArray[3] = !xOneZero ? x1n : opp1 === "-" && num1[0] === "-" ? num1.replace("-", "") : opp1 === "+" && num1[0] !== "-" ? num1 : num1.replace("-", "")
         newArray[4] = 1
         newArray[5] = num2
         newArray[6] = 1
@@ -720,7 +720,7 @@ function checkWin() {
     for (let x = 1; x < 3; x++) {
         if (element(`p${row}${x}`).children[0].innerHTML !== "0") plhsNum += element(`p${row}${x}`).children[0].innerHTML
         if (element(`p${row}${x}`).children.length > 1) {
-           if (element(`p${row}${x}`).children[1].innerHTML !== "0") plhsDen += element(`p${row}${x}`).children[1].innerHTML 
+            if (element(`p${row}${x}`).children[1].innerHTML !== "0") plhsDen += element(`p${row}${x}`).children[1].innerHTML
         }
         if (element(`p${row}${x + 2}`).children[0].innerHTML !== "0") prhsNum += element(`p${row}${x + 2}`).children[0].innerHTML
         if (element(`p${row}${x + 2}`).children.length > 1) {
@@ -730,8 +730,8 @@ function checkWin() {
     console.log(plhsNum, plhsDen, prhsNum, prhsDen)
 
     if ((((plhsNum === "x" && prhsNum !== "x") || (plhsNum === "1x" && prhsNum !== "1x")) && (plhsDen === "" || plhsDen === "1"))
-         || ((prhsNum === "x" && plhsNum !== "x") || (prhsNum === "1x" && plhsNum !== "1x")) && (prhsDen === "" || prhsDen === "1")) {
-        element("info-screen").innerHTML = ""
+        || ((prhsNum === "x" && plhsNum !== "x") || (prhsNum === "1x" && plhsNum !== "1x")) && (prhsDen === "" || prhsDen === "1")) {
+        //element("info-screen").innerHTML = ""
         element(`bal-${row}`).innerHTML = ""
         element(`row-${row}`).style.borderBottom = "double"
         element(`row-${row}`).style.marginRight = "70px"
@@ -939,7 +939,7 @@ function check() {
             balanceString += e.innerHTML
         })
         console.log(balance)
-        
+
         if (balanceString === "") {
             console.log("nothing")
             return
@@ -1025,7 +1025,7 @@ function check() {
                 extend(e[0], e[1], e[2], e[3]);
             }
             completeCheck()
-            let finalRow = element(`row-${row}`)
+            //let finalRow = element(`row-${row}`)
             //checkRows(initialRow, finalRow)
             return;
         }
@@ -1035,7 +1035,7 @@ function check() {
             createNewRow(newP);
             multiplication(newP, b, multiplicationCheck.multiplications[0]);
             completeCheck()
-            let finalRow = element(`row-${row}`)
+            //let finalRow = element(`row-${row}`)
             //checkRows(initialRow, finalRow)
             return;
         }
@@ -1131,7 +1131,7 @@ function checkXWithAddition(p, b) {
 
     // Iterate through the positions
     for (let x = 0; x < 4; x++) {
-        
+
         if (b[x][0] === "") continue; // Skip empty balance entries
 
         // Check if the balance has a valid sign and validate 'x' presence
@@ -1369,7 +1369,7 @@ function createNewRow(p) {
     let signOne = `<div class="int">+</div>`;
     let signTwo = `<div class="int">+</div>`;
 
-    for (let x = 0; x < 4; x++) {
+    /*for (let x = 0; x < 4; x++) {
         if (p[x][0] === "0") {
             oldText.push(`<div class="int">${p[x][0]}</div>`);
         } else if (p[x][1] === "1") {
@@ -1377,6 +1377,15 @@ function createNewRow(p) {
         } else {
             (p[x][0] !== "1x" || p[x][1] !== "1x" || p[x][0] !== "-1x") ? oldText.push(`<div class="num">${p[x][0]}</div><div class="int">${p[x][1]}</div>`) : (p[x][0] !== "1x" && p[x][0] !== "-1x") ? oldText.push(`<div class="num">${p[x][0]}</div><div class="int">x</div>`) : (p[x][0] !== "-1x") ? oldText.push(`<div class="num">x</div><div class="int">${p[x][1]}</div>`) : oldText.push(`<div class="num">-x</div><div class="int">${p[x][1]}</div>`);
             //oldText.push(`<div class="num">${p[x][0]}</div><div class="int">${p[x][1]}</div>`);
+        }
+    }*/
+    for (let x = 0; x < 4; x++) {
+        if (p[x][0] === "0") {
+            oldText.push(`<div class="int">${p[x][0]}</div>`);
+        } else if (p[x][1] === "1") {
+            oldText.push(`<div class="int">${p[x][0]}</div>`);
+        } else {
+            oldText.push(`<div class="num">${p[x][0]}</div><div class="int">${p[x][1]}</div>`);
         }
     }
 
@@ -1421,6 +1430,16 @@ function updateRow() {
     if (newRow.children[4].children[0].innerHTML !== "0" && newRow.children[6].children[0].innerHTML[0] === "-") {
         newRow.children[6].children[0].innerHTML = newRow.children[6].children[0].innerHTML.slice(1);
         newRow.children[5].children[0].innerHTML = "-";
+    }
+    for (let x = 0; x < 7; x += 2) {
+        if (newRow.children[x].children[0].innerHTML === "1x") newRow.children[x].children[0].innerHTML = "x"
+        if (newRow.children[x].children[0].innerHTML === "-1x") newRow.children[x].children[0].innerHTML = "-x"
+
+        if (newRow.children[x].length > 1) {
+            if (newRow.children[x].children[1].innerHTML === "1x") newRow.children[x].children[1].innerHTML = "x"
+            if (newRow.children[x].children[1].innerHTML === "-1x") newRow.children[x].children[1].innerHTML = "-x"
+
+        }
     }
 }
 
@@ -1586,6 +1605,37 @@ function updateElementWithExtend(newNum, newDen, hasXnum, hasXden, position) {
 function addition(p, b, a) {
     console.log("running addition");
     a[0].forEach(index => processIndex(index, p, b));
+    let target = element(`row-${row + 1}`)
+    let infoText = ""
+    for (let x = 0; x < 7; x += 2) {
+        console.log("x", target.children[x].children[0].innerHTML)
+        if (target.children[x].children.length > 1) {
+            let numHasX = target.children[x].children[0].innerHTML.includes("x") ? true : false
+            let denHasX = target.children[x].children[1].innerHTML.includes("x") ? true : false
+            let num = parseInt(target.children[x].children[0].innerHTML.replace("x", ""))
+            let den = parseInt(target.children[x].children[1].innerHTML.replace("x", ""))
+            let g = gcd(num, den)
+            let oldText = `${target.children[x].children[0].innerHTML}/${target.children[x].children[1].innerHTML}`
+            let newText = ""
+            num = num / g
+            den = den / g
+            if (den === 1) {
+                console.log("2 to 1")
+                target.children[x].innerHTML = `<div class="int">${numHasX ? num + "x" : num}</div></div>`
+                newText = numHasX ? `${num}x` : num
+                infoText = g !== 1 ? infoText + `${oldText} = ${newText} <br><br>` : infoText
+                console.log(infoText)
+
+            } else {
+                target.children[x].children[0].innerHTML = numHasX ? num + "x" : num
+                target.children[x].children[1].innerHTML = denHasX ? den + "x" : den
+                newText = numHasX ? `${num}x/${den}` : denHasX ? `${num}/${den}x` : `${num}/${den}`
+                infoText = g !== 1 ? infoText + `${oldText} = ${newText} <br><br>` : infoText
+            }
+        }
+    }
+    console.log(infoText, element("info-screen"))
+    element("info-screen").innerHTML = infoText
 }
 
 
@@ -1660,7 +1710,7 @@ function getResultString(result, original, balance) {
     if (result === 0) {
         return "0";
     } else {
-        return original.includes("x") || balance.includes("x") ? result + "x" :  result.toString();
+        return original.includes("x") || balance.includes("x") ? result + "x" : result.toString();
     }
 }
 
@@ -1687,16 +1737,16 @@ function setElementContent(p, b, x, newRow) {
         num = parseInt(p[0].replace("x", "")) * parseInt(b[0].slice(1).replace("x", ""));
         den = parseInt(p[1].replace("x", "")) * parseInt(b[1].replace("x", ""));
         if (den < 0) {
-            num = num*(-1)
-            den = den*(-1)
+            num = num * (-1)
+            den = den * (-1)
         }
     } else {
         console.log("running /");
         num = parseInt(p[0].replace("x", "")) * parseInt(b[1].replace("x", ""));
         den = parseInt(p[1].replace("x", "")) * parseInt(b[0].slice(1).replace("x", ""));
         if (den < 0) {
-            num = num*(-1)
-            den = den*(-1)
+            num = num * (-1)
+            den = den * (-1)
         }
     }
 
@@ -1705,9 +1755,9 @@ function setElementContent(p, b, x, newRow) {
     let g = gcd(num, den);
     num = num / g;
     den = den / g;
-    
+
     console.log("gcd", num, den)
-    
+
     let [numHasX, denHasX] = getVariablesStatus(b, p);
 
     console.log("after get variable status")
