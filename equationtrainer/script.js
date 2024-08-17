@@ -8,10 +8,15 @@ let creating = false
 let emptyArray = ["", "", "", "", "", "", "", "", "", ""]
 let testArray = ["2x", "3", "-", "5", "1", "4", "5", "+", "2x", "1"]
 let newArray = ["2x", "3", "-", "5", "1", "4", "5", "+", "2x", "1"]
+let history = {}
+let historyId = 0
 let level = 1
 
 createEquation()
-addEquation(1, newArray)
+console.log(newArray)
+addEquation(3, newArray)
+console.log(newArray)
+//createHistory(newArray)
 
 
 const warningsText = (warning, args) => {
@@ -810,6 +815,13 @@ function changeXToOneX(x) {
 
 function completeCheckWithAddEquation() {
     creating = false
+    let values = []
+    target = element(`row-1`)
+    for (child of target.children) {
+        for (let x = 0; x < child.children.length; x++) {
+            values.push(child.children[x].innerHTML)
+        }
+    }
     available = []
     for (let x = 0; x < 4; x++) {
         available[x] = `b1${x + 1}`
@@ -819,6 +831,8 @@ function completeCheckWithAddEquation() {
     createBalanceRow()
     hideUnused()
     selected = available[0]
+    
+    createHistory(values)
     select(selected)
 }
 
@@ -861,9 +875,11 @@ function check() {
         for (let x = 1; x < 5; x++) {
             changeXToOneX(x)
         }
+        //newArray = []
 
         // Check conditions
         for (let x of [1, 3]) {
+            console.log("custom?")
             // Get raw innerHTML values
             let p11a = element(`p1${x}`).children[0].innerHTML;
             let p12a = element(`p1${x + 1}`).children[0].innerHTML;
@@ -898,7 +914,15 @@ function check() {
                 element(`p1${x}`).children[1].innerHTML = element(`p1${x}`).children[1].innerHTML.includes("x") ? den + "x" : den;
                 element(`p1${x + 1}`).children[0].innerHTML = "0";
                 element(`p1${x + 1}`).children[1].innerHTML = "0";
+
+                newArray.push(
+                    element(`p1${x}`).children[0].innerHTML.includes("x") ? num + "x" : num,
+                    "+",
+                    element(`p1${x}`).children[1].innerHTML.includes("x") ? den + "x" : den,
+                 )
             }
+            console.log("check",newArray)
+            createHistory(newArray)
         }
 
 
@@ -1947,4 +1971,140 @@ function updateAvailableAndSelect(id) {
  */
 function removeByValue(value, array) {
     return array.filter(item => item !== value);
+}
+
+
+
+function createHistory(newArray) {
+    historyId ++
+    let hcid = `hc${historyId}`
+    let hrid = `hr${historyId}`
+    let hbid = `hb${historyId}`
+    let historyText = `
+        <div id="${hrid}-1" class="plhs"><div class="num">${newArray[0]}</div><div class="int">${newArray[1]}</div></div>
+        <div id="${hrid}-2o" class="plhs"><div class="int">${newArray[2]}</div></div>
+        <div id="${hrid}-2" class="plhs"><div class="num">${newArray[3]}</div><div class="int">${newArray[4]}</div></div>
+        <div class="plhs">
+            <div id="he" class="int">=</div>
+        </div>
+        <div id="${hrid}-3" class="prhs"><div class="num">${newArray[5]}</div><div class="int">${newArray[6]}</div></div>
+        <div id="${hrid}-4o" class="prhs"><div class="int">${newArray[7]}</div></div>
+        <div id="${hrid}-4" class="prhs"><div class="num">${newArray[8]}</div><div class="int">${newArray[9]}</div></div>
+    `;
+    let historyContainer = document.createElement("div")
+    let historyRow = document.createElement("div")
+    let deleteButton = document.createElement("div")
+    let buttonContainer = document.createElement("div")
+    setAttributes(historyContainer, {
+        "class": "cont",
+        "id": hcid
+    })
+    setAttributes(historyRow, {
+        "class": "history-row",
+        "id": hrid
+    })
+    setAttributes(deleteButton, {
+        "class": "history-button",
+        "id": hbid,
+        "onclick": `hideEntry("${hcid}")`
+    })
+    setAttributes(buttonContainer, {
+        "class": "button-container",
+    })
+
+    historyRow.innerHTML = historyText
+    buttonContainer.appendChild(deleteButton)
+    historyContainer.appendChild(buttonContainer)
+    historyContainer.appendChild(historyRow)
+    element("history").appendChild(historyContainer)
+    hideUnused()
+    updateRow()
+
+
+    function getElementsContent(selector) {
+        let content = [];
+        document.querySelectorAll(selector).forEach((e) => content.push(e.children[0].innerHTML));
+        return content;
+    }
+
+    function hideUnused() {
+        let prhs = getElementsContent(`[id^='${hrid}']:not(.plhs):not(.row)`);
+        let plhs = getElementsContent(`[id^='${hrid}']:not(.prhs):not(.row)`);
+        console.log(prhs, plhs)
+        handleLeftSide(plhs);
+        handleRightSide(prhs);
+        
+    }
+    
+    function handleRightSide(prhs) {
+        if ((prhs[0] === "0"||prhs[0] === "") && prhs[2] !== "0") {
+            hideElements(1, 3);
+        } else if (prhs[0] !== "0" && (prhs[2] === "0"||prhs[2] === "")) {
+            hideElements(0, 4);
+        } else if ((prhs[0] === "0"||prhs[0] === "") && (prhs[2] === "0"||prhs[2] === "")) {
+            hideElements(0, 4);
+        }
+    }
+
+    function handleLeftSide(plhs) {
+        if ((plhs[0] === "0"||plhs[0] === "") && plhs[2] !== "0") {
+            hideElements(1, 1);
+            adjustMargins();
+        } else if (plhs[0] !== "0" && (plhs[2] === "0"||plhs[2] === "")) {
+            hideElements(0, 2);
+            adjustMargins();
+        } else if ((plhs[0] === "0"||plhs[0] === "")  && (plhs[2] === "0"||plhs[2] === "")) {
+            hideElements(0, 2);
+            adjustMargins();
+        }
+    }
+    
+    function hideElements(offset, index) {
+        hideElement(`${hrid}-${index}`);
+        hideElement(`${hrid}-${index + offset}o`);
+    }
+
+    function adjustMargins() {
+        element(`${hrid}`).setAttribute("style", "margin-left:80px;");
+        element(`${hrid}`).setAttribute("style", "margin-left:80px;");
+    }
+
+    function updateRow() {
+        let newRow = element(`${hrid}`);
+        console.log(newRow)
+    
+        // Update the signs and values based on conditions
+        if (newRow.children[0].children[0].innerHTML === "0" && newRow.children[1].children[0].innerHTML === "-") {
+            newRow.children[2].children[0].innerHTML = "-" + newRow.children[2].children[0].innerHTML;
+            newRow.children[1].children[0].innerHTML = "+";
+        }
+        if (newRow.children[4].children[0].innerHTML === "0" && newRow.children[5].children[0].innerHTML === "-") {
+            newRow.children[6].children[0].innerHTML = "-" + newRow.children[6].children[0].innerHTML;
+            newRow.children[5].children[0].innerHTML = "+";
+        }
+        if (newRow.children[0].children[0].innerHTML !== "0" && newRow.children[2].children[0].innerHTML[0] === "-") {
+            newRow.children[2].children[0].innerHTML = newRow.children[2].children[0].innerHTML.slice(1);
+            newRow.children[1].children[0].innerHTML = "-";
+        }
+        if (newRow.children[4].children[0].innerHTML !== "0" && newRow.children[6].children[0].innerHTML[0] === "-") {
+            newRow.children[6].children[0].innerHTML = newRow.children[6].children[0].innerHTML.slice(1);
+            newRow.children[5].children[0].innerHTML = "-";
+        }
+        for (let x = 0; x < 7; x += 2) {
+            if (newRow.children[x].children[0].innerHTML === "1x") newRow.children[x].children[0].innerHTML = "x"
+            if (newRow.children[x].children[0].innerHTML === "-1x") newRow.children[x].children[0].innerHTML = "-x"
+    
+            if (newRow.children[x].length > 1) {
+                if (newRow.children[x].children[1].innerHTML === "1x") newRow.children[x].children[1].innerHTML = "x"
+                if (newRow.children[x].children[1].innerHTML === "-1x") newRow.children[x].children[1].innerHTML = "-x"
+    
+            }
+            if (newRow.children[x].children[1].innerHTML === "1") newRow.children[x].innerHTML = `<div class="int">${newRow.children[x].children[0].innerHTML}</div>`
+        }
+    }
+
+}
+
+function hideEntry(id) {
+    element(id).style.display = "none"
 }
