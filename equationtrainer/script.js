@@ -14,10 +14,8 @@ let level = 1
 
 createEquation()
 console.log(newArray)
-addEquation(3, newArray)
+addEquation(1, newArray)
 console.log(newArray)
-//createHistory(newArray)
-
 
 const warningsText = (warning, args) => {
     let warningsText = ""
@@ -576,6 +574,9 @@ function addEquation(flag, arr) {
     available = ["p11a", "p11b", "o12oa", "p12a", "p12b", "p13a", "p13b", "o14oa", "p14a", "p14b"]
     selected = available[0]
     select(selected)
+
+    //createHistory(arr)
+
     if (1 || 3) check()
 }
 
@@ -817,11 +818,36 @@ function completeCheckWithAddEquation() {
     creating = false
     let values = []
     target = element(`row-1`)
-    for (child of target.children) {
-        for (let x = 0; x < child.children.length; x++) {
-            values.push(child.children[x].innerHTML)
-        }
-    }
+    let targetChildren = Array.from(target.children)
+    console.log(targetChildren)
+    
+        /*for (let x = 0; x < targetChildren.length; x++) {
+            if (x !== 1 || x!== 3 || x !== 5) {
+                values.push(targetChildren[x].children[0].innerHTML)
+                targetChildren[x].children.length > 1 ? values.push(targetChildren[x].children[1].innerHTML) : values.push("1")
+
+            } else if (x !== 1 || x !== 5) {
+                values.push(targetChildren[x].children[0].innerHTML)
+            }
+            
+        }*/
+
+       values = [
+        targetChildren[0].children[0].innerHTML,
+        targetChildren[0].children.length > 1 ? targetChildren[0].children[1].innerHTML : "1",
+        targetChildren[1].children[0].innerHTML,
+        targetChildren[2].children[0].innerHTML,
+        targetChildren[2].children.length > 1 ? targetChildren[2].children[1].innerHTML : "1",
+        targetChildren[4].children[0].innerHTML,
+        targetChildren[4].children.length > 1 ? targetChildren[4].children[1].innerHTML : "1",
+        
+        targetChildren[5].children[0].innerHTML,
+        targetChildren[6].children[0].innerHTML,
+        targetChildren[6].children.length > 1 ? targetChildren[6].children[1].innerHTML : "1",
+        
+       ]
+    
+        console.log(values)
     available = []
     for (let x = 0; x < 4; x++) {
         available[x] = `b1${x + 1}`
@@ -847,7 +873,6 @@ function completeCheck() {
     row++;
     createBalanceRow();
     setAvailable();
-    //element("info-screen").innerHTML = ""
     selected = available[0];
     select(selected);
     hideUnused();
@@ -921,8 +946,8 @@ function check() {
                     element(`p1${x}`).children[1].innerHTML.includes("x") ? den + "x" : den,
                  )
             }
-            console.log("check",newArray)
-            createHistory(newArray)
+            //console.log("check",newArray)
+            //createHistory(newArray)
         }
 
 
@@ -1980,6 +2005,9 @@ function createHistory(newArray) {
     let hcid = `hc${historyId}`
     let hrid = `hr${historyId}`
     let hbid = `hb${historyId}`
+    let historyArray = [...newArray]
+    history[hcid] = historyArray
+    console.log(history)
     let historyText = `
         <div id="${hrid}-1" class="plhs"><div class="num">${newArray[0]}</div><div class="int">${newArray[1]}</div></div>
         <div id="${hrid}-2o" class="plhs"><div class="int">${newArray[2]}</div></div>
@@ -1996,17 +2024,18 @@ function createHistory(newArray) {
     let deleteButton = document.createElement("div")
     let buttonContainer = document.createElement("div")
     setAttributes(historyContainer, {
-        "class": "cont",
+        "class": "history-container",
         "id": hcid
     })
     setAttributes(historyRow, {
         "class": "history-row",
-        "id": hrid
+        "id": hrid,
+        "onclick": `enterHistory("${hcid}")`
     })
     setAttributes(deleteButton, {
         "class": "history-button",
         "id": hbid,
-        "onclick": `hideEntry("${hcid}")`
+        "onclick": `hideElement("${hcid}")`
     })
     setAttributes(buttonContainer, {
         "class": "button-container",
@@ -2028,8 +2057,8 @@ function createHistory(newArray) {
     }
 
     function hideUnused() {
-        let prhs = getElementsContent(`[id^='${hrid}']:not(.plhs):not(.row)`);
-        let plhs = getElementsContent(`[id^='${hrid}']:not(.prhs):not(.row)`);
+        let prhs = getElementsContent(`[id^='${hrid}']:not(.plhs):not(.history-row)`);
+        let plhs = getElementsContent(`[id^='${hrid}']:not(.prhs):not(.history-row)`);
         console.log(prhs, plhs)
         handleLeftSide(plhs);
         handleRightSide(prhs);
@@ -2037,6 +2066,7 @@ function createHistory(newArray) {
     }
     
     function handleRightSide(prhs) {
+        console.log(prhs[0])
         if ((prhs[0] === "0"||prhs[0] === "") && prhs[2] !== "0") {
             hideElements(1, 3);
         } else if (prhs[0] !== "0" && (prhs[2] === "0"||prhs[2] === "")) {
@@ -2105,6 +2135,13 @@ function createHistory(newArray) {
 
 }
 
-function hideEntry(id) {
-    element(id).style.display = "none"
+//function hideEntry(id) {
+//    element(id).style.display = "none"
+//}
+
+function enterHistory(id) {
+    console.log(history)
+    console.log(id)
+    hideElement(id)
+    addEquation(3, history[id])
 }

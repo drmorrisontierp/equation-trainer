@@ -319,13 +319,35 @@
 }
 
 #history {
+    display: flex;
+    flex-direction: column;
+    align-content: left;
+    justify-content: flex-start;
     overflow-y: scroll;
     overflow-x: hidden;
 }
 
-.cont {
+#history-title {
     display: flex;
     flex-direction: row;
+}
+
+#title-button {
+    margin-left: 10%;
+    cursor: pointer;
+    font-size: small;
+    border: solid black 1px;
+    background-color: rgb(250, 224, 215);
+}
+
+#title-button:hover {
+    background-color: lightcoral;
+}
+
+.history-container {
+    display: flex;
+    flex-direction: row;
+    justify-items: flex-start;
     transform: scale(0.5);
     max-height: 60px;
 }
@@ -360,4 +382,8 @@
     grid-template-rows: 60px;
     column-gap: 5px;
     max-height: 60px;
+}
+
+.history-row:hover {
+    border: dotted black 1px;
 }
