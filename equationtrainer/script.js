@@ -2045,9 +2045,14 @@ function createHistory(newArray) {
     buttonContainer.appendChild(deleteButton)
     historyContainer.appendChild(buttonContainer)
     historyContainer.appendChild(historyRow)
-    element("history").appendChild(historyContainer)
+    element("history-shell").appendChild(historyContainer)
+    element("history-outside").scrollTop = element("history-outside").scrollHeight
     hideUnused()
     updateRow()
+    
+    
+        
+    
 
 
     function getElementsContent(selector) {
@@ -2144,4 +2149,9 @@ function enterHistory(id) {
     console.log(id)
     hideElement(id)
     addEquation(3, history[id])
+}
+
+function clearHistory() {
+    element("history-shell").innerHTML = ""
+    
 }
