@@ -138,17 +138,42 @@ function createEquation() {
     nox1b = nox1b / g1
     nox2 = nox2 / g2
     nox2b = nox2b / g2
-
+//for levels one and two
     let final = Math.round(Math.random() * 20 + 1)
     let numbers = level === 1 ? final * (x1 / gx1) : Math.round(Math.random() * 100) < 50 ? final * (x1 / gx1) : final * (x1 / gx1) * (-1)
     let num2 = 0
     let num1 = Math.round(Math.random() * numbers + 1)
+// for level four
+    let solution = Math.round(Math.random() * 20 + 1)
+    solution = Math.round(Math.random() * 100) < 50 ? solution : solution*(-1)
+    let multiple = solution * x1
+    let x14 = Math.round(Math.random()*x1 + 1)
+    let x24 = 0
+    let num4 = 0
+    let num3 = Math.round(Math.random() * multiple + 1)
+
 
     while (num2 === 0) {
         num1 = Math.round(Math.random() * numbers + 1); // Regenerate num1
         num2 = opp1 === "+" ? numbers + num1 : numbers - num1;
     }
+
+    while (num4 === 0) {
+        num3 = Math.round(Math.random() * multiple + 1); // Regenerate num1
+        num4 = opp1 === "+" ? (multiple + num3)*(-1) : (num3 - multiple);
+    }
+
+    while (x24 === 0) {
+        x14 = Math.round(Math.random()*x1 + 1)
+        x24 = opp2 === "+" ? (x1 - x14)*(-1) : (x14 - x1)
+    }
+
+    let flip = Math.round(Math.random() * 100) < 50
+    let x114 = `${flip ? x14 : x24}x`
+    let x224 = `${flip ? x24 : x24}x`
     num1 = num1.toString()
+    num3 = num3.toString()
+    num4 = num4.toString()
 
     console.log(final, numbers, num1, num2)
     let xOneNum
@@ -197,15 +222,15 @@ function createEquation() {
         newArray[9] = ""
     }
     if (level === 4) {
-        newArray[0] = x1n
+        newArray[0] = x114
         newArray[1] = 1
-        newArray[2] = opp1
-        newArray[3] = nox1
+        newArray[2] = num3[0] === "+" ? "+" : "-"
+        newArray[3] = num3[0] === "+" ? num3 : num3.replace("-", "")
         newArray[4] = 1
-        newArray[5] = nox2
+        newArray[5] = num4
         newArray[6] = 1
-        newArray[7] = opp2
-        newArray[8] = x2n
+        newArray[7] = x224[0] === "+" ? "+" : "-"
+        newArray[8] = x224[0] === "+" ? x224 : x224.replace("-", "")
         newArray[9] = 1
     }
     if (level === 5) {
@@ -2050,10 +2075,6 @@ function createHistory(newArray) {
     hideUnused()
     updateRow()
     
-    
-        
-    
-
 
     function getElementsContent(selector) {
         let content = [];
