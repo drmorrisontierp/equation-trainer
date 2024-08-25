@@ -1,4 +1,545 @@
-// Global variables
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ekvationlösningstränare</title>
+    
+    <style type="text/css">
+        * {
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    font-weight: bold;
+font-size: 10pt;
+
+}
+
+#screen {
+    display: grid;
+    grid-template-columns:  59vw 39vw;
+    grid-template-rows: 95vh;
+    background-color: rgb(239, 244, 248);
+}
+
+#left {
+    grid-area: 1/1/2/2;
+    padding-left: 3vw;
+    overflow-y: scroll;
+    max-height: 95vh;
+    border: solid black 1px;
+    background-color: rgb(252, 252, 227);
+}
+
+#right {
+    grid-area: 1/2/2/3;
+    max-height: 95vh;
+    background-color: rgb(239, 244, 248);
+}
+
+.row-group {
+    display: grid;
+    grid-template-columns: 200px 200px;
+    grid-template-rows: 60px;
+    column-gap: 20px;
+}
+
+
+.row {
+    grid-area: 1/1/2/2;
+    display: grid;
+    grid-template-columns: repeat(7, 30px);
+    grid-template-rows: 60px;
+    column-gap: 5px;
+}
+
+.row-info {
+    grid-area: 1/2/2/3;
+    min-width: 200px;
+    max-height: 40px;
+    margin-left: 1vw;
+}
+
+.bal-group {
+    display: grid;
+    grid-template-columns: 200px 200px;
+    grid-template-rows: 60px;
+    column-gap: 20px;
+}
+
+.bal {
+    grid-area: 1/1/2/2;
+    display: grid;
+    grid-template-columns: repeat(7, 30px);
+    grid-template-rows: 30px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    column-gap: 5px;
+}
+
+.bal-info {
+    grid-area: 1/2/2/3;
+    min-width: 200px;
+    max-height: 30px;
+    margin-left: 1vw;
+}
+
+.plhs {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.prhs {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.num {
+    border-bottom: solid black 1px;
+    text-align: center;
+}
+
+.int {
+    text-align: center;
+}
+
+.blhs {
+    display: flex;
+    flex-direction: column;
+    border: solid black 1px;
+    justify-content: center;
+    text-align: center;
+    width:30px;
+    background-color: white;
+}
+
+.brhs {
+    display: flex;
+    flex-direction: column;
+    border: solid black 1px;
+    justify-content: center;
+    text-align: center;
+    width:30px;
+    background-color: white;
+}
+
+.a-num {
+    display: flex;
+    flex-direction: column;
+    border: solid black 1px;
+    justify-content: center;
+    text-align: center;
+    min-width: 30px;
+    min-height: 30px;
+}
+.a-int {
+    display: flex;
+    flex-direction: column;
+    border: solid black 1px;
+    justify-content: center;
+    text-align: center;
+    min-width: 30px;
+    min-height: 30px;
+}
+
+#keyboard {
+    display: grid;
+    grid-template-columns: 100px 100px 100px;
+    grid-template-rows: 180px 50px;
+    gap: 30px;
+    margin: 10px 0 0 8px;
+}
+
+#keypad {
+    grid-area: 1/1/2/2;
+    display: grid;
+    grid-template-columns: 30px 30px 30px;
+    grid-template-rows: 30px 30px 30px 30px;
+    gap: 5px;
+}
+
+#operations {
+    grid-area: 1/2/2/3;
+    display: grid;
+    grid-template-columns: 50px 50px;
+    grid-template-rows: 30px 30px 30px 30px;
+    gap: 5px;
+}
+
+#check {
+    grid-area: 2/1/3/3;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    border: solid black 1px;
+    background-color: rgb(240, 255, 250);
+    width: 200px;
+    height: 30px;
+    margin-left: 25px;
+    cursor: pointer;
+    
+}
+
+#check:hover {
+    background-color: aquamarine;
+}
+
+
+.button {
+    border: solid black 1px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    background-color: aliceblue;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    cursor: pointer;
+}
+.button:hover {
+    background-color: aqua;
+}
+
+#dummy {
+    width: 30px;
+    height: 30px;
+}
+
+#plus {
+    margin-left: 18px;
+}
+#times {
+    margin-left: 18px;
+}
+#del {
+    margin-left: 18px;
+}
+.arrow-button {
+    border: solid black 1px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: antiquewhite;
+    text-align: center;
+    cursor: pointer;
+}
+
+.arrow-button:hover {
+    background-color: rgb(225, 181, 68);
+}
+
+#display {
+    display: grid;
+    grid-template-columns: 200px 118px;
+    border: solid black 1px;
+    border-radius: 5px;
+    margin: 5px 5px 0 5px;
+    background-color: rgb(255, 255, 255);
+}
+
+#info-screen {
+    margin: 2px 5px 2px 5px;
+    min-width: 200px;
+    min-height: 100px;
+    text-align: center;
+}
+#reset-etc {
+    display: grid;
+    grid-template-rows: 30px 30px 30px 30px;
+    grid-template-columns: 100px;
+    row-gap: 5px;
+    margin-left: -8px;
+}
+#level-row {
+    display: grid;
+    grid-template-columns: 30px 30px 30px;
+    grid-template-rows: 30px;
+    column-gap: 5px;
+}
+.reset-button {
+    border: solid black 1px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: antiquewhite;
+    text-align: center;
+    margin-left: 10px;
+    min-height: 30px;
+    max-width: 100px;
+    cursor: pointer;
+}
+
+
+.reset-button:hover {
+    background-color: rgb(225, 181, 68); 
+}
+
+#del {
+    background-color: rgb(250, 224, 215);
+}
+
+#del:hover {
+    background-color: lightcoral;
+}
+
+#clear {
+    background-color: rgb(250, 224, 215);
+}
+
+#clear:hover {
+    background-color: lightcoral;
+}
+
+#reset {
+    background-color: rgb(250, 224, 215);
+}
+
+#reset:hover {
+    background-color: lightcoral;
+}
+
+#level-minus, #level-plus {
+    background-color: antiquewhite;
+}
+
+#level-minus:hover, #level-plus:hover {
+    background-color: rgb(225, 181, 68);
+}
+
+#level-display {
+    background-color: rgb(255, 255, 255);
+    
+}
+
+#restart {
+    margin-top: 10%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    height: 40%;
+    width: 40%;
+    border: solid black 1px;
+    background-color: rgb(240, 255, 250);
+}
+
+#restart:hover {
+    background-color: aquamarine;
+}
+
+#history {
+    display: flex;
+    flex-direction: column;
+    align-content: left;
+    justify-content: flex-start;
+    
+    
+}
+
+
+
+
+#history-outside {
+    display: flex;
+    flex-direction: column;
+    align-content: left;
+    justify-content: top;
+    overflow-y: scroll;
+    overflow-x: hidden;
+    max-height: 200px;
+    min-height: 200px;
+    border: solid black 1px;
+    border-radius: 2px;
+}
+
+#history-shell {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: top;
+    
+}
+
+#history-title {
+    display: flex;
+    flex-direction: row;
+    padding: 2px;
+}
+
+#title-button {
+    margin-left: 10%;
+    cursor: pointer;
+    font-size: small;
+    border: solid black 1px;
+    background-color: rgb(250, 224, 215);
+}
+
+#title-button:hover {
+    background-color: lightcoral;
+}
+
+.history-container {
+    display: flex;
+    flex-direction: row;
+    justify-items: flex-start;
+    
+    max-height: 60px;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.history-button {
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    max-height: 13px;
+    max-width: 12px;
+    min-height: 13px;
+    min-width: 12px;
+    background-color:  rgb(250, 224, 215);
+    border: solid black 1px;
+    justify-content: center;
+}
+
+.history-button:hover {
+    background-color: lightcoral;
+}
+
+.history-row {
+    cursor: pointer;
+    display: grid;
+    grid-template-columns: repeat(7, 20px);
+    grid-template-rows: 20px;
+    column-gap: 2px;
+    max-height: 20px;
+    font-size: 10px;
+    padding-bottom: 5px;
+    margin-left: 5px;
+}
+
+.history-row:hover {
+    border: dotted black 1px;
+}
+
+    </style>
+</head>
+<body>
+    <div id="screen">
+        <div id="left">
+            <div id="row-group-1" class="row-group">
+                <div id="row-1" class="row">
+                    <div id="p11" class="plhs">
+                        <div class="int">4</div>
+                    </div>
+                    <div id="o12o" class="plhs">
+                        <div class="int">-</div>
+                    </div>
+                    <div id="p12" class="plhs">
+                        <div class="num">2x</div>
+                        <div class="int">3</div>
+                    </div>
+                    <div class="plhs">
+                        <div class="int">=</div>
+                    </div>
+                    <div id="p13" class="prhs">
+                        <div class="num">6x</div>
+                        <div class="int">3</div>
+                    </div>
+                    <div id="o14o" class="prhs">
+                        <div class="int">+</div>
+                    </div>
+                    <div id="p14" class="prhs">
+                        <div class="int">2</div>
+                    </div>
+                </div>
+                <div id="row-info-1" class="row-info" >
+                    <svg width="400px" height="60px" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L390 5 Q400 5 400 15 L400 45 Q 400 55 390 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
+                        <text X="37" Y="25" >the equation that should be solved</text>
+                        <text X="37" Y="45" >for "x" using the balance method</text>
+                    </svg>
+                </div>
+            </div>
+            <div id="bal-group-1" class="bal-group">
+                <div id="bal-1" class="bal">
+                    <div id="b11" class="blhs" onmousedown="select(id)">*4/4</div>
+                    <div id="b12b" class="blank"></div>
+                    <div id="b12" class="blhs" onmousedown="select(id)">*2</div>
+                    <div id="b13b" class="blank"></div>
+                    <div id="b13" class="brhs" onmousedown="select(id)">*2</div>
+                    <div id="b14b" class="blank"></div>
+                    <div id="b14" class="brhs" onmousedown="select(id)"></div>
+                </div>
+                <div id="bal-info-1" class="bal-info" >
+                    <svg width="400px" height="60px" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L390 5 Q400 5 400 15 L400 45 Q 400 55 390 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
+                        <text X="37" Y="25" >enter an operation in the box under</text>
+                        <text X="37" Y="45" >the term that you want to manipulate</text>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    
+        <div id="right">
+            <div id="display">
+                <div id="info-screen"></div>
+                <div id="history">
+                    <div id="history-title">
+                        <div>History</div>
+                        <div id="title-button" onclick="clearHistory()">clear history</div>
+                    </div>
+                    <div id="history-outside">
+                    <div id="history-shell"></div>
+                </div>
+                </div>
+            </div>
+            <div id="keyboard">
+                <div id="keypad">
+                    <div id="7" class="button" onclick="enter('7')">7</div>
+                    <div id="8" class="button" onclick="enter('8')">8</div>
+                    <div id="9" class="button" onclick="enter('9')">9</div>
+                    <div id="4" class="button" onclick="enter('4')">4</div>
+                    <div id="5" class="button" onclick="enter('5')">5</div>
+                    <div id="6" class="button" onclick="enter('6')">6</div>
+                    <div id="1" class="button" onclick="enter('1')">1</div>
+                    <div id="2" class="button" onclick="enter('2')">2</div>
+                    <div id="3" class="button" onclick="enter('3')">3</div>
+                    <div id="x" class="button" onclick="enter('x')">x</div>
+                    <div id="0" class="button" onclick="enter('0')">0</div>
+                    <div id="dummy"></div>
+                </div>
+                <div id="operations">
+                    <div id="plus" class="button" onclick="enter('+')">+</div>
+                    <div id="minus" class="button" onclick="enter('-')">-</div>
+                    <div id="times" class="button" onclick="enter('*')">*</div>
+                    <div id="divided" class="button" onclick="enter('/')">/</div>
+                    <div id="left-arrow" class="arrow-button" onclick="moveThrough('left')">&#8678</div>
+                    <div id="right-arrow" class="arrow-button" onclick="moveThrough('right')">&#8680</div>
+                    <div id="del" class="button" onclick="del()">del</div>
+                    <div id="clear" class="button" onclick="back()">back</div>
+                </div>
+                <div id="reset-etc">
+                    <div id="level-row">
+                        <div id="level-minus" class="button" onclick="changeLevel('down')">-</div>
+                        <div  id="level-display" class="button">1</div>
+                        <div id="level-plus" class="button" onclick="changeLevel('up')">+</div>
+                    </div>
+                    <div id="new" class="reset-button" onclick="addEquation(1, newArray)">level</div>
+                    <div id="custom" class="reset-button" onclick="addEquation(2, emptyArray)">custom</div>
+                    <div id="reset" class="reset-button" onclick="addEquation(3, newArray)">reset</div>
+                </div>
+                <div id="check" class="check-button" onclick="check()">check</div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" >
+    // Global variables
 let row = 1;
 let available = ["b11", "b12", "b13", "b14"]
 let index = 0
@@ -151,13 +692,6 @@ function createEquation() {
     let x24 = 0
     let num4 = 0
     let num3 = Math.round(Math.random() * multiple + 1)
-
-    let a = Math.round(Math.random() * 99 + 1)
-    let b = Math.round(Math.random() * 8 + 1)
-    let c = Math.round(Math.random() * 8 + 1)
-    let d = Math.round(Math.random() * c * a + 1)
-    let h = Math.round(Math.random() * 8 + 1)
-    let i = Math.round(Math.random() * 9 + 1)
 
 
     while (num2 === 0) {
@@ -2183,3 +2717,6 @@ function clearHistory() {
     element("history-shell").innerHTML = ""
     
 }
+</script>
+</body>
+</html>
