@@ -1792,7 +1792,9 @@ function getResultString(result, original, balance) {
  * @param {HTMLElement} newRow - The new row element.
  */
 function setElementContent(p, b, x, newRow) {
-    console.log("set contents")
+    console.log("set contents,", p, b, x, newRow)
+    if (p[0] === "-x") p[0] = "-1x"
+    if (p[1] === "-x") p[1] = "-1x"
     let numElement = document.createElement("div");
     let denElement = document.createElement("div");
 

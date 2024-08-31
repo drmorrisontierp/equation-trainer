@@ -1491,6 +1491,8 @@ function getResultString(result, original) {
 function setElementContent(p, b, x, newRow) {
     let numElement = document.createElement("div");
     let denElement = document.createElement("div");
+    if (p[0] === "-x") p[0] = "-1x"
+    if (p[1] === "-x") p[1] = "-1x"
 
     setAttributes(numElement, { "class": "num" });
     setAttributes(denElement, { "class": "int" });
