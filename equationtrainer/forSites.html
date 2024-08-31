@@ -55,7 +55,7 @@ font-size: 10pt;
     grid-area: 1/2/2/3;
     min-width: 200px;
     max-height: 40px;
-    margin-left: 1vw;
+    margin-left: 30px;
 }
 
 .bal-group {
@@ -63,6 +63,8 @@ font-size: 10pt;
     grid-template-columns: 200px 200px;
     grid-template-rows: 60px;
     column-gap: 20px;
+    margin-top: 10px;
+    margin-left: -10px;
 }
 
 .bal {
@@ -79,7 +81,8 @@ font-size: 10pt;
     grid-area: 1/2/2/3;
     min-width: 200px;
     max-height: 30px;
-    margin-left: 1vw;
+    margin-left: 30px;
+    margin-top: -10px;
 }
 
 .plhs {
@@ -109,7 +112,7 @@ font-size: 10pt;
     border: solid black 1px;
     justify-content: center;
     text-align: center;
-    width:30px;
+    width: 50px;
     background-color: white;
 }
 
@@ -119,7 +122,7 @@ font-size: 10pt;
     border: solid black 1px;
     justify-content: center;
     text-align: center;
-    width:30px;
+    width: 50px;
     background-color: white;
 }
 
@@ -144,7 +147,7 @@ font-size: 10pt;
 
 #keyboard {
     display: grid;
-    grid-template-columns: 100px 100px 100px;
+    grid-template-columns: 120px 120px 120px;
     grid-template-rows: 180px 50px;
     gap: 30px;
     margin: 10px 0 0 8px;
@@ -153,16 +156,16 @@ font-size: 10pt;
 #keypad {
     grid-area: 1/1/2/2;
     display: grid;
-    grid-template-columns: 30px 30px 30px;
-    grid-template-rows: 30px 30px 30px 30px;
+    grid-template-columns: 40px 40px 40px;
+    grid-template-rows: 40px 40px 40px 40px;
     gap: 5px;
 }
 
 #operations {
     grid-area: 1/2/2/3;
     display: grid;
-    grid-template-columns: 50px 50px;
-    grid-template-rows: 30px 30px 30px 30px;
+    grid-template-columns: 60px 60px;
+    grid-template-rows: 40px 40px 40px 40px;
     gap: 5px;
 }
 
@@ -182,14 +185,14 @@ font-size: 10pt;
 }
 
 #check:hover {
-    background-color: aquamarine;
+    background-color: rgb(67, 194, 78);
 }
 
 
 .button {
     border: solid black 1px;
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
     display: flex;
     background-color: aliceblue;
     flex-direction: column;
@@ -202,8 +205,8 @@ font-size: 10pt;
 }
 
 #dummy {
-    width: 30px;
-    height: 30px;
+    width: 40px;
+    height: 40px;
 }
 
 #plus {
@@ -231,7 +234,7 @@ font-size: 10pt;
 
 #display {
     display: grid;
-    grid-template-columns: 200px 118px;
+    grid-template-columns: 240px 195px;
     border: solid black 1px;
     border-radius: 5px;
     margin: 5px 5px 0 5px;
@@ -246,15 +249,15 @@ font-size: 10pt;
 }
 #reset-etc {
     display: grid;
-    grid-template-rows: 30px 30px 30px 30px;
+    grid-template-rows: 40px 40px 40px 40px;
     grid-template-columns: 100px;
     row-gap: 5px;
     margin-left: -8px;
 }
 #level-row {
     display: grid;
-    grid-template-columns: 30px 30px 30px;
-    grid-template-rows: 30px;
+    grid-template-columns: 40px 40px 40px;
+    grid-template-rows: 40px;
     column-gap: 5px;
 }
 .reset-button {
@@ -264,7 +267,7 @@ font-size: 10pt;
     justify-content: center;
     background-color: antiquewhite;
     text-align: center;
-    margin-left: 10px;
+    margin-left: 30px;
     min-height: 30px;
     max-width: 100px;
     cursor: pointer;
@@ -336,9 +339,6 @@ font-size: 10pt;
     
     
 }
-
-
-
 
 #history-outside {
     display: flex;
@@ -458,11 +458,6 @@ font-size: 10pt;
                     </div>
                 </div>
                 <div id="row-info-1" class="row-info" >
-                    <svg width="400px" height="60px" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L390 5 Q400 5 400 15 L400 45 Q 400 55 390 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
-                        <text X="37" Y="25" >the equation that should be solved</text>
-                        <text X="37" Y="45" >for "x" using the balance method</text>
-                    </svg>
                 </div>
             </div>
             <div id="bal-group-1" class="bal-group">
@@ -476,11 +471,6 @@ font-size: 10pt;
                     <div id="b14" class="brhs" onmousedown="select(id)"></div>
                 </div>
                 <div id="bal-info-1" class="bal-info" >
-                    <svg width="400px" height="60px" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L390 5 Q400 5 400 15 L400 45 Q 400 55 390 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
-                        <text X="37" Y="25" >enter an operation in the box under</text>
-                        <text X="37" Y="45" >the term that you want to manipulate</text>
-                    </svg>
                 </div>
             </div>
         </div>
@@ -552,6 +542,7 @@ let newArray = ["2x", "3", "-", "5", "1", "4", "5", "+", "2x", "1"]
 let history = {}
 let historyId = 0
 let level = 1
+const infoShape = `"M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L320 5 Q330 5 330 15 L330 45 Q 330 55 320 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30"`
 
 createEquation()
 console.log(newArray)
@@ -631,11 +622,14 @@ function restart() {
     creating = false
     createEquation()
     addEquation(1, newArray)
-    element("row-info-1").innerHTML = `<svg width="280px" height="60px" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L270 5 Q280 5 280 15 L280 45 Q 280 55 270 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
-    <text X="37" Y="25" >the equation that should be solved</text>
-    <text X="37" Y="45" >for "x" using the balance method</text>
-</svg>`
+    element("row-info-1").innerHTML = `
+        <svg width="280px" height="60px" xmlns="http://www.w3.org/2000/svg">
+           <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L190 5 Q200 5 200 15 L200 45 Q 200 55 190 55 L40 55 Q 30 
+            55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
+            <text X="37" Y="25" >the equation that should be solved</text>
+            <text X="37" Y="45" >for "x" using the balance method</text>
+        </svg>
+`
 }
 
 function changeLevel(direction) {
@@ -1101,7 +1095,7 @@ function addEquation(flag, arr) {
     setAttributes(newRowInfo, { "id": "row-info-1", "class": "row-info" })
 
     newRowInfo.innerHTML = `<svg width="400px" height="60px" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L390 5 Q400 5 400 15 L400 45 Q 400 55 390 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
+    <path d=${infoShape} stroke="black" fill="white"/>
     <text X="37" Y="25" >the equation that should be solved</text>
     <text X="37" Y="45" >for "x" using the balance method</text>
 </svg>`
@@ -1972,7 +1966,7 @@ function createNewRow(p) {
     setAttributes(newRowInfo, { "id": `row-info-${row + 1}`, "class": "row-info" });
 
     newRowInfo.innerHTML = `<svg width="400px" height="60px" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L390 5 Q400 5 400 15 L400 45 Q 400 55 390 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
+    <path d=${infoShape} stroke="black" fill="white"/>
     <text X="37" Y="25" >the equation that should be solved</text>
     <text X="37" Y="45" >for "x" using the balance method</text>
 </svg>`
@@ -2059,7 +2053,7 @@ function createBalanceRow() {
     setAttributes(newRowInfo, { "id": `bal-info-${row}`, "class": "bal-info", });
 
     newRowInfo.innerHTML = `<svg width="400px" height="60px" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L390 5 Q400 5 400 15 L400 45 Q 400 55 390 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
+    <path d=${infoShape} stroke="black" fill="white"/>
     <text X="37" Y="25" >enter an operation in the box under</text>
     <text X="37" Y="45" >the term that you want to manipulate</text>
 </svg>`
@@ -2327,6 +2321,8 @@ function getResultString(result, original, balance) {
  */
 function setElementContent(p, b, x, newRow) {
     console.log("set contents")
+    if (p[0] === "-x") p[0] = "-1x"
+    if (p[1] === "-x") p[1] = "-1x"
     let numElement = document.createElement("div");
     let denElement = document.createElement("div");
 
@@ -2540,7 +2536,7 @@ function handleRightSide(prhs) {
  */
 function adjustMargins() {
     element(`row-${row}`).setAttribute("style", "margin-left:80px;");
-    element(`bal-${row}`).setAttribute("style", "margin-left:80px;");
+    element(`bal-${row}`).setAttribute("style", "margin-left:78px;");
 }
 
 
@@ -2701,10 +2697,6 @@ function createHistory(newArray) {
     }
 
 }
-
-//function hideEntry(id) {
-//    element(id).style.display = "none"
-//}
 
 function enterHistory(id) {
     console.log(history)
