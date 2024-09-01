@@ -81,6 +81,10 @@ const warningsText = (warning, args) => {
 // Select the first available position in the first balance row
 select(available[0])
 
+function newLevel() {
+    createEquation()
+    addEquation(1, newArray)
+}
 
 // Add event listeners
 document.addEventListener("keydown", handleKeydown);
@@ -546,9 +550,9 @@ function handleKeydown(event) {
 function addEquation(flag, arr) {
     stopped = false
     element("info-screen").innerHTML = ""
-    if (flag === 1) {
-        createEquation()
-    }
+    //if (flag === 1) {
+    //    createEquation()
+    //}
     let target = element("left");  // returns an element with id "left"
 
     // Convert HTMLCollection to an array
