@@ -1174,6 +1174,7 @@ function enter(key) {
         if ("123456789".includes(key) && (lastEntered === "x" || selected[0] === "o")) return
         if (key === "0" && (entered === "m" || entered === "") && element(selected).className === "a-int") return
         if (key === "x" && xChars > 1) return
+        if (key === "x" && selected[0] === "o") return
     }
     element(selected).innerHTML += key;
 
