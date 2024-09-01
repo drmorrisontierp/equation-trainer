@@ -2371,7 +2371,7 @@ function setElementContent(p, b, x, newRow) {
     console.log("after get variable status")
 
     if (den === 1 && !denHasX) {
-        denElement.innerHTML = Math.abs(num) !== 1 ? (numHasX ? num + "x" : num) : (numHasX ? "x" : num);
+        denElement.innerHTML = Math.abs(num) !== 1 ? (numHasX ? num + "x" : num) : (numHasX ? (num < 0 ? "-x" : "x") : num);
         newRow.children[x * 2].appendChild(denElement);
     } else {
         numElement.innerHTML = Math.abs(num) !== 1 ? (numHasX ? num + "x" : num) : (numHasX ? "x" : num);
