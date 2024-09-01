@@ -2012,8 +2012,8 @@ function handleRightSide(prhs) {
  * Adjusts the margins for the row and balance elements.
  */
 function adjustMargins() {
-    element(`row-${row}`).setAttribute("style", "margin-left:80px;");
-    element(`bal-${row}`).setAttribute("style", "margin-left:80px;");
+    element(`row-${row}`).setAttribute("style", "margin-left:70px;");
+    element(`bal-${row}`).setAttribute("style", "margin-left:70px;");
 }
 
 
