@@ -11,11 +11,12 @@ let newArray = ["2x", "3", "-", "5", "1", "4", "5", "+", "2x", "1"]
 let history = {}
 let historyId = 0
 let level = 1
+const infoShape = `"M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L390 5 Q400 5 400 15 L400 45 Q 400 55 390 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30"`
 
 createEquation()
-console.log(newArray)
+//console.log(newArray)
 addEquation(1, newArray)
-console.log(newArray)
+//console.log(newArray)
 
 const warningsText = (warning, args) => {
     let warningsText = ""
@@ -95,7 +96,7 @@ function restart() {
     createEquation()
     addEquation(1, newArray)
     element("row-info-1").innerHTML = `<svg width="280px" height="60px" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L270 5 Q280 5 280 15 L280 45 Q 280 55 270 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
+    <path d=${infoShape} stroke="black" fill="white"/>
     <text X="37" Y="25" >the equation that should be solved</text>
     <text X="37" Y="45" >for "x" using the balance method</text>
 </svg>`
@@ -571,7 +572,7 @@ function addEquation(flag, arr) {
     setAttributes(newRowInfo, { "id": "row-info-1", "class": "row-info" })
 
     newRowInfo.innerHTML = `<svg width="400px" height="60px" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L390 5 Q400 5 400 15 L400 45 Q 400 55 390 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
+    <path d=${infoShape} stroke="black" fill="white"/>
     <text X="37" Y="25" >the equation that should be solved</text>
     <text X="37" Y="45" >for "x" using the balance method</text>
 </svg>`
@@ -1443,7 +1444,7 @@ function createNewRow(p) {
     setAttributes(newRowInfo, { "id": `row-info-${row + 1}`, "class": "row-info" });
 
     newRowInfo.innerHTML = `<svg width="400px" height="60px" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L390 5 Q400 5 400 15 L400 45 Q 400 55 390 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
+    <path d=${infoShape} stroke="black" fill="white"/>
     <text X="37" Y="25" >the equation that should be solved</text>
     <text X="37" Y="45" >for "x" using the balance method</text>
 </svg>`
@@ -1530,7 +1531,7 @@ function createBalanceRow() {
     setAttributes(newRowInfo, { "id": `bal-info-${row}`, "class": "bal-info", });
 
     newRowInfo.innerHTML = `<svg width="400px" height="60px" xmlns="http://www.w3.org/2000/svg">
-    <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L390 5 Q400 5 400 15 L400 45 Q 400 55 390 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
+    <path d=${infoShape} stroke="black" fill="white"/>
     <text X="37" Y="25" >enter an operation in the box under</text>
     <text X="37" Y="45" >the term that you want to manipulate</text>
 </svg>`

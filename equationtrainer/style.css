@@ -229,6 +229,11 @@
     background-color: rgb(255, 255, 255);
 }
 
+#info-title {
+    text-decoration-line: underline;
+    text-align: center;
+}
+
 #info-screen {
     margin: 5px 10px 5px 10px;
     min-width: 300px;
