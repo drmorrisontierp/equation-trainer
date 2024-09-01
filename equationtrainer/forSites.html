@@ -242,11 +242,17 @@ font-size: 10pt;
     background-color: rgb(255, 255, 255);
 }
 
+#info-title {
+    text-decoration-line: underline;
+    text-align: center;
+}
+
 #info-screen {
     margin: 2px 5px 2px 5px;
     min-width: 200px;
     min-height: 100px;
-    text-align: center;
+    text-align: left;
+    font-weight: normal;
 }
 #reset-etc {
     display: grid;
@@ -478,7 +484,12 @@ font-size: 10pt;
     
         <div id="right">
             <div id="display">
-                <div id="info-screen"></div>
+                <div id="info">
+                    <div id="info-title">
+                        <div>Information</div>
+                    </div>
+                    <div id="info-screen"></div>
+                </div>
                 <div id="history">
                     <div id="history-title">
                         <div>History</div>
