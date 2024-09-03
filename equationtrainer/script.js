@@ -143,16 +143,16 @@ function createEquation() {
     nox1b = nox1b / g1
     nox2 = nox2 / g2
     nox2b = nox2b / g2
-//for levels one and two
+    //for levels one and two
     let final = Math.round(Math.random() * 20 + 1)
     let numbers = level === 1 ? final * (x1 / gx1) : Math.round(Math.random() * 100) < 50 ? final * (x1 / gx1) : final * (x1 / gx1) * (-1)
     let num2 = 0
     let num1 = Math.round(Math.random() * numbers + 1)
-// for level four
+    // for level four
     let solution = Math.round(Math.random() * 20 + 1)
-    solution = Math.round(Math.random() * 100) < 50 ? solution : solution*(-1)
+    solution = Math.round(Math.random() * 100) < 50 ? solution : solution * (-1)
     let multiple = solution * x1
-    let x14 = Math.round(Math.random()*x1 + 1)
+    let x14 = Math.round(Math.random() * x1 + 1)
     let x24 = 0
     let num4 = 0
     let num3 = Math.round(Math.random() * multiple + 1)
@@ -172,12 +172,12 @@ function createEquation() {
 
     while (num4 === 0) {
         num3 = Math.round(Math.random() * multiple + 1); // Regenerate num1
-        num4 = opp1 === "+" ? (multiple + num3)*(-1) : (num3 - multiple);
+        num4 = opp1 === "+" ? (multiple + num3) * (-1) : (num3 - multiple);
     }
 
     while (x24 === 0) {
-        x14 = Math.round(Math.random()*x1 + 1)
-        x24 = opp2 === "+" ? (x1 - x14)*(-1) : (x14 - x1)
+        x14 = Math.round(Math.random() * x1 + 1)
+        x24 = opp2 === "+" ? (x1 - x14) * (-1) : (x14 - x1)
     }
 
     let flip = Math.round(Math.random() * 100) < 50
@@ -858,19 +858,8 @@ function completeCheckWithAddEquation() {
     target = element(`row-1`)
     let targetChildren = Array.from(target.children)
     console.log(targetChildren)
-    
-        /*for (let x = 0; x < targetChildren.length; x++) {
-            if (x !== 1 || x!== 3 || x !== 5) {
-                values.push(targetChildren[x].children[0].innerHTML)
-                targetChildren[x].children.length > 1 ? values.push(targetChildren[x].children[1].innerHTML) : values.push("1")
 
-            } else if (x !== 1 || x !== 5) {
-                values.push(targetChildren[x].children[0].innerHTML)
-            }
-            
-        }*/
-
-       values = [
+    values = [
         targetChildren[0].children[0].innerHTML,
         targetChildren[0].children.length > 1 ? targetChildren[0].children[1].innerHTML : "1",
         targetChildren[1].children[0].innerHTML,
@@ -878,14 +867,13 @@ function completeCheckWithAddEquation() {
         targetChildren[2].children.length > 1 ? targetChildren[2].children[1].innerHTML : "1",
         targetChildren[4].children[0].innerHTML,
         targetChildren[4].children.length > 1 ? targetChildren[4].children[1].innerHTML : "1",
-        
+
         targetChildren[5].children[0].innerHTML,
         targetChildren[6].children[0].innerHTML,
         targetChildren[6].children.length > 1 ? targetChildren[6].children[1].innerHTML : "1",
-        
-       ]
-    
-        console.log(values)
+
+    ]
+
     available = []
     for (let x = 0; x < 4; x++) {
         available[x] = `b1${x + 1}`
@@ -895,7 +883,7 @@ function completeCheckWithAddEquation() {
     createBalanceRow()
     hideUnused()
     selected = available[0]
-    
+
     createHistory(values)
     select(selected)
 }
@@ -982,7 +970,7 @@ function check() {
                     element(`p1${x}`).children[0].innerHTML.includes("x") ? num + "x" : num,
                     "+",
                     element(`p1${x}`).children[1].innerHTML.includes("x") ? den + "x" : den,
-                 )
+                )
             }
             //console.log("check",newArray)
             //createHistory(newArray)
@@ -1018,13 +1006,12 @@ function check() {
 
     } else {
         //stop it working for empty balance row
-        
+
         let balance = document.querySelectorAll(`[id^="b${row}"]`)
         let balanceString = ""
         balance.forEach((e) => {
             balanceString += e.innerHTML
         })
-        console.log(balance)
 
         if (balanceString === "") {
             console.log("nothing")
@@ -1079,7 +1066,6 @@ function check() {
             p[2],
             p3
         ]
-        console.log(newP)
 
         let initialRow = element(`row-${row}`)
         console.log("initialRow", initialRow)
@@ -1094,7 +1080,6 @@ function check() {
                     dissimilar++
                 }
             }
-            console.log(dissimilar)
             if (dissimilar === 0) back()
         }
 
@@ -1111,8 +1096,7 @@ function check() {
                 extend(e[0], e[1], e[2], e[3]);
             }
             completeCheck()
-            //let finalRow = element(`row-${row}`)
-            //checkRows(initialRow, finalRow)
+            
             return;
         }
 
@@ -1121,14 +1105,10 @@ function check() {
             createNewRow(newP);
             multiplication(newP, b, multiplicationCheck.multiplications[0]);
             completeCheck()
-            //let finalRow = element(`row-${row}`)
-            //checkRows(initialRow, finalRow)
             return;
         }
 
         // Check the balance and perform the addition operation if valid
-        //if (!checkBalance(b)) return;
-
         if (!xCheck.faults && !balanceCheck.faults) {
             createNewRow(newP);
             addition(newP, b, xCheck.fractions);
@@ -1140,10 +1120,8 @@ function check() {
 
 
         if (extendCheck.faults) {
-            console.log("extendCheck.faults")
             if (extendCheck.warning === "addition") {
                 if (balanceCheck.faults) {
-                    console.log("balanceCheck.faults")
                     element("info-screen").innerHTML = warningsText("balance-fault", [balanceCheck.warning[0], balanceCheck.warning[1]])
                     return
                 } else if (xCheck.faults) {
@@ -1160,7 +1138,6 @@ function check() {
                 }
             } else if (extendCheck.warning === "multiplication") {
                 if (multiplicationCheck.faults) {
-                    console.log("multiplicationCheck.faults")
                     element("info-screen").innerHTML = multiplicationCheck.warning
                     return
                 }
@@ -1189,9 +1166,6 @@ function checkBalance(b) {
             lhs[1] = b[1][0] === "" || b[1][0] === "" ? "" : b[1][1] !== "1" ? `${b[1][0]}/${b[1][1]}` : b[1][0]
         rhs[0] = b[2][0] === "" || b[2][0] === "" ? "" : b[2][1] !== "1" ? `${b[2][0]}/${b[2][1]}` : b[2][0]
         rhs[1] = b[3][0] === "" || b[3][0] === "" ? "" : b[3][1] !== "1" ? `${b[3][0]}/${b[3][1]}` : b[3][0]
-
-        //console.log("failed to balance", b.join(""), [b[0], b[1]].sort().join() !== [b[2], b[3]].sort().join())
-        //element("info-screen").innerHTML = warningsText("balance-fault", [lhs.join(""), rhs.join("")])
         return { "faults": true, "warning": [lhs.join(""), rhs.join("")] }
     }
     return { "faults": false, }
@@ -1206,8 +1180,6 @@ function checkBalance(b) {
  * @returns {Array|null} - An array of positions for valid addition/subtraction or null if faults are found.
  */
 function checkXWithAddition(p, b) {
-    console.log("checkXWithAddition");
-
     let faults = 0;               // Counter for faults
     let positionsToAdd = [];      // Positions to be considered for addition
     let fractionsToAdd = [];      // Positions for valid addition/subtraction
@@ -1215,9 +1187,7 @@ function checkXWithAddition(p, b) {
 
     // Iterate through the positions
     for (let x = 0; x < 4; x++) {
-
         if (b[x][0] === "") continue; // Skip empty balance entries
-
         // Check if the balance has a valid sign and validate 'x' presence
         if (b[x][0][0] === "+" || b[x][0][0] === "-") {
             let faultPosition
@@ -1257,9 +1227,7 @@ function checkXWithAddition(p, b) {
                 positionsToAdd.push(x); // Add position to the list if valid
             }
             console.log(faultCode)
-            //console.log(`faults: ${faults}, positionsToAdd: ${positionsToAdd}`);
         } else {
-            //console.log("Fail: invalid sign in b", x);
             faultCode["invalidSign"].push(x) //TODO position can be wrong +1
             faults++;
         }
@@ -1274,7 +1242,6 @@ function checkXWithAddition(p, b) {
         } else {
             fractionsToAdd.push(x); // Add position to the list if denominators match
         }
-        //console.log(`faults: ${faults}, fractionsToAdd: ${fractionsToAdd}`);
     }
 
     // Return null if faults are found, else return positions for addition/subtraction
@@ -2041,7 +2008,7 @@ function removeByValue(value, array) {
 
 
 function createHistory(newArray) {
-    historyId ++
+    historyId++
     let hcid = `hc${historyId}`
     let hrid = `hr${historyId}`
     let hbid = `hb${historyId}`
@@ -2089,7 +2056,7 @@ function createHistory(newArray) {
     element("history-outside").scrollTop = element("history-outside").scrollHeight
     hideUnused()
     updateRow()
-    
+
 
     function getElementsContent(selector) {
         let content = [];
@@ -2103,33 +2070,33 @@ function createHistory(newArray) {
         console.log(prhs, plhs)
         handleLeftSide(plhs);
         handleRightSide(prhs);
-        
+
     }
-    
+
     function handleRightSide(prhs) {
         console.log(prhs[0])
-        if ((prhs[0] === "0"||prhs[0] === "") && prhs[2] !== "0") {
+        if ((prhs[0] === "0" || prhs[0] === "") && prhs[2] !== "0") {
             hideElements(1, 3);
-        } else if (prhs[0] !== "0" && (prhs[2] === "0"||prhs[2] === "")) {
+        } else if (prhs[0] !== "0" && (prhs[2] === "0" || prhs[2] === "")) {
             hideElements(0, 4);
-        } else if ((prhs[0] === "0"||prhs[0] === "") && (prhs[2] === "0"||prhs[2] === "")) {
+        } else if ((prhs[0] === "0" || prhs[0] === "") && (prhs[2] === "0" || prhs[2] === "")) {
             hideElements(0, 4);
         }
     }
 
     function handleLeftSide(plhs) {
-        if ((plhs[0] === "0"||plhs[0] === "") && plhs[2] !== "0") {
+        if ((plhs[0] === "0" || plhs[0] === "") && plhs[2] !== "0") {
             hideElements(1, 1);
             adjustMargins();
-        } else if (plhs[0] !== "0" && (plhs[2] === "0"||plhs[2] === "")) {
+        } else if (plhs[0] !== "0" && (plhs[2] === "0" || plhs[2] === "")) {
             hideElements(0, 2);
             adjustMargins();
-        } else if ((plhs[0] === "0"||plhs[0] === "")  && (plhs[2] === "0"||plhs[2] === "")) {
+        } else if ((plhs[0] === "0" || plhs[0] === "") && (plhs[2] === "0" || plhs[2] === "")) {
             hideElements(0, 2);
             adjustMargins();
         }
     }
-    
+
     function hideElements(offset, index) {
         hideElement(`${hrid}-${index}`);
         hideElement(`${hrid}-${index + offset}o`);
@@ -2143,7 +2110,7 @@ function createHistory(newArray) {
     function updateRow() {
         let newRow = element(`${hrid}`);
         console.log(newRow)
-    
+
         // Update the signs and values based on conditions
         if (newRow.children[0].children[0].innerHTML === "0" && newRow.children[1].children[0].innerHTML === "-") {
             newRow.children[2].children[0].innerHTML = "-" + newRow.children[2].children[0].innerHTML;
@@ -2164,11 +2131,11 @@ function createHistory(newArray) {
         for (let x = 0; x < 7; x += 2) {
             if (newRow.children[x].children[0].innerHTML === "1x") newRow.children[x].children[0].innerHTML = "x"
             if (newRow.children[x].children[0].innerHTML === "-1x") newRow.children[x].children[0].innerHTML = "-x"
-    
+
             if (newRow.children[x].length > 1) {
                 if (newRow.children[x].children[1].innerHTML === "1x") newRow.children[x].children[1].innerHTML = "x"
                 if (newRow.children[x].children[1].innerHTML === "-1x") newRow.children[x].children[1].innerHTML = "-x"
-    
+
             }
             if (newRow.children[x].children[1].innerHTML === "1") newRow.children[x].innerHTML = `<div class="int">${newRow.children[x].children[0].innerHTML}</div>`
         }
@@ -2189,5 +2156,5 @@ function enterHistory(id) {
 
 function clearHistory() {
     element("history-shell").innerHTML = ""
-    
+
 }
