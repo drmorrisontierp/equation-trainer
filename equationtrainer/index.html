@@ -8,6 +8,89 @@
 </head>
 <body>
     <div id="screen">
+        <div id="info-popup">
+            <div id="information">
+                <h2>Introduction</h2>
+                <p>
+                    This program is designed to teach and improve your ability to solve equations using the balance method.
+                    You are given an equation to solve (as indicated by the speech bubble to the right).
+                    
+                </p>
+                <p>
+                    To solve the equation, you have to enter the appropriate operation under each term. For instance, 
+                    if the equation is,
+                </p>
+                <p>
+                    2x - 5 = 15
+                </p>
+                <p>
+                    you will need to enter "+5" under both the term "5" and the term "15": i.e.
+                </p>
+                <p>
+                    2x - 5 = 15 <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+5&nbsp;&nbsp;&nbsp;+5
+                </p>
+                <p>
+                    After the "check" button is pressed the equation will change to, 
+                </p>
+                <p>
+                    2x = 20
+                </p>
+                <p>
+                    To complete the solution you will then have to enter "/2" under both the "2x" and "20" terms: i.e.
+                </p>
+                <p>
+                    2x = 20 <br> /2&nbsp;&nbsp;&nbsp;/2
+
+                </p>
+                <br>
+                <h2>
+                    Allowed operations
+                </h2>
+                <p>
+                    The following operations are allowed to be entered under terms
+                    +, -, *, /, extend, (reduce).
+                </p>
+                <p>
+                    Additions: "+a", "+a/b", "+ax", "+ax/b", "+a/bx" (where "a" and "b" are integers).
+                </p>
+                <p>
+                    Subtractions: "-a", "-a/b", "-ax", "-ax/b", "-a/bx" (where "a" and "b" are integers).
+                </p>
+                <p>
+                    Multiplications: "*a", "*-a", "*a/b", "*-a/b", "*ax", "*-ax", "*ax/b", "*-a/bx", (where "a" and "b" are integers).
+                </p>
+                <p>
+                    Divisions: "/a", "/-a", "/a/b", "/-a/b", "/ax", "/-ax", "/ax/b", "/-a/bx", (where "a" and "b" are integers).
+                </p>
+                <p>
+                    Remember, operations on both the left-hand-side and right-hand-side have to be equivalent and, as I have not 
+                    included brackets, multiplication and division must be carried out on all the terms of the equation: i.e.
+                </p>
+                <p>
+                    2x - 5 = 15 <br> /2&nbsp;&nbsp;&nbsp;/2&nbsp;&nbsp;&nbsp;/2
+                </p>
+                <p>
+                    You can extend fractions by using "*a/a" and reduce them by using "/a/a" (however, this is generally
+                    done automatically by the program.). An example of extension,
+                </p>
+                <p>
+                    2x/3 - 5 = 15 + x/4 <br> *4/4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*3/3
+                </p>
+                <p>
+                    ...will result in,
+                </p>
+                <p>
+                    8x/12 - 5 = 15 + 3x/12
+                </p>
+                <br>
+                <h2>
+                    Tips
+                </h2>
+                <p>
+                    Carry out additions and multiplications first.
+                </p>
+            </div>
+        </div>
         <div id="left">
             <div id="row-group-1" class="row-group">
                 <div id="row-1" class="row">
@@ -117,6 +200,15 @@
                     <div id="reset" class="reset-button" onclick="addEquation(3, newArray)">reset</div>
                 </div>
                 <div id="check" class="check-button" onclick="check()">check</div>
+                <div id="info-button" onclick="infoPopup()">
+                    <svg width="40px" height="40px" xmlns="http://www.w3.org/2000/svg">
+                        <g>
+                            <circle id="info-button" cx="20" cy="20" r="16" stroke="black" stroke-width="2" fill="white"/>
+                            <circle cx="20" cy="12" r="2" stroke="black" fill="black"/>
+                            <line x1="20" y1="17" x2="20" y2="30" stroke="black" stroke-width="4"/>
+                        </g>
+                    </svg>
+                </div>             
             </div>
         </div>
     </div>

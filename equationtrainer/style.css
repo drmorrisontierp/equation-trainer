@@ -421,3 +421,22 @@
 .history-row:hover {
     border: dotted black 1px;
 }
+
+#info-button:hover {
+    fill: rgb(243, 178, 232);
+}
+
+#info-popup {
+    display: flex;
+    background-color: white;
+    z-index: 10;
+    grid-area: 1/1/2/3;
+    margin: 5% 15% 5% 15%;
+    border: solid black 1px;
+    border-radius: 5px;
+}
+
+#information {
+    margin: 2% 2% 2% 2%;
+    overflow-y: scroll;
+}

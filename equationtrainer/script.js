@@ -14,9 +14,7 @@ let level = 1
 const infoShape = `"M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L390 5 Q400 5 400 15 L400 45 Q 400 55 390 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30"`
 
 createEquation()
-//console.log(newArray)
 addEquation(1, newArray)
-//console.log(newArray)
 
 const warningsText = (warning, args) => {
     let warningsText = ""
@@ -34,15 +32,16 @@ const warningsText = (warning, args) => {
         } else if (args.length === 4) {
             warningsText += `Please look at all the positions.`
         }
-    } else if (warning === "addition-fault") {
+    } else if (warning === "invalidSign") {
+        warningsText = "Invalid sign at position"
         if (args.length === 1) {
-            warningsText = ""
+            warningsText = ` ${args[0]}`
         } else if (args.length === 2) {
-            warningsText = ""
+            warningsText = `s ${args[0]} and ${args[1]}`
         } else if (args.length === 3) {
-            warningsText = ""
-        } else if (args.length === 3) {
-            warningsText = ""
+            warningsText = `s ${args[0]}, ${args[1]} and ${args[2]}`
+        } else if (args.length === 4) {
+            warningsText = `s ${args[0]}, ${args[1]}, ${args[2]} and ${args[3]}`
         }
     } else if (warning === "extend-fault") {
         let operation = args[0]
@@ -1149,6 +1148,29 @@ function check() {
     }
 }
 
+/**
+ * Checks that the operations on the left-hand side of an equation and the right-hand side are equivalent.
+ * The function ignores the order of terms within each side.
+ *
+ * @param {string[]} b - An array of four algebraic expressions representing an equation.
+ * @returns {boolean} - True if the equation is balanced, false otherwise.
+ */
+function checkOperations(b) {
+    console.log("checkBalance")
+    const lhs = [b[0], b[1]].sort().join()
+    const rhs = [b[2], b[3]].sort().join()
+    const plus = countChars(lhs, "+")  + countChars(rhs, "+")
+    const minus = countChars(lhs, "-") + countChars(rhs, "-")
+    const times = countChars(lhs, "*") + countChars(rhs, "*")
+    const divide = countChars(lhs, "/") + countChars(rhs, "/")
+
+
+    if (plus !== 0 && (times !== 0 || divide !== 0)) {
+        return { "faults": true, "warning": [lhs.join(""), rhs.join("")] }
+    }
+    return { "faults": false, }
+}
+
 
 /**
  * Checks if the two expressions on the left-hand side of an equation are equal to the two expressions on the right-hand side.
@@ -1183,7 +1205,7 @@ function checkXWithAddition(p, b) {
     let faults = 0;               // Counter for faults
     let positionsToAdd = [];      // Positions to be considered for addition
     let fractionsToAdd = [];      // Positions for valid addition/subtraction
-    let faultCode = { "faults": true, "x-fault": [], "invalidSign": [], "noCommonDenominator": [] }
+    let faultCode = { "faults": true, "x-fault": [],  "invalidSign": [], "noCommonDenominator": [] }
 
     // Iterate through the positions
     for (let x = 0; x < 4; x++) {
