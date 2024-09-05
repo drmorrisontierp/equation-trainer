@@ -11,6 +11,7 @@ let newArray = ["2x", "3", "-", "5", "1", "4", "5", "+", "2x", "1"]
 let history = {}
 let historyId = 0
 let level = 1
+let popupOpen = false
 const infoShape = `"M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L390 5 Q400 5 400 15 L400 45 Q 400 55 390 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30"`
 
 createEquation()
@@ -2179,4 +2180,10 @@ function enterHistory(id) {
 function clearHistory() {
     element("history-shell").innerHTML = ""
 
+}
+
+function infoPopup() {
+    console.log("popup")
+    element("info-popup").style.display = popupOpen ? "none" : "flex";
+    popupOpen = !popupOpen
 }

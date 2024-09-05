@@ -423,11 +423,12 @@
 }
 
 #info-button:hover {
-    fill: rgb(243, 178, 232);
+    fill: rgb(224, 231, 236);
 }
 
 #info-popup {
-    display: flex;
+    display: none;
+    flex-direction: column;
     background-color: white;
     z-index: 10;
     grid-area: 1/1/2/3;
@@ -439,4 +440,27 @@
 #information {
     margin: 2% 2% 2% 2%;
     overflow-y: scroll;
+}
+
+#window-bar {
+    display: flex;
+    flex-direction: column;
+    background-color: rgb(249, 252, 255);
+    justify-content: center;
+    min-height: 22px;
+    border-radius: 5px;
+}
+
+#bar-middle {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+}
+
+#close-button {
+    margin: 10px 5px 5px 5px;
+}
+
+#info-close:hover {
+    fill: rgb(224, 231, 236);
 }
