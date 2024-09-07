@@ -8,46 +8,183 @@
 </head>
 <body>
     <div id="screen">
-        <div id="left">
-            <div id="row-1" class="row">
-                <div id="p11" class="plhs">
-                    <div class="int">4</div>
-                </div>
-                <div id="o12o" class="plhs">
-                    <div class="int">-</div>
-                </div>
-                <div id="p12" class="plhs">
-                    <div class="num">2x</div>
-                    <div class="int">3</div>
-                </div>
-                <div class="plhs">
-                    <div class="int">=</div>
-                </div>
-                <div id="p13" class="prhs">
-                    <div class="num">6x</div>
-                    <div class="int">3</div>
-                </div>
-                <div id="o14o" class="prhs">
-                    <div class="int">+</div>
-                </div>
-                <div id="p14" class="prhs">
-                    <div class="int">2</div>
+        <div id="info-popup">
+            <div id="window-bar">
+                <div id="bar-middle">
+                    <div id="close-button" onclick="infoPopup()">
+                        <svg width="16px" height="16px" xmlns="http://www.w3.org/2000/svg">
+                            <g>
+                                <circle id="info-close" cx="8" cy="8" r="7" stroke="black" stroke-width="1" fill="rgb(249, 252, 255)" />
+                                <line x1="4" y1="4" x2="12" y2="12" stroke="black" stroke-width="1"/>
+                                <line x1="12" y1="4" x2="4" y2="12" stroke="black" stroke-width="1"/>
+                            </g>
+                        </svg>
+                    </div>
                 </div>
             </div>
-            <div id="bal-1" class="bal">
-                <div id="b11" class="blhs" onmousedown="select(id)">*4/4</div>
-                <div id="b12b" class="blank"></div>
-                <div id="b12" class="blhs" onmousedown="select(id)">*2</div>
-                <div id="b13b" class="blank"></div>
-                <div id="b13" class="brhs" onmousedown="select(id)">*2</div>
-                <div id="b14b" class="blank"></div>
-                <div id="b14" class="brhs" onmousedown="select(id)"></div>
+            <div id="information">
+                <h2>Introduction</h2>
+                <p>
+                    This program is designed to teach and improve your ability to solve equations using the balance method.
+                    You are given an equation to solve (as indicated by the speech bubble to the right).
+                    
+                </p>
+                <p>
+                    To solve the equation, you have to enter the appropriate operation or operations under the corresponding term. 
+                    For instance, if the equation is
+                </p>
+                <p>
+                    2x - 5 = 15
+                </p>
+                <p>
+                    you will need to enter "+5" under both the term "5" and the term "15": i.e.
+                </p>
+                <p>
+                    2x - 5 = 15 <br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+5&nbsp;&nbsp;&nbsp;+5
+                </p>
+                <p>
+                    After the "check" button is pressed the equation will change to, 
+                </p>
+                <p>
+                    2x = 20
+                </p>
+                <p>
+                    To complete the solution you will then have to enter "/2" under both the "2x" and "20" terms: i.e.
+                </p>
+                <p>
+                    2x = 20 <br> /2&nbsp;&nbsp;&nbsp;/2
+
+                </p>
+                <p>
+                    ...and thus you will get...
+                </p>
+                <p>
+                    x = 10
+                </p>
+                <br>
+                <h2>
+                    Allowed operations
+                </h2>
+                <p>
+                    The following operations are allowed to be entered under terms:
+                </p>
+                <p>
+                    Additions: "+a", "+a/b", "+ax", "+ax/b", "+a/bx" (where "a" and "b" are integers).
+                </p>
+                <p>
+                    Subtractions: "-a", "-a/b", "-ax", "-ax/b", "-a/bx" (where "a" and "b" are integers).
+                </p>
+                <p>
+                    Multiplications: "*a", "*-a", "*a/b", "*-a/b", "*ax", "*-ax", "*ax/b", "*-a/bx", (where "a" and "b" are integers).
+                </p>
+                <p>
+                    Divisions: "/a", "/-a", "/a/b", "/-a/b", "/ax", "/-ax", "/ax/b", "/-a/bx", (where "a" and "b" are integers).
+                </p>
+                <p>
+                    Remember, operations on both the left-hand-side and right-hand-side have to be equivalent and, as I have not 
+                    included brackets, multiplication and division must be carried out on all the terms of the equation: i.e.
+                </p>
+                <p>
+                    2x - 5 = 15 <br> /2&nbsp;&nbsp;&nbsp;/2&nbsp;&nbsp;&nbsp;/2
+                </p>
+                <p>
+                    You can extend fractions by using "*a/a" and reduce them by using "/a/a" (however, reduction is generally
+                    done automatically by the program.). An example of extension,
+                </p>
+                <p>
+                    2x/3 - 5 = 15 + x/4 <br> *4/4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;*3/3
+                </p>
+                <p>
+                    ...will result in,
+                </p>
+                <p>
+                    8x/12 - 5 = 15 + 3x/12
+                </p>
+                <p>
+                    The program will prohibit the entering of incorrect operations.
+                </p>
+                <br>
+                <h2>
+                    Tips
+                </h2>
+                <p>
+                    Carry out additions and subtractions first and only multiply or divide when there are 
+                    single terms on the right- and left-hand-sides.
+                </p>
+            </div>
+        </div>
+        <div id="left">
+            <div id="row-group-1" class="row-group">
+                <div id="row-1" class="row">
+                    <div id="p11" class="plhs">
+                        <div class="int">4</div>
+                    </div>
+                    <div id="o12o" class="plhs">
+                        <div class="int">-</div>
+                    </div>
+                    <div id="p12" class="plhs">
+                        <div class="num">2x</div>
+                        <div class="int">3</div>
+                    </div>
+                    <div class="plhs">
+                        <div class="int">=</div>
+                    </div>
+                    <div id="p13" class="prhs">
+                        <div class="num">6x</div>
+                        <div class="int">3</div>
+                    </div>
+                    <div id="o14o" class="prhs">
+                        <div class="int">+</div>
+                    </div>
+                    <div id="p14" class="prhs">
+                        <div class="int">2</div>
+                    </div>
+                </div>
+                <div id="row-info-1" class="row-info" >
+                    <svg width="400px" height="60px" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L390 5 Q400 5 400 15 L400 45 Q 400 55 390 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
+                        <text X="37" Y="25" >the equation that should be solved</text>
+                        <text X="37" Y="45" >for "x" using the balance method</text>
+                    </svg>
+                </div>
+            </div>
+            <div id="bal-group-1" class="bal-group">
+                <div id="bal-1" class="bal">
+                    <div id="b11" class="blhs" onmousedown="select(id)">*4/4</div>
+                    <div id="b12b" class="blank"></div>
+                    <div id="b12" class="blhs" onmousedown="select(id)">*2</div>
+                    <div id="b13b" class="blank"></div>
+                    <div id="b13" class="brhs" onmousedown="select(id)">*2</div>
+                    <div id="b14b" class="blank"></div>
+                    <div id="b14" class="brhs" onmousedown="select(id)"></div>
+                </div>
+                <div id="bal-info-1" class="bal-info" >
+                    <svg width="400px" height="60px" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L390 5 Q400 5 400 15 L400 45 Q 400 55 390 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30" stroke="black" fill="white"/>
+                        <text X="37" Y="25" >enter an operation in the box under</text>
+                        <text X="37" Y="45" >the term that you want to manipulate</text>
+                    </svg>
+                </div>
             </div>
         </div>
     
         <div id="right">
             <div id="display">
-                <div id="info-screen"></div>
+                <div id="info">
+                    <div id="info-title">
+                        <div>Information</div>
+                    </div>
+                    <div id="info-screen"></div>
+                </div>
+                <div id="history">
+                    <div id="history-title">
+                        <div>History</div>
+                        <div id="title-button" onclick="clearHistory()">clear history</div>
+                    </div>
+                    <div id="history-outside">
+                    <div id="history-shell"></div>
+                </div>
+                </div>
             </div>
             <div id="keyboard">
                 <div id="keypad">
@@ -80,11 +217,20 @@
                         <div  id="level-display" class="button">1</div>
                         <div id="level-plus" class="button" onclick="changeLevel('up')">+</div>
                     </div>
-                    <div id="new" class="reset-button" onclick="addEquation(1, newArray)">level</div>
+                    <div id="new" class="reset-button" onclick="newLevel()">level</div>
                     <div id="custom" class="reset-button" onclick="addEquation(2, emptyArray)">custom</div>
                     <div id="reset" class="reset-button" onclick="addEquation(3, newArray)">reset</div>
                 </div>
                 <div id="check" class="check-button" onclick="check()">check</div>
+                <div id="info-button" onclick="infoPopup()">
+                    <svg width="40px" height="40px" xmlns="http://www.w3.org/2000/svg">
+                        <g>
+                            <circle id="info-button" cx="20" cy="20" r="16" stroke="black" stroke-width="2" fill="rgb(239, 244, 248)"/>
+                            <circle cx="20" cy="12" r="2" stroke="black" fill="black"/>
+                            <line x1="20" y1="17" x2="20" y2="30" stroke="black" stroke-width="4"/>
+                        </g>
+                    </svg>
+                </div>             
             </div>
         </div>
     </div>
