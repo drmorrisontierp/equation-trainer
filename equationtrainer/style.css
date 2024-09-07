@@ -422,6 +422,12 @@
     border: dotted black 1px;
 }
 
+#info-button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
 #info-button:hover {
     fill: rgb(224, 231, 236);
 }
