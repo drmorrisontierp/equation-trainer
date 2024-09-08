@@ -1088,9 +1088,12 @@ function check() {
         let xCheck = checkXWithAddition(newP, b);
         let multiplicationCheck = checkMultiplication(newP, b);
         let balanceCheck = checkBalance(b)
+        let operationCheck = checkOperations(b)
+        console.log(operationCheck.faults)
 
         // Perform the extend operation if valid
         if (!extendCheck.faults) {
+            console.log("extension")
             createNewRow(newP);
             for (let e of extendCheck.extentions) {
                 extend(e[0], e[1], e[2], e[3]);
@@ -1109,7 +1112,7 @@ function check() {
         }
 
         // Check the balance and perform the addition operation if valid
-        if (!xCheck.faults && !balanceCheck.faults) {
+        if (!xCheck.faults && !balanceCheck.faults && !operationCheck.faults) {
             createNewRow(newP);
             addition(newP, b, xCheck.fractions);
             completeCheck()
@@ -1123,6 +1126,9 @@ function check() {
             if (extendCheck.warning === "addition") {
                 if (balanceCheck.faults) {
                     element("info-screen").innerHTML = warningsText("balance-fault", [balanceCheck.warning[0], balanceCheck.warning[1]])
+                    return
+                } else if (operationCheck.faults) {
+                    element("info-screen").innerHTML = warningsText("operation-fault")
                     return
                 } else if (xCheck.faults) {
                     let warning = ""
@@ -1139,6 +1145,9 @@ function check() {
             } else if (extendCheck.warning === "multiplication") {
                 if (multiplicationCheck.faults) {
                     element("info-screen").innerHTML = multiplicationCheck.warning
+                    return
+                } else if (operationCheck.faults) {
+                    element("info-screen").innerHTML = warningsText("operation-fault")
                     return
                 }
             } else {
@@ -1157,7 +1166,7 @@ function check() {
  * @returns {boolean} - True if the equation is balanced, false otherwise.
  */
 function checkOperations(b) {
-    console.log("checkBalance")
+    console.log("checkOperations")
     const lhs = [b[0], b[1]].sort().join()
     const rhs = [b[2], b[3]].sort().join()
     const plus = countChars(lhs, "+")  + countChars(rhs, "+")
@@ -1165,9 +1174,11 @@ function checkOperations(b) {
     const times = countChars(lhs, "*") + countChars(rhs, "*")
     const divide = countChars(lhs, "/") + countChars(rhs, "/")
 
+    console.log(plus, minus, times, divide)
+    console.log((plus !== 0 && (times !== 0 || divide !== 0)) , (minus !== 0 && (times !== 0 || divide !== 0)) )
 
-    if (plus !== 0 && (times !== 0 || divide !== 0)) {
-        return { "faults": true, "warning": [lhs.join(""), rhs.join("")] }
+    if ((plus !== 0 && (times !== 0 || divide !== 0)) || (minus !== 0 && (times !== 0 || divide !== 0))) {
+        return { "faults": true, "warning": [] }
     }
     return { "faults": false, }
 }
