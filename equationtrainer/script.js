@@ -46,15 +46,6 @@ const warningsText = (warning, args) => {
         }
     } else if (warning === "extend-fault") {
         let operation = args[0]
-        if (args.length === 1) {
-            warningsText = ""
-        } else if (args.length === 2) {
-            warningsText = ""
-        } else if (args.length === 3) {
-            warningsText = ""
-        } else if (args.length === 3) {
-            warningsText = ""
-        }
         warningsText = `When you ${operation ? 'extend' : 'reduce'} a fraction,
         you should be ${operation ? 'multiplying' : 'dividing'} by a fraction that
         is equivalent to one: i.e. ${args[1]}/${args[1]} or ${args[2]}/${args[2]}`
@@ -1150,7 +1141,9 @@ function check() {
                     return
                 } 
             } else {
-                element("info-screen").innerHTML = extendCheck.warning
+                //element("info-screen").innerHTML = extendCheck.warning
+                
+                element("info-screen").innerHTML = warningsText("extend-fault", extendCheck.warning)
                 return
             }
         }
@@ -1384,7 +1377,7 @@ function checkExtend(p, b) {
         if (possibles.length === 1 && additions.length === 0) {
             console.log("add warning: trying to reduce/expand with wrong method")
             if (b[possibles[0]][0][0] === "*") {
-                return { "faults": true, "warning": "extensionFault" };
+                return { "faults": true, "warning": ["extend", b[possibles[0]][0].slice(1), b[possibles[0]][1]]};
             } else {
                 return { "faults": true, "warning": "reductionFault" };
             }
