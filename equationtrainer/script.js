@@ -1379,7 +1379,7 @@ function checkExtend(p, b) {
             if (b[possibles[0]][0][0] === "*") {
                 return { "faults": true, "warning": ["extend", b[possibles[0]][0].slice(1), b[possibles[0]][1]]};
             } else {
-                return { "faults": true, "warning": "reductionFault" };
+                return { "faults": true, "warning": ["reduce", b[possibles[0]][0].slice(1), b[possibles[0]][1]]};
             }
 
         } else if (possibles.length === 0) {
