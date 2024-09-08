@@ -236,9 +236,13 @@
 
 #info-screen {
     margin: 5px 10px 5px 10px;
-    min-width: 300px;
-    min-height: 200px;
+    max-width: 280px;
+    -moz-hyphens: auto;
+    -webkit-hyphens: auto;
+    hyphens: auto;
     text-align: center;
+    font-weight: normal;
+    text-align: justify;
 }
 #reset-etc {
     display: grid;

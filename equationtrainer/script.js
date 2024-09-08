@@ -63,7 +63,7 @@ const warningsText = (warning, args) => {
         console.log("running")
         warningsText = `When balancing an equation, one needs to have exactly the same operations
          manipulating expressions on both sides of the equation.<br><br> I see you have the equivalent of 
-         ${args[0]} on the left hand side and ${args[1]} on the right: they are not the same.`
+         '${args[0]}' on the left hand side and ${args[1] || "'0'"} on the right: they are not the same.`
     } else if (warning === "multiplication-fault") {
         if (args.length === 1) {
             warningsText = ""
@@ -74,6 +74,11 @@ const warningsText = (warning, args) => {
         } else if (args.length === 3) {
             warningsText = ""
         }
+    } else if (warning === "operation-fault") {
+        warningsText = `It is possible to carry out additions and subtractions at the same time but not ${args[0]} 
+        and ${args[1]}. <br><br>One should be allowed reduction/expansion and addition/subtraction but I havent found a 
+        way to code it yet`
+        
     }
     return warningsText
 
@@ -1092,7 +1097,7 @@ function check() {
         console.log(operationCheck.faults)
 
         // Perform the extend operation if valid
-        if (!extendCheck.faults) {
+        if (!extendCheck.faults && !operationCheck.faults) {
             console.log("extension")
             createNewRow(newP);
             for (let e of extendCheck.extentions) {
@@ -1123,12 +1128,9 @@ function check() {
 
 
         if (extendCheck.faults) {
-            if (extendCheck.warning === "addition") {
+            if (extendCheck.warning === "addition") {   
                 if (balanceCheck.faults) {
                     element("info-screen").innerHTML = warningsText("balance-fault", [balanceCheck.warning[0], balanceCheck.warning[1]])
-                    return
-                } else if (operationCheck.faults) {
-                    element("info-screen").innerHTML = warningsText("operation-fault")
                     return
                 } else if (xCheck.faults) {
                     let warning = ""
@@ -1146,15 +1148,16 @@ function check() {
                 if (multiplicationCheck.faults) {
                     element("info-screen").innerHTML = multiplicationCheck.warning
                     return
-                } else if (operationCheck.faults) {
-                    element("info-screen").innerHTML = warningsText("operation-fault")
-                    return
-                }
+                } 
             } else {
                 element("info-screen").innerHTML = extendCheck.warning
                 return
             }
         }
+        if (operationCheck.faults) {
+            element("info-screen").innerHTML = warningsText("operation-fault", operationCheck.warning)
+            return
+        } 
     }
 }
 
@@ -1174,11 +1177,11 @@ function checkOperations(b) {
     const times = countChars(lhs, "*") + countChars(rhs, "*")
     const divide = countChars(lhs, "/") + countChars(rhs, "/")
 
-    console.log(plus, minus, times, divide)
-    console.log((plus !== 0 && (times !== 0 || divide !== 0)) , (minus !== 0 && (times !== 0 || divide !== 0)) )
+    const symbolOne = (plus !== 0 ) ? "additions" : "subtractions"
+    const symbolTwo = (times !== 0 ) ? "multiplications" : "divisions"
 
     if ((plus !== 0 && (times !== 0 || divide !== 0)) || (minus !== 0 && (times !== 0 || divide !== 0))) {
-        return { "faults": true, "warning": [] }
+        return { "faults": true, "warning": [symbolOne, symbolTwo] }
     }
     return { "faults": false, }
 }
