@@ -46,8 +46,8 @@ const warningsText = (warning, args) => {
         }
     } else if (warning === "extend-fault") {
         let operation = args[0]
-        warningsText = `When you ${operation ? 'extend' : 'reduce'} a fraction,
-        you should be ${operation ? 'multiplying' : 'dividing'} by a fraction that
+        warningsText = `When you ${operation === "extend" ? 'extend' : 'reduce'} a fraction,
+        you should be ${operation === "extend" ? 'multiplying' : 'dividing'} by a fraction that
         is equivalent to one: i.e. ${args[1]}/${args[1]} or ${args[2]}/${args[2]}`
 
     } else if (warning === "balance-fault") {
@@ -55,7 +55,13 @@ const warningsText = (warning, args) => {
         warningsText = `When balancing an equation, one needs to have exactly the same operations
          manipulating expressions on both sides of the equation.<br><br> I see you have the equivalent of 
          '${args[0]}' on the left hand side and ${args[1] || "'0'"} on the right: they are not the same.`
-    } else if (warning === "multiplication-fault") {
+    } else if (warning === "cant-process-x-squared") {
+        console.log("running")
+        warningsText = `Sorry I can't process x-squared with this program even if you can.`
+    } else if (warning === "all-positions-must-have-same-value") {
+        console.log("running")
+        warningsText = `I haven't included brackets so you have to operate on all terms with the same multiplier or divisor.`
+    }else if (warning === "multiplication-fault") {
         if (args.length === 1) {
             warningsText = ""
         } else if (args.length === 2) {
@@ -67,7 +73,7 @@ const warningsText = (warning, args) => {
         }
     } else if (warning === "operation-fault") {
         warningsText = `It is possible to carry out additions and subtractions at the same time but not ${args[0]} 
-        and ${args[1]}. <br><br>One should be allowed reduction/expansion and addition/subtraction but I havent found a 
+        and ${args[1]}. <br><br>One should be allowed reduction/ expansion and addition/ subtraction but I havent found a 
         way to code it yet`
         
     }
@@ -1137,7 +1143,7 @@ function check() {
                 }
             } else if (extendCheck.warning === "multiplication") {
                 if (multiplicationCheck.faults) {
-                    element("info-screen").innerHTML = multiplicationCheck.warning
+                    element("info-screen").innerHTML = warningsText(multiplicationCheck.warning)
                     return
                 } 
             } else {
@@ -1327,7 +1333,7 @@ function checkMultiplication(p, b) {
     }
     console.log("exOrM", extentionOrMultiplication, "FP", filledPosition.length)
     if (extentionOrMultiplication > 0) {
-        return { "faults": true, "warning": "all positions must have same value" };
+        return { "faults": true, "warning": "all-positions-must-have-same-value" };
     }
 
 
@@ -1336,7 +1342,7 @@ function checkMultiplication(p, b) {
     let mx = checkForXSquared(p, b);
     if (!mx) {
 
-        return { "faults": true, "warning": "cant process x-squared" };
+        return { "faults": true, "warning": "cant-process-x-squared" };
     }
 
     //console.log("No problems with multiplication/division");
