@@ -2,40 +2,23 @@ function createEquation2(level) {
     newArray = ["", "", "", "", "", "", "", "", "", ""]
     
     
+    let e = Math.round(Math.random() * 8 + 1)
+    let g = Math.round(Math.random() * 8 + 1)*(level > 4 ? (Math.round(Math.random() * 100) < 50 ? 1 : -1) : 1)
+    let f = Math.round(Math.random() * 7 + 2)
+    let a = g*f
+    let dif = "1235".includes(level.toString()) ? 0 : (a - Math.round(Math.random()*a+1))
+    a = a - dif
+    let o = ("1235".includes(level.toString()) ? 0 : (dif))*(-1)
+    let b = "1456".includes(level.toString()) ? 1 : f * e
+    let p = "12356".includes(level.toString()) ? 1 : e
 
-    let a = Math.round(Math.random() * 8 + 1)*(level > 4 ? (Math.round(Math.random() * 100) < 50 ? 1 : -1) : 1)
-    let o = "1235".includes(level.toString()) ? 0 : Math.round(Math.random() * 8 + 1)*(Math.round(Math.random() * 100) < 50 ? 1 : -1)
- 
-    let b = "1456".includes(level.toString()) ? 1 : Math.round(Math.random() * 8 + 1)
-    let p = "12356".includes(level.toString()) ? 1 : Math.round(Math.random() * 8 + 1)
+    let s = Math.round(Math.random() * 20 + 1) * ("1234".includes(level.toString()) ? 1 : (Math.round(Math.random() * 100) < 50 ? 1 : -1))
+    let dif2 = (s - Math.round(Math.random()*s+1))
+    let c = (s*e - dif2)*(-1)
+    let d = e
+    let m = dif2*g
+    let n = e*g
     
-    let x = (a*p - o*b)/(p*b)
-    //let x = (a*p - o*b)
-    console.log(x)
-    let g1 = gcd(a, b)
-    let g2 = gcd(o, p)
-
-    a = Math.round(a/g1)
-    b = Math.round(b/g1)
-    o = Math.round(o/g2)
-    p = Math.round(p/g2)
-
-
-    let f = Math.round(Math.random() * 20 + 1) * x * p * b * ("1234".includes(level.toString())? 1 : (Math.round(Math.random() * 100) < 50 ? 1 : -1))
-    
-    let c = Math.round(Math.random() * 8 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
-    let d = Math.round(Math.random() * 8 + 1)
-    g1 = gcd(c, d)
-    c = Math.round(c/g1)
-    d = Math.round(d/g1)
-    
-    let n = Math.round(Math.random() * 4 + 1)
-    //let m = f + c
-    let m = (f*d*n + c*n)
-    n = n*d
-    g1 = gcd(m, n)
-    m = m/g1
-    n = n/g1
     
     
     a = a.toString() + "x"
@@ -47,7 +30,7 @@ function createEquation2(level) {
     o = o.toString() + "x"
     p = p.toString()
 
-    console.log("a: ", a, "b: ", b, "c: ", c, "d: ", d, "m: ", m, "n: ", n, "o: ", o, "p: ", p, "f: ", f)
+    console.log("a: ", a, "b: ", b, "c: ", c, "d: ", d, "m: ", m, "n: ", n, "o: ", o, "p: ", p, "s: ", s, dif2)
     if (level === 1) {
         newArray[0] = a
         newArray[1] = 1
@@ -214,7 +197,7 @@ function createEquation2(level) {
 }
 
 console.log("run")
-createEquation2(9)
+createEquation2(1)
 
 
 
