@@ -47,7 +47,7 @@ function createEquation2(level) {
     o = o.toString() + "x"
     p = p.toString()
 
-    console.log("a: ", a, "b: ", b, "c: ", c, "d: ", d, "m: ", m, "n: ", n, "o: ", o, "p: ", p, "f: ", f)
+    //console.log("a: ", a, "b: ", b, "c: ", c, "d: ", d, "m: ", m, "n: ", n, "o: ", o, "p: ", p, "f: ", f)
     if (level === 1) {
         newArray[0] = a
         newArray[1] = 1
@@ -97,6 +97,19 @@ function createEquation2(level) {
         newArray[9] = 1
     }
     if (level === 5) {
+        newArray[0] = a
+        newArray[1] = "1"
+        newArray[2] = (c[0] === "-"? "-": "+")
+        newArray[3] = (c[0] === "-"? c.slice(1): c)
+        newArray[4] = d
+        newArray[5] = m
+        newArray[6] = n
+        newArray[7] = ""
+        newArray[8] = ""
+        newArray[9] = ""
+    }
+
+    if (level === 6) {
         let xPosOne = Math.round(Math.random() * 100) < 50
         newArray[0] = xPosOne ? a : c
         newArray[1] = 1
@@ -109,7 +122,7 @@ function createEquation2(level) {
         newArray[8] = ""
         newArray[9] = ""
     }
-    if (level === 6) {
+    if (level === 7) {
         let xPosOne = Math.round(Math.random() * 100) < 50
         let xPosTwo = Math.round(Math.random() * 100) < 50
         newArray[0] = xPosOne ? a : c
@@ -123,7 +136,7 @@ function createEquation2(level) {
         newArray[8] = xPosOne? (o[0] === "-"? o.slice(1): o) : (m[0] === "-"? m.slice(1): m)
         newArray[9] = 1
     }
-    if (level === 7) {
+    if (level === 8) {
         newArray[0] = a
         newArray[1] = b
         newArray[2] = (c[0] === "-"? "-": "+")
@@ -135,18 +148,7 @@ function createEquation2(level) {
         newArray[8] = (o[0] === "-"? o.slice(1): o)
         newArray[9] = p
     }
-    if (level === 8) {
-        newArray[0] = b
-        newArray[1] = a
-        newArray[2] = (c[0] === "-"? "-": "+")
-        newArray[3] = (c[0] === "-"? c.slice(1): c)
-        newArray[4] = d
-        newArray[5] = m
-        newArray[6] = n
-        newArray[7] = ""
-        newArray[8] = ""
-        newArray[9] = ""
-    }
+    
     if (level === 9) {
         let xPosOne = Math.round(Math.random() * 100) < 50
         let xPosTwo = Math.round(Math.random() * 100) < 50
