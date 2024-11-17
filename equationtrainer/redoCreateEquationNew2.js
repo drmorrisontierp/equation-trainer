@@ -3,13 +3,21 @@ function createEquation2(level) {
     
     let s = Math.round(Math.random() * 20 + 1) * ("123456".includes(level.toString()) ? 1 : (Math.round(Math.random() * 100) < 50 ? 1 : -1))
     let c0 = Math.round(Math.random() * 99 + 1)*(Math.round(Math.random() * 100) < 50 ? 1 : -1)
-    let c = Math.round(Math.random() * 25 + 1)*(Math.round(Math.random() * 100) < 50 ? 1 : -1)
+    let c4 = Math.round(Math.random() * 25 + 1)*(Math.round(Math.random() * 100) < 50 ? 1 : -1)
     
     let a = Math.round(Math.random() * 8 + 1)
     let b = Math.round(Math.random() * 8 + 1)
-    let b5 = Math.round(Math.random() * 8 + 1)
+    let c = Math.round(Math.random() * 20 + 1)*(Math.round(Math.random() * 100) < 50 ? 1 : -1)
     let d = Math.round(Math.random() * 8 + 1)
+    let m = Math.round(Math.random() * 20 + 1)
     let n = Math.round(Math.random() * 8 + 1)
+    let o = Math.round(Math.random() * 8 + 1)*(Math.round(Math.random() * 100) < 50 ? 1 : -1)
+    let p = Math.round(Math.random() * 8 + 1)
+    
+    while (a/b == o/p) {
+        console.log("new o")
+        o = Math.round(Math.random() * 8 + 1)*(Math.round(Math.random() * 100) < 50 ? 1 : -1)
+    }
 
     
 
@@ -18,19 +26,39 @@ function createEquation2(level) {
         b = Math.round(Math.random() * 8 + 1)
     }
 
-    let h = Math.round(Math.random()*s*a + 1)*(Math.round(Math.random() * 100) < 50 ? 1 : -1)
-    let g = s*a - h
+    
+   
     let j = Math.round(Math.random()*a + 1)*(Math.round(Math.random() * 100) < 50 ? 1 : -1)
     let k = a - j
 
-    let m5 = (g/gcd(g, b5))*Math.round(Math.random() * 2 + 1)
-    let n5 = (b5/gcd(g, b5))*Math.round(Math.random() * 2 + 1)
-    let c5 = (h/gcd(h, b5))*Math.round(Math.random() * 2 + 1)*(-1)
-    let d5 = (b5/gcd(h, b5))*Math.round(Math.random() * 2 + 1)
+    
+    
     let a6 = k
+    
     let o6 = j*(-1)
+    let [x, y, x1, y1, b1, a1, o1] = [0, 0, 0, 0, 0, 0]
+    
 
+if ("57".includes(level.toString())) {
+    x = Math.round(Math.random() * 8 + 1)*(Math.round(Math.random() * 100) < 50 ? 1 : -1)
+    y = Math.round(Math.random() * 8 + 1)
+    x1 = Math.round(Math.random() * 8 + 1)
+    y1 = Math.round(Math.random() * 8 + 1)
+    b1 = Math.round(Math.random() * 3 + 1)
+    a1 = Math.round(Math.random() * 8 + 1)
+    o1 = Math.round(Math.random() * 8 + 1)*(Math.round(Math.random() * 100) < 50 ? 1 : -1)
+    
 
+    while ((x+x1)%a !== 0 ) {
+        console.log("new x")
+        x = Math.round(Math.random() * 8 + 1)
+    }
+    while ((y+y1)%a !== 0 ) {
+        console.log("new y")
+        y = Math.round(Math.random() * 8 + 1)
+    }
+
+}
 
     //console.log("a: ", a, "b: ", b, "c: ", c, "d: ", d, "m: ", m, "n: ", n, "o: ", o, "p: ", p, "s: ", s, dif2)
     if (level === 0) {
@@ -87,67 +115,79 @@ function createEquation2(level) {
         console.log((s*a)%b == 0)
         newArray[0] = (a/gcd(a,b)).toString() + "x"
         newArray[1] = (b/gcd(a,b)).toString()
-        newArray[2] = c.toString()[0] === "-"? "-": "+"
-        newArray[3] = c.toString()[0] === "-"? c.toString().slice(1): c.toString();
+        newArray[2] = c4.toString()[0] === "-"? "-": "+"
+        newArray[3] = c4.toString()[0] === "-"? c4.toString().slice(1): c4.toString();
         newArray[4] = "1"
-        newArray[5] = (s*a)%b == 0 ? ((s*a + c*b)/b).toString() : ((s*a + c)).toString()
+        newArray[5] = (s*a)%b == 0 ? ((s*a + c4*b)/b).toString() : ((s*a + c4)).toString()
         newArray[6] = "1"
         newArray[7] = ""
         newArray[8] = ""
         newArray[9] = ""
     }
     
-    /*if (level === 5) {
-        newArray[0] = (a/gcd(a,b)).toString() + "x"
-        newArray[1] = (b/gcd(a,b)).toString()
-        newArray[2] = (c.toString()[0] === "-"? "-" : "+" ) 
-        newArray[3] = (c.toString()[0] === "-"? c.toString().slice(1) : c.toString()) 
-        newArray[4] = d.toString()
-        newArray[5] = (((s*(a/gcd(a,b))*d + c*b)/((b/gcd(a,b))*d))*n).toString()
-        newArray[6] = n.toString()
-        newArray[7] = ""
-        newArray[8] = ""
-        newArray[9] = ""
-    }*/
+    
     if (level === 5) {
-        newArray[0] = (a/gcd(a,b)).toString() + "x"
-        newArray[1] = (b5/gcd(a,b5)).toString()
-        newArray[2] = (c5.toString()[0] === "-"? "-" : "+" ) 
-        newArray[3] = (c5.toString()[0] === "-"? c5.toString().slice(1) : c5.toString()) 
-        newArray[4] = d5.toString()
-        newArray[5] = m5.toString()
-        newArray[6] = n5.toString()
+        newArray[0] = (a/gcd(a,(x1*y1*b1))).toString() + "x"
+        newArray[1] = ((x1*y1*b1)/gcd(a,(x1*y1*b1))).toString()
+        newArray[2] = (x.toString()[0] === "-"? "-" : "+" ) 
+        newArray[3] = (x.toString()[0] === "-"? (x/gcd(x, (x1*b1))).toString().slice(1) : (x/gcd(x, (x1*b1))).toString()) 
+        newArray[4] = ((x1*b1)/gcd(x, (x1*b1))).toString()
+        newArray[5] = (y/gcd(y, (y1*b1))).toString()
+        newArray[6] = ((y1*b1)/gcd(y, (y1*b1))).toString()
         newArray[7] = ""
         newArray[8] = ""
         newArray[9] = ""
     }
+    
     if (level === 6) {
         newArray[0] = (a6).toString() + "x"
         newArray[1] = "1"
-        newArray[2] = (c.toString()[0] === "-"? "-" : "+" ) 
-        newArray[3] = (c.toString()[0] === "-"? c.toString().slice(1) : c.toString()) 
+        newArray[2] = (c4.toString()[0] === "-"? "-" : "+" ) 
+        newArray[3] = (c4.toString()[0] === "-"? c4.toString().slice(1) : c4.toString()) 
         newArray[4] = "1"
-        newArray[5] = (s*a + c).toString()
+        newArray[5] = (s*a + c4).toString()
         newArray[6] = "1"
         newArray[7] = (o6.toString()[0] === "-"? "-" : "+" ) 
         newArray[8] = (o6.toString()[0] === "-"? o6.toString().slice(1) + "x" : o6.toString() + "x")
         newArray[9] = "1"
     }
-
-    /*
-    if (level === 6) {
-        newArray[0] = a
-        newArray[1] = "1"
-        newArray[2] = (c[0] === "-"? "-": "+")
-        newArray[3] = (c[0] === "-"? c.slice(1): c)
-        newArray[4] = "1"
-        newArray[5] = m
-        newArray[6] = "1"
-        newArray[7] = (o[0] === "-"? "-": "+") 
-        newArray[8] = (o[0] === "-"? o.slice(1): o)
-        newArray[9] = "1"
+    if (level === 7) {
+        newArray[0] = (a1/gcd(a1,(x1*y1*b1))).toString() + "x"
+        newArray[1] = ((y1*b1)/gcd(a1,(y1*b1))).toString()
+        newArray[2] = (x.toString()[0] === "-"? "-" : "+" ) 
+        newArray[3] = ((x/gcd(x, (x1*b1))).toString()[0] === "-"? x.toString().slice(1) : x.toString()) 
+        newArray[4] = ((x1*b1)/gcd(x, (x1*b1))).toString()
+        newArray[5] = (y/gcd(y, y1*b1)).toString()
+        newArray[6] = ((y1*b1/gcd(y, y1*b1))).toString()
+        newArray[7] = (o1.toString()[0] === "-"? "-" : "+" ) 
+        newArray[8] = (o1.toString()[0] === "-"? (o1/gcd(o1,(x1*b1))).toString().slice(1) + "x" : (o1/gcd(o1,(x1*b1))).toString() + "x")
+        newArray[9] = ((x1*b1)/gcd(o1,(x1*b1))).toString()
     }
-    */
+    if (level === 8) {
+        newArray[0] = (a/gcd(a, b)).toString() + "x"
+        newArray[1] = (b/gcd(a, b)).toString()
+        newArray[2] = (c.toString()[0] === "-"? "-" : "+" ) 
+        newArray[3] = (c.toString()[0] === "-"? (c/gcd(c, d)).toString().slice(1) : (c/gcd(c, d)).toString()) 
+        newArray[4] = (d/gcd(c, d)).toString()
+        newArray[5] = (m/gcd(m, n)).toString()
+        newArray[6] = (n/gcd(m, n)).toString()
+        newArray[7] = (o.toString()[0] === "-"? "-" : "+" ) 
+        newArray[8] = (o.toString()[0] === "-"? (o/gcd(o, p)).toString().slice(1) + "x" : (o/gcd(o, p)).toString() + "x") 
+        newArray[9] = (p/gcd(o, p)).toString()
+    }
+    if (level === 9) {
+        newArray[0] = (a/gcd(a, b)).toString() + "x"
+        newArray[1] = (b/gcd(a, b)).toString()
+        newArray[2] = (c.toString()[0] === "-"? "-" : "+" ) 
+        newArray[3] = (c.toString()[0] === "-"? (c/gcd(c, d)).toString().slice(1) : (c/gcd(c, d)).toString()) 
+        newArray[4] = (d/gcd(c, d)).toString()
+        newArray[5] = (m/gcd(m, n)).toString()
+        newArray[6] = (n/gcd(m, n)).toString()
+        newArray[7] = (o.toString()[0] === "-"? "-" : "+" ) 
+        newArray[8] = (o.toString()[0] === "-"? (o/gcd(o, p)).toString().slice(1) + "x" : (o/gcd(o, p)).toString() + "x") 
+        newArray[9] = (p/gcd(o, p)).toString()
+    }
+
     console.log("level: ", level, "NewArray: ", newArray)
 
     let xIndex = []
