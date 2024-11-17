@@ -17,9 +17,17 @@ function createEquation2(level) {
 
 
     if ("89".includes(level.toString())) {
-        while (a / b == o / p) {
+        while (a / b == (o / p)*(-1)) {
             console.log("new o")
-            o = Math.round(Math.random() * 8 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+            o = Math.round(Math.random() * 12 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+        }
+        while (c / d == (o / p)*(-1)) {
+            console.log("new c")
+            c = Math.round(Math.random() *20 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+        }
+        while (c / d == (m / n)*(-1)) {
+            console.log("new m")
+            m = Math.round(Math.random() * 20 + 1)
         }
     }
 
@@ -198,6 +206,7 @@ function createEquation2(level) {
 
     console.log("level: ", level, "NewArray: ", newArray)
 
+    /*
     let xIndex = []
     for (let i = 0; i < newArray.length; i++) {
         //console.log(newArray[i])
@@ -212,14 +221,14 @@ function createEquation2(level) {
                 xL = parseFloat((parseInt(newArray[xIndex[0] - 1]) / parseInt(newArray[xIndex[0]].replace("x", ""))).toFixed(5))
                 xR = parseFloat((parseInt(newArray[xIndex[1] - 1]) / parseInt(newArray[xIndex[1]].replace("x", ""))).toFixed(5))
             }
-            //console.log(xL, xR)
+            console.log(xL, xR)
             if (xL === xR) {
                 console.log("recreating")
                 createEquation2(level)
             }
         }
 
-    }
+    }*/
 
 
     return
