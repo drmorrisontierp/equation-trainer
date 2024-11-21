@@ -814,7 +814,7 @@ document.addEventListener("keydown", handleKeydown);
 function restart() {
     stopped = false
     creating = false
-    newArray = createEquation(level)
+    newArray = createEquation(level-1)
     addEquation(1, newArray)
     element("row-info-1").innerHTML = `
         <svg width="280px" height="60px" xmlns="http://www.w3.org/2000/svg">
