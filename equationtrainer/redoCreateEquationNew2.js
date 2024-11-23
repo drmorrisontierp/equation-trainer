@@ -4,9 +4,7 @@ function createEquation2(level) {
     let s = Math.round(Math.random() * 20 + 1) * ("123456".includes(level.toString()) ? 1 : (Math.round(Math.random() * 100) < 50 ? 1 : -1))
     let c0 = Math.round(Math.random() * 99 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
     let c4 = Math.round(Math.random() * 25 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
-
     let a = Math.round(Math.random() * 8 + 1)
-
     let b = Math.round(Math.random() * 8 + 1)
     let c = Math.round(Math.random() * 20 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
     let d = Math.round(Math.random() * 8 + 1)
@@ -14,7 +12,6 @@ function createEquation2(level) {
     let n = Math.round(Math.random() * 8 + 1)
     let o = Math.round(Math.random() * 12 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
     let p = Math.round(Math.random() * 8 + 1)
-
 
     if ("89".includes(level.toString())) {
         while (a / b == (o / p)*(-1)) {
@@ -30,27 +27,17 @@ function createEquation2(level) {
             m = Math.round(Math.random() * 20 + 1)
         }
     }
-
-
-
     if ("4".includes(level.toString())) {
         while (s * a % b !== 0) {
             console.log("new b")
             b = Math.round(Math.random() * 8 + 1)
         }
     }
-
-
     let j = Math.round(Math.random() * a + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
     let k = a - j
-
-
-
     let a6 = k
-
     let o6 = j * (-1)
     let [x, y, x1, y1, b1, a1, o1] = [0, 0, 0, 0, 0, 0]
-
 
     if ("57".includes(level.toString())) {
         x = Math.round(Math.random() * 8 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
@@ -61,7 +48,6 @@ function createEquation2(level) {
         a1 = Math.round(Math.random() * 8 + 1)
         o1 = Math.round(Math.random() * 8 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
 
-
         while ((x + x1) % a !== 0) {
             console.log("new x")
             x = Math.round(Math.random() * 8 + 1)
@@ -70,7 +56,6 @@ function createEquation2(level) {
             console.log("new y")
             y = Math.round(Math.random() * 8 + 1)
         }
-
     }
 
     //console.log("a: ", a, "b: ", b, "c: ", c, "d: ", d, "m: ", m, "n: ", n, "o: ", o, "p: ", p, "s: ", s, dif2)
@@ -122,8 +107,6 @@ function createEquation2(level) {
         newArray[8] = ""
         newArray[9] = ""
     }
-
-
     if (level === 4) {
         console.log((s * a) % b == 0)
         newArray[0] = (a / gcd(a, b)).toString() + "x"
@@ -137,8 +120,6 @@ function createEquation2(level) {
         newArray[8] = ""
         newArray[9] = ""
     }
-
-
     if (level === 5) {
         newArray[0] = (a / gcd(a, (x1 * y1 * b1))).toString() + "x"
         newArray[1] = ((x1 * y1 * b1) / gcd(a, (x1 * y1 * b1))).toString()
@@ -151,7 +132,6 @@ function createEquation2(level) {
         newArray[8] = ""
         newArray[9] = ""
     }
-
     if (level === 6) {
         newArray[0] = (a6).toString() + "x"
         newArray[1] = "1"
@@ -203,36 +183,7 @@ function createEquation2(level) {
         newArray[8] = (o.toString()[0] === "-" ? (o / gcd(o, p)).toString().slice(1) + (xpos3 ? "" : xnum ? "x" : "") : (o / gcd(o, p)).toString() + (xpos3 ? "" : xnum ? "x" : ""))
         newArray[9] = (p / gcd(o, p)).toString() + (xpos3 ? "" : xnum ? "" : "x")
     }
-
-    console.log("level: ", level, "NewArray: ", newArray)
-
-    /*
-    let xIndex = []
-    for (let i = 0; i < newArray.length; i++) {
-        //console.log(newArray[i])
-        if (newArray[i].includes("x")) xIndex.push(i)
-        if (xIndex.length > 1) {
-            let xL
-            let xR
-            if (xIndex[0] === 0 || xIndex[0] === 3) {
-                xL = parseFloat((parseInt(newArray[xIndex[0]].replace("x", "")) / parseInt(newArray[xIndex[0] + 1])).toFixed(5))
-                xR = parseFloat((parseInt(newArray[xIndex[1]].replace("x", "")) / parseInt(newArray[xIndex[1] + 1])).toFixed(5))
-            } else {
-                xL = parseFloat((parseInt(newArray[xIndex[0] - 1]) / parseInt(newArray[xIndex[0]].replace("x", ""))).toFixed(5))
-                xR = parseFloat((parseInt(newArray[xIndex[1] - 1]) / parseInt(newArray[xIndex[1]].replace("x", ""))).toFixed(5))
-            }
-            console.log(xL, xR)
-            if (xL === xR) {
-                console.log("recreating")
-                createEquation2(level)
-            }
-        }
-
-    }*/
-
-
     return
-
 }
 
 console.log("run")

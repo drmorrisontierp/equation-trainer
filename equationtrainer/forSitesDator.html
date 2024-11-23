@@ -689,7 +689,9 @@ font-size: 10pt;
                     <div id="custom" class="reset-button" onclick="addEquation(2, emptyArray)">custom</div>
                     <div id="reset" class="reset-button" onclick="addEquation(3, newArray)">reset</div>
                 </div>
+                <div id="check-score-info" >
                 <div id="check" class="check-button" onclick="check()">check</div>
+                <div id="score" ></div>
                 <div id="info-button" onclick="infoPopup()">
                     <svg width="40px" height="40px" xmlns="http://www.w3.org/2000/svg">
                         <g>
@@ -698,7 +700,8 @@ font-size: 10pt;
                             <line x1="20" y1="17" x2="20" y2="30" stroke="black" stroke-width="4"/>
                         </g>
                     </svg>
-                </div> 
+                </div>
+            </div> 
             </div>
         </div>
     </div>
@@ -718,9 +721,11 @@ let history = {}
 let historyId = 0
 let level = 1
 let popupOpen = false
+let bonus = 1
 const infoShape = `"M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L320 5 Q330 5 330 15 L330 45 Q 330 55 320 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30"`
 
-createEquation()
+newArray = createEquation(level-1)
+
 addEquation(1, newArray)
 
 const warningsText = (warning, args) => {
@@ -784,11 +789,26 @@ const warningsText = (warning, args) => {
 
 }
 
+const levelInfo = {
+    1: `Nivå 1: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp x + c = h </span> <br> med en heltalslösning`,
+    2: `Nivå 2: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax = h </span> <br> med en heltalslösning`,
+    3: `Nivå 3: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp x/b = h </span> <br> med en heltalslösning`,
+    4: `Nivå 4: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax + c = h </span> <br> med en heltalslösning`,
+    5: `Nivå 5: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax/b + c = h </span> <br> med en heltalslösning`,
+    6: `Nivå 6: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax/b + c/d = h/k </span> <br> med en heltalslösning`,
+    7: `Nivå 7: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax + c = h + mx </span> <br> med en heltalslösning`,
+    8: `Nivå 8: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax/b + c/d = h/k + mx/n </span> <br> med en rationeltalslösning`,
+    9: `Nivå 9: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax/b + c/d = h/k + mx/n </span> <br> med en rationeltalslösning`,
+    10: "Nivå 10: Ekvationer där alla positioner är randomiserat",
+}
+
+element("info-screen").innerHTML = levelInfo[level]
+
 // Select the first available position in the first balance row
 select(available[0])
 
 function newLevel() {
-    createEquation()
+    newArray = createEquation(level-1)
     addEquation(1, newArray)
 }
 
@@ -796,9 +816,10 @@ function newLevel() {
 document.addEventListener("keydown", handleKeydown);
 
 function restart() {
+    console.log(level)
     stopped = false
     creating = false
-    createEquation()
+    newArray = createEquation(level-1)
     addEquation(1, newArray)
     element("row-info-1").innerHTML = `
         <svg width="280px" height="60px" xmlns="http://www.w3.org/2000/svg">
@@ -811,312 +832,208 @@ function restart() {
 
 function changeLevel(direction) {
     if (direction === "up") {
-        if (level < 9) {
+        if (level < 10) {
             level++
+            element("info-screen").innerHTML = levelInfo[level]
         } else {
-            level = 9
+            level = 10
         }
     } else {
         if (level > 1) {
             level--
+            element("info-screen").innerHTML = levelInfo[level]
         } else {
             level = 1
         }
     }
-    console.log("level:", level)
     element("level-display").innerHTML = level
 }
+function createEquation(level) {
+    let newArray = ["", "", "", "", "", "", "", "", "", ""]
 
-function createEquation() {
-    newArray = ["", "", "", "", "", "", "", "", "", ""]
-    let x1 = Math.round(Math.random() * 8 + 1)
-    let x2 = Math.round(Math.random() * 8 + 1)
-    let x1b = Math.round(Math.random() * 8 + 1)
-    let x2b = Math.round(Math.random() * 8 + 1)
-    let nox1 = Math.round(Math.random() * 99 + 1)
-    let nox2 = Math.round(Math.random() * 99 + 1)
-    let nox1b = Math.round(Math.random() * 8 + 1)
-    let nox2b = Math.round(Math.random() * 8 + 1)
-    let opp1 = Math.round(Math.random() * 100) < 50 ? "+" : "-";
-    let opp2 = Math.round(Math.random() * 100) < 50 ? "+" : "-";
-    let gx1 = gcd(x1, x1b)
-    let gx2 = gcd(x2, x2b)
-    let g1 = gcd(nox1, nox1b)
-    let g2 = gcd(nox2, nox2b)
-    let x1n = (x1 / gx1).toString() + "x"
-    let x1d = x1b / gx1
-    let x2n = (x2 / gx2).toString() + "x"
-    let x2d = x2b / gx2
-    nox1 = nox1 / g1
-    nox1b = nox1b / g1
-    nox2 = nox2 / g2
-    nox2b = nox2b / g2
-//for levels one and two
-    let final = Math.round(Math.random() * 20 + 1)
-    let numbers = level === 1 ? final * (x1 / gx1) : Math.round(Math.random() * 100) < 50 ? final * (x1 / gx1) : final * (x1 / gx1) * (-1)
-    let num2 = 0
-    let num1 = Math.round(Math.random() * numbers + 1)
-// for level four
-    let solution = Math.round(Math.random() * 20 + 1)
-    solution = Math.round(Math.random() * 100) < 50 ? solution : solution*(-1)
-    let multiple = solution * x1
-    let x14 = Math.round(Math.random()*x1 + 1)
-    let x24 = 0
-    let num4 = 0
-    let num3 = Math.round(Math.random() * multiple + 1)
+    let s = Math.round(Math.random() * 20 + 1) * ("123456".includes(level.toString()) ? 1 : (Math.round(Math.random() * 100) < 50 ? 1 : -1))
+    let c0 = Math.round(Math.random() * 99 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+    let c4 = Math.round(Math.random() * 25 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+    let a = Math.round(Math.random() * 7 + 2)
+    let b = Math.round(Math.random() * 8 + 1)
+    let c = Math.round(Math.random() * 20 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+    let d = Math.round(Math.random() * 8 + 1)
+    let m = Math.round(Math.random() * 20 + 1)
+    let n = Math.round(Math.random() * 8 + 1)
+    let o = Math.round(Math.random() * 12 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+    let p = Math.round(Math.random() * 8 + 1)
 
+    if ("89".includes(level.toString())) {
+        while (a / b == (o / p)*(-1)) {
+            console.log("new o")
+            o = Math.round(Math.random() * 12 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+        }
+        while (c / d == (o / p)*(-1)) {
+            console.log("new c")
+            c = Math.round(Math.random() *20 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+        }
+        while (c / d == (m / n)*(-1)) {
+            console.log("new m")
+            m = Math.round(Math.random() * 20 + 1)
+        }
+    }
+    if ("4".includes(level.toString())) {
+        while (s * a % b !== 0) {
+            console.log("new b")
+            b = Math.round(Math.random() * 8 + 1)
+        }
+    }
+    let j = Math.round(Math.random() * (a-1) + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+    let k = a - j
+    let a6 = k
+    let o6 = j * (-1)
+    let [x, y, x1, y1, b1, a1, o1] = [0, 0, 0, 0, 0, 0]
 
-    while (num2 === 0) {
-        num1 = Math.round(Math.random() * numbers + 1); // Regenerate num1
-        num2 = opp1 === "+" ? numbers + num1 : numbers - num1;
+    if ("57".includes(level.toString())) {
+        x = Math.round(Math.random() * 8 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+        y = Math.round(Math.random() * 8 + 1)
+        x1 = Math.round(Math.random() * 8 + 1)
+        y1 = Math.round(Math.random() * 8 + 1)
+        b1 = Math.round(Math.random() * 3 + 1)
+        a1 = Math.round(Math.random() * 8 + 1)
+        o1 = Math.round(Math.random() * 8 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+
+        while ((x + x1) % a !== 0) {
+            console.log("new x")
+            x = Math.round(Math.random() * 8 + 1)
+        }
+        while ((y + y1) % a !== 0) {
+            console.log("new y")
+            y = Math.round(Math.random() * 8 + 1)
+        }
     }
 
-    while (num4 === 0) {
-        num3 = Math.round(Math.random() * multiple + 1); // Regenerate num1
-        num4 = opp1 === "+" ? (multiple + num3)*(-1) : (num3 - multiple);
+    if (level === 0) {
+        newArray[0] = "x"
+        newArray[1] = "1"
+        newArray[2] = (c0.toString())[0] === "-" ? "-" : "+"
+        newArray[3] = (c0.toString())[0] === "-" ? c0.toString().slice(1) : c0.toString();
+        newArray[4] = "1"
+        newArray[5] = (s - c0).toString()
+        newArray[6] = "1"
+        newArray[7] = ""
+        newArray[8] = ""
+        newArray[9] = ""
     }
-
-    while (x24 === 0) {
-        x14 = Math.round(Math.random()*x1 + 1)
-        x24 = opp2 === "+" ? (x1 - x14)*(-1) : (x14 - x1)
-    }
-
-    let flip = Math.round(Math.random() * 100) < 50
-    let x114 = `${flip ? x14 : x24}x`
-    let x224 = `${flip ? x24 : x24}x`
-    num1 = num1.toString()
-    num3 = num3.toString()
-    num4 = num4.toString()
-
-    console.log(final, numbers, num1, num2)
-    let xOneNum
-    let xOneZero
-    let xTwoFive
-    let noxOneNum
-    let noxTwoNum
-
     if (level === 1) {
-        newArray[0] = x1n
-        newArray[1] = 1
-        newArray[2] = opp1
-        newArray[3] = num1
-        newArray[4] = 1
-        newArray[5] = num2
-        newArray[6] = 1
+        newArray[0] = a.toString() + "x"
+        newArray[1] = "1"
+        newArray[2] = ""
+        newArray[3] = ""
+        newArray[4] = "1"
+        newArray[5] = (a * s).toString()
+        newArray[6] = "1"
         newArray[7] = ""
         newArray[8] = ""
         newArray[9] = ""
     }
     if (level === 2) {
-        xOneZero = Math.round(Math.random() * 100) < 50 ? true : false;
-        numOneMinus = Math.round(Math.random() * 100) < 50 ? true : false;
-        numTwoMinus = Math.round(Math.random() * 100) < 50 ? true : false;
-        newArray[0] = xOneZero ? x1n : opp1 === "+" ? num1 : num1[0] === "-" ? num1.replace("-", "") : "-" + num1
-        newArray[1] = 1
-        newArray[2] = !xOneZero ? opp2 : opp1 === "-" && num1[0] === "-" ? "+" : opp1 === "+" && num1[0] !== "-" ? "+" : "-"
-        newArray[3] = !xOneZero ? x1n : opp1 === "-" && num1[0] === "-" ? num1.replace("-", "") : opp1 === "+" && num1[0] !== "-" ? num1 : num1.replace("-", "")
-        newArray[4] = 1
-        newArray[5] = num2
-        newArray[6] = 1
+        newArray[0] = "x"
+        newArray[1] = a.toString()
+        newArray[2] = ""
+        newArray[3] = ""
+        newArray[4] = "1"
+        newArray[5] = Math.round(Math.random() * 20 + 1).toString()
+        newArray[6] = "1"
         newArray[7] = ""
         newArray[8] = ""
         newArray[9] = ""
     }
     if (level === 3) {
-        newArray[0] = "x"
-        newArray[1] = x1b
-        newArray[2] = opp1
-        newArray[3] = nox1
-        newArray[4] = 1
-        newArray[5] = nox2
-        newArray[6] = 1
+        newArray[0] = a.toString() + "x"
+        newArray[1] = "1"
+        newArray[2] = c0.toString()[0] === "-" ? "-" : "+"
+        newArray[3] = c0.toString()[0] === "-" ? c0.toString().slice(1) : c0.toString();
+        newArray[4] = "1"
+        newArray[5] = (s * a + c0).toString()
+        newArray[6] = "1"
         newArray[7] = ""
         newArray[8] = ""
         newArray[9] = ""
     }
     if (level === 4) {
-        newArray[0] = x114
-        newArray[1] = 1
-        newArray[2] = num3[0] === "+" ? "+" : "-"
-        newArray[3] = num3[0] === "+" ? num3 : num3.replace("-", "")
-        newArray[4] = 1
-        newArray[5] = num4
-        newArray[6] = 1
-        newArray[7] = x224[0] === "+" ? "+" : "-"
-        newArray[8] = x224[0] === "+" ? x224 : x224.replace("-", "")
-        newArray[9] = 1
+        console.log((s * a) % b == 0)
+        newArray[0] = (a / gcd(a, b)).toString() + "x"
+        newArray[1] = (b / gcd(a, b)).toString()
+        newArray[2] = c4.toString()[0] === "-" ? "-" : "+"
+        newArray[3] = c4.toString()[0] === "-" ? c4.toString().slice(1) : c4.toString();
+        newArray[4] = "1"
+        newArray[5] = (s * a) % b == 0 ? ((s * a + c4 * b) / b).toString() : ((s * a + c4)).toString()
+        newArray[6] = "1"
+        newArray[7] = ""
+        newArray[8] = ""
+        newArray[9] = ""
     }
     if (level === 5) {
-        newArray[0] = x1n
-        newArray[1] = x1d
-        newArray[2] = opp1
-        newArray[3] = nox1
-        newArray[4] = nox1b
-        newArray[5] = nox2
-        newArray[6] = nox2b
-        newArray[7] = opp2
-        newArray[8] = x2n
-        newArray[9] = x2d
+        newArray[0] = (a / gcd(a, (x1 * y1 * b1))).toString() + "x"
+        newArray[1] = ((x1 * y1 * b1) / gcd(a, (x1 * y1 * b1))).toString()
+        newArray[2] = (x.toString()[0] === "-" ? "-" : "+")
+        newArray[3] = (x.toString()[0] === "-" ? (x / gcd(x, (x1 * b1))).toString().slice(1) : (x / gcd(x, (x1 * b1))).toString())
+        newArray[4] = ((x1 * b1) / gcd(x, (x1 * b1))).toString()
+        newArray[5] = (y / gcd(y, (y1 * b1))).toString()
+        newArray[6] = ((y1 * b1) / gcd(y, (y1 * b1))).toString()
+        newArray[7] = ""
+        newArray[8] = ""
+        newArray[9] = ""
     }
     if (level === 6) {
-        xOneNum = Math.round(Math.random() * 100) < 50 ? true : false;
-        newArray[0] = xOneNum ? x1n : x1d
-        newArray[1] = xOneNum ? x1d : x1n
-        newArray[2] = opp1
-        newArray[3] = nox1
-        newArray[4] = 1
-        newArray[5] = nox2
-        newArray[6] = 1
-        newArray[7] = ""
-        newArray[8] = ""
-        newArray[9] = ""
+        newArray[0] = (a6).toString() + "x"
+        newArray[1] = "1"
+        newArray[2] = (c4.toString()[0] === "-" ? "-" : "+")
+        newArray[3] = (c4.toString()[0] === "-" ? c4.toString().slice(1) : c4.toString())
+        newArray[4] = "1"
+        newArray[5] = (s * a + c4).toString()
+        newArray[6] = "1"
+        newArray[7] = (o6.toString()[0] === "-" ? "-" : "+")
+        newArray[8] = (o6.toString()[0] === "-" ? o6.toString().slice(1) + "x" : o6.toString() + "x")
+        newArray[9] = "1"
     }
     if (level === 7) {
-        xOneNum = Math.round(Math.random() * 100) < 50 ? true : false;
-        newArray[0] = xOneNum ? x1n : x1d
-        newArray[1] = xOneNum ? x1d : x1n
-        newArray[2] = opp1
-        newArray[3] = nox1
-        newArray[4] = nox1b
-        newArray[5] = nox2
-        newArray[6] = nox2b
-        newArray[7] = ""
-        newArray[8] = ""
-        newArray[9] = ""
+        newArray[0] = (a1 / gcd(a1, (x1 * y1 * b1))).toString() + "x"
+        newArray[1] = ((y1 * b1) / gcd(a1, (y1 * b1))).toString()
+        newArray[2] = (x.toString()[0] === "-" ? "-" : "+")
+        newArray[3] = ((x / gcd(x, (x1 * b1))).toString()[0] === "-" ? x.toString().slice(1) : x.toString())
+        newArray[4] = ((x1 * b1) / gcd(x, (x1 * b1))).toString()
+        newArray[5] = (y / gcd(y, y1 * b1)).toString()
+        newArray[6] = ((y1 * b1 / gcd(y, y1 * b1))).toString()
+        newArray[7] = (o1.toString()[0] === "-" ? "-" : "+")
+        newArray[8] = (o1.toString()[0] === "-" ? (o1 / gcd(o1, (x1 * b1))).toString().slice(1) + "x" : (o1 / gcd(o1, (x1 * b1))).toString() + "x")
+        newArray[9] = ((x1 * b1) / gcd(o1, (x1 * b1))).toString()
     }
-
     if (level === 8) {
-        xOneNum = Math.round(Math.random() * 100) < 50 ? true : false;
-        newArray[0] = xOneNum ? x1n : x1d
-        newArray[1] = xOneNum ? x1d : x1n
-        newArray[2] = opp1
-        newArray[3] = nox1
-        newArray[4] = nox1b
-        newArray[5] = nox2
-        newArray[6] = nox2b
-        newArray[7] = opp2
-        newArray[8] = xOneNum ? x2n : x2d
-        newArray[9] = xOneNum ? x2d : x2n
+        newArray[0] = (a / gcd(a, b)).toString() + "x"
+        newArray[1] = (b / gcd(a, b)).toString()
+        newArray[2] = (c.toString()[0] === "-" ? "-" : "+")
+        newArray[3] = (c.toString()[0] === "-" ? (c / gcd(c, d)).toString().slice(1) : (c / gcd(c, d)).toString())
+        newArray[4] = (d / gcd(c, d)).toString()
+        newArray[5] = (m / gcd(m, n)).toString()
+        newArray[6] = (n / gcd(m, n)).toString()
+        newArray[7] = (o.toString()[0] === "-" ? "-" : "+")
+        newArray[8] = (o.toString()[0] === "-" ? (o / gcd(o, p)).toString().slice(1) + "x" : (o / gcd(o, p)).toString() + "x")
+        newArray[9] = (p / gcd(o, p)).toString()
     }
     if (level === 9) {
-        xOneNum = Math.round(Math.random() * 100) < 50 ? true : false;
-        noxOneNum = Math.round(Math.random() * 100) < 50 ? true : false;
-        noxTwoNum = Math.round(Math.random() * 100) < 50 ? true : false;
-        xOneZero = Math.round(Math.random() * 100) < 50 ? true : false;
-        xTwoFive = Math.round(Math.random() * 100) < 50 ? true : false;
-        if (xOneNum) {
-            if (noxOneNum) {
-                if (xOneZero) {
-                    newArray[0] = x1n
-                    newArray[1] = x1d
-                    newArray[3] = nox1
-                    newArray[4] = nox1b
-                } else {
-                    newArray[0] = nox1
-                    newArray[1] = nox1b
-                    newArray[3] = x1n
-                    newArray[4] = x1d
-                }
-            } else {
-                if (xOneZero) {
-                    newArray[0] = x1n
-                    newArray[1] = x1d
-                    newArray[3] = nox1b
-                    newArray[4] = nox1
-                } else {
-                    newArray[0] = nox1b
-                    newArray[1] = nox1
-                    newArray[3] = x1n
-                    newArray[4] = x1d
-                }
-            }
-        } else {
-            if (noxOneNum) {
-                if (xOneZero) {
-                    newArray[0] = nox1
-                    newArray[1] = nox1b
-                    newArray[3] = x1d
-                    newArray[4] = x1n
-                } else {
-                    newArray[0] = x1d
-                    newArray[1] = x1n
-                    newArray[3] = nox1
-                    newArray[4] = nox1b
-                }
-            } else {
-                if (xOneZero) {
-                    newArray[0] = x1d
-                    newArray[1] = x1n
-                    newArray[3] = nox1b
-                    newArray[4] = nox1
-                } else {
-                    newArray[0] = nox1b
-                    newArray[1] = nox1
-                    newArray[3] = x1n
-                    newArray[4] = x1d
-                }
-            }
-
-        }
-        newArray[2] = opp1
-        if (xOneNum) {
-            if (noxTwoNum) {
-                if (xTwoFive) {
-                    newArray[5] = x2n
-                    newArray[6] = x2d
-                    newArray[8] = nox2
-                    newArray[9] = nox2b
-                } else {
-                    newArray[5] = nox2
-                    newArray[6] = nox2b
-                    newArray[8] = x2n
-                    newArray[9] = x2d
-                }
-            } else {
-                if (xTwoFive) {
-                    newArray[5] = x2n
-                    newArray[6] = x2d
-                    newArray[8] = nox2b
-                    newArray[9] = nox2
-                } else {
-                    newArray[5] = nox2b
-                    newArray[6] = nox2
-                    newArray[8] = x2n
-                    newArray[9] = x2d
-                }
-            }
-        } else {
-            if (noxTwoNum) {
-                if (xTwoFive) {
-                    newArray[5] = nox2
-                    newArray[6] = nox2b
-                    newArray[8] = x2d
-                    newArray[9] = x2n
-                } else {
-                    newArray[5] = x2d
-                    newArray[6] = x2n
-                    newArray[8] = nox2
-                    newArray[9] = nox2b
-                }
-            } else {
-                if (xTwoFive) {
-                    newArray[0] = x2d
-                    newArray[1] = x2n
-                    newArray[3] = nox2b
-                    newArray[4] = nox2
-                } else {
-                    newArray[0] = nox2b
-                    newArray[1] = nox2
-                    newArray[3] = x2n
-                    newArray[4] = x2d
-                }
-            }
-
-        }
-        newArray[7] = opp2
+        let xpos1 = (Math.round(Math.random() * 100) < 50 ? true : false)
+        let xpos3 = (Math.round(Math.random() * 100) < 50 ? true : false)
+        let xnum = (Math.round(Math.random() * 100) < 50 ? true : false)
+        newArray[0] = (a / gcd(a, b)).toString() + (!xpos1 ? "" : xnum ? "x" : "")
+        newArray[1] = (b / gcd(a, b)).toString() + (!xpos1 ? "" : xnum ? "" : "x")
+        newArray[2] = (c.toString()[0] === "-" ? "-" : "+")
+        newArray[3] = (c.toString()[0] === "-" ? (c / gcd(c, d)).toString().slice(1) + (xpos1 ? "" : xnum ? "x" : "") : (c / gcd(c, d)).toString() + (xpos1 ? "" : xnum ? "x" : ""))
+        newArray[4] = (d / gcd(c, d)).toString() + (xpos1 ? "" : xnum ? "" : "x")
+        newArray[5] = (m / gcd(m, n)).toString() + (!xpos3 ? "" : xnum ? "x" : "")
+        newArray[6] = (n / gcd(m, n)).toString() + (!xpos3 ? "" : xnum ? "" : "x")
+        newArray[7] = (o.toString()[0] === "-" ? "-" : "+")
+        newArray[8] = (o.toString()[0] === "-" ? (o / gcd(o, p)).toString().slice(1) + (xpos3 ? "" : xnum ? "x" : "") : (o / gcd(o, p)).toString() + (xpos3 ? "" : xnum ? "x" : ""))
+        newArray[9] = (p / gcd(o, p)).toString() + (xpos3 ? "" : xnum ? "" : "x")
     }
+    return newArray
 }
-
 
 /**
  * Helper function to replace document.getElementById(id).
@@ -1245,16 +1162,12 @@ function handleKeydown(event) {
     } else if (!isNaN(key)) {
         enter(key);
     }
-    //console.log(key);
 }
 
 
 function addEquation(flag, arr) {
     stopped = false
     element("info-screen").innerHTML = ""
-    //if (flag === 1) {
-    //    createEquation()
-    //}
     let target = element("left");  // returns an element with id "left"
 
     // Convert HTMLCollection to an array
@@ -1313,9 +1226,28 @@ function addEquation(flag, arr) {
     selected = available[0]
     select(selected)
 
-    //createHistory(arr)
 
     if (1 || 3) check()
+}
+
+function setBonus(level) {
+    if ("123".includes(level.toString())) {
+        bonus = 1
+    } else if ("4".includes(level.toString())) {
+        bonus = 4
+    } else if ("5".includes(level.toString())) {
+        bonus = 6
+    } else if ("6".includes(level.toString())) {
+        bonus = 12
+    } else if ("7".includes(level.toString())) {
+        bonus = 14
+    } else if ("8".includes(level.toString())) {
+        bonus = 16
+    } else if ("9".includes(level.toString())) {
+        bonus = 16
+    } else {
+        bonus = 25
+    }
 }
 
 function enter(key) {
@@ -1329,7 +1261,6 @@ function enter(key) {
     } else {
         lastEntered = "m"
     }
-    //console.log(entered, lastEntered)
     if (!creating) {
         if (key === "/" && ("+-/".includes(lastEntered) || divChars > 1)) return
         if (key === "*" && entered !== "") return
@@ -1454,7 +1385,6 @@ function moveThrough(direction) {
 
 
 function checkWin() {
-    console.log("check win")
     let plhsNum = ""; // String to hold the current row's left-hand-sides values
     let plhsDen = ""; // String to hold the current row's left-hand-sides values
     let prhsNum = ""; // String to hold the current row's right-hand-sides values
@@ -1470,7 +1400,6 @@ function checkWin() {
             if (element(`p${row}${x + 2}`).children[1].innerHTML !== "0") prhsDen += element(`p${row}${x + 2}`).children[1].innerHTML
         }
     }
-    console.log(plhsNum, plhsDen, prhsNum, prhsDen)
 
     if ((((plhsNum === "x" && prhsNum !== "x") || (plhsNum === "1x" && prhsNum !== "1x")) && (plhsDen === "" || plhsDen === "1"))
         || ((prhsNum === "x" && plhsNum !== "x") || (prhsNum === "1x" && plhsNum !== "1x")) && (prhsDen === "" || prhsDen === "1")) {
@@ -1484,7 +1413,6 @@ function checkWin() {
 
         stopped = true
 
-        console.log("You won")
     } else {
         return
     }
@@ -1559,19 +1487,7 @@ function completeCheckWithAddEquation() {
     let values = []
     target = element(`row-1`)
     let targetChildren = Array.from(target.children)
-    console.log(targetChildren)
     
-        /*for (let x = 0; x < targetChildren.length; x++) {
-            if (x !== 1 || x!== 3 || x !== 5) {
-                values.push(targetChildren[x].children[0].innerHTML)
-                targetChildren[x].children.length > 1 ? values.push(targetChildren[x].children[1].innerHTML) : values.push("1")
-
-            } else if (x !== 1 || x !== 5) {
-                values.push(targetChildren[x].children[0].innerHTML)
-            }
-            
-        }*/
-
        values = [
         targetChildren[0].children[0].innerHTML,
         targetChildren[0].children.length > 1 ? targetChildren[0].children[1].innerHTML : "1",
@@ -1587,7 +1503,6 @@ function completeCheckWithAddEquation() {
         
        ]
     
-        console.log(values)
     available = []
     for (let x = 0; x < 4; x++) {
         available[x] = `b1${x + 1}`
@@ -1644,7 +1559,6 @@ function check() {
 
         // Check conditions
         for (let x of [1, 3]) {
-            console.log("custom?")
             // Get raw innerHTML values
             let p11a = element(`p1${x}`).children[0].innerHTML;
             let p12a = element(`p1${x + 1}`).children[0].innerHTML;
@@ -1686,8 +1600,6 @@ function check() {
                     element(`p1${x}`).children[1].innerHTML.includes("x") ? den + "x" : den,
                  )
             }
-            //console.log("check",newArray)
-            //createHistory(newArray)
         }
 
 
@@ -1726,7 +1638,6 @@ function check() {
         balance.forEach((e) => {
             balanceString += e.innerHTML
         })
-        console.log(balance)
 
         if (balanceString === "") {
             console.log("nothing")
@@ -1781,22 +1692,17 @@ function check() {
             p[2],
             p3
         ]
-        console.log(newP)
 
         let initialRow = element(`row-${row}`)
-        console.log("initialRow", initialRow)
 
         function checkRows(initial, final) {
-            console.log(initial.children.length, final.children.length)
             if (initial.children.length !== final.children.length) return;
             let dissimilar = 0
             for (let index = 0; index < initial.children.length; index++) {
                 if (initial.children[index].children[0].innerHTML !== final.children[index].children[0].innerHTML) {
-                    console.log(initial.children[index].children[0].innerHTML, final.children[index].children[0].innerHTML)
                     dissimilar++
                 }
             }
-            console.log(dissimilar)
             if (dissimilar === 0) back()
         }
 
@@ -1829,7 +1735,6 @@ function check() {
         }
 
         // Check the balance and perform the addition operation if valid
-        //if (!checkBalance(b)) return;
 
         if (!xCheck.faults && !balanceCheck.faults) {
             createNewRow(newP);
@@ -1842,10 +1747,8 @@ function check() {
 
 
         if (extendCheck.faults) {
-            console.log("extendCheck.faults")
             if (extendCheck.warning === "addition") {
                 if (balanceCheck.faults) {
-                    console.log("balanceCheck.faults")
                     element("info-screen").innerHTML = warningsText("balance-fault", [balanceCheck.warning[0], balanceCheck.warning[1]])
                     return
                 } else if (xCheck.faults) {
@@ -1883,7 +1786,6 @@ function check() {
  * @returns {boolean} - True if the equation is balanced, false otherwise.
  */
 function checkBalance(b) {
-    console.log("checkBalance")
     if ([b[0], b[1]].sort().join() !== [b[2], b[3]].sort().join() || b.join("") === "") {
         let lhs = []
         let rhs = []
@@ -1892,8 +1794,6 @@ function checkBalance(b) {
         rhs[0] = b[2][0] === "" || b[2][0] === "" ? "" : b[2][1] !== "1" ? `${b[2][0]}/${b[2][1]}` : b[2][0]
         rhs[1] = b[3][0] === "" || b[3][0] === "" ? "" : b[3][1] !== "1" ? `${b[3][0]}/${b[3][1]}` : b[3][0]
 
-        //console.log("failed to balance", b.join(""), [b[0], b[1]].sort().join() !== [b[2], b[3]].sort().join())
-        //element("info-screen").innerHTML = warningsText("balance-fault", [lhs.join(""), rhs.join("")])
         return { "faults": true, "warning": [lhs.join(""), rhs.join("")] }
     }
     return { "faults": false, }
@@ -1908,7 +1808,7 @@ function checkBalance(b) {
  * @returns {Array|null} - An array of positions for valid addition/subtraction or null if faults are found.
  */
 function checkXWithAddition(p, b) {
-    console.log("checkXWithAddition");
+    //console.log("checkXWithAddition");
 
     let faults = 0;               // Counter for faults
     let positionsToAdd = [];      // Positions to be considered for addition
@@ -1940,25 +1840,25 @@ function checkXWithAddition(p, b) {
                 }
             }
             if (b[x][0].includes("x") && !(p[x][0].includes("x") || p[x][0] === "0")) {
-                console.log("Fail: b contains 'x' but p does not");
+                //console.log("Fail: b contains 'x' but p does not");
                 faultCode["x-fault"].push(faultPosition)
                 faults++;
             } else if (!b[x][0].includes("x") && p[x][0].includes("x")) {
-                console.log("Fail: p contains 'x' but b does not");
+                //console.log("Fail: p contains 'x' but b does not");
                 faultCode["x-fault"].push(faultPosition)
                 faults++;
             } else if (b[x][1].includes("x") && !(p[x][1].includes("x") || p[x][0] === "0")) {
-                console.log("Fail: b denominator contains 'x' but p does not");
+                //console.log("Fail: b denominator contains 'x' but p does not");
                 faultCode["x-fault"].push(faultPosition)
                 faults++;
             } else if (!b[x][1].includes("x") && p[x][1].includes("x")) {
-                console.log("Fail: p denominator contains 'x' but b does not");
+                //console.log("Fail: p denominator contains 'x' but b does not");
                 faultCode["x-fault"].push(faultPosition)
                 faults++;
             } else {
                 positionsToAdd.push(x); // Add position to the list if valid
             }
-            console.log(faultCode)
+            //console.log(faultCode)
             //console.log(`faults: ${faults}, positionsToAdd: ${positionsToAdd}`);
         } else {
             //console.log("Fail: invalid sign in b", x);
@@ -1996,7 +1896,7 @@ function checkXWithAddition(p, b) {
  * @returns {Array|null} - Returns an array with filled positions, empty positions, and positions with x, or null if invalid.
  */
 function checkMultiplication(p, b) {
-    console.log("checkMultiplication");
+    //console.log("checkMultiplication");
 
     let emptyPosition = [];
     let filledPosition = [];
@@ -2017,12 +1917,11 @@ function checkMultiplication(p, b) {
 
 
     // Ensure all filled positions have the same operation
-    console.log(b)
+    //console.log(b)
     let lastPositionNum = b[filledPosition[0]][0];
     let lastPositionDen = b[filledPosition[0]][1];
     let extentionOrMultiplication = 0
     for (let x of filledPosition) {
-        console.log("LP1:", lastPositionNum, "bx0", b[x][0], "LP2:", lastPositionDen, "bx1", b[x][1])
         if ((b[x][0] !== lastPositionNum || b[x][0] === "" || b[x][0] === "0") || (b[x][1] !== lastPositionDen)) {
             //return {"faults": true, "warning": "all positions must have same value"};
             extentionOrMultiplication++;
@@ -2030,7 +1929,7 @@ function checkMultiplication(p, b) {
         lastPositionNum = b[x][0];
         lastPositionDen = b[x][1];
     }
-    console.log("exOrM", extentionOrMultiplication, "FP", filledPosition.length)
+    //console.log("exOrM", extentionOrMultiplication, "FP", filledPosition.length)
     if (extentionOrMultiplication > 0) {
         return { "faults": true, "warning": "all positions must have same value" };
     }
@@ -2056,7 +1955,7 @@ function checkMultiplication(p, b) {
  * @returns {Array|null} - An array of details for extending/reducing the fractions or null if no such operations are found.
  */
 function checkExtend(p, b) {
-    console.log("check extend");
+    //console.log("check extend");
 
     let a = [];        // Stores indices of valid operations
     let possibles = []
@@ -2080,7 +1979,6 @@ function checkExtend(p, b) {
     // If no valid operations are found, return null
     if (a.length === 0) {
         if (possibles.length === 1 && additions.length === 0) {
-            console.log("add warning: trying to reduce/expand with wrong method")
             if (b[possibles[0]][0][0] === "*") {
                 return { "faults": true, "warning": "extensionFault" };
             } else {
@@ -2088,7 +1986,6 @@ function checkExtend(p, b) {
             }
 
         } else if (possibles.length === 0) {
-            console.log("going forward to addition/subtraction")
             return { "faults": true, "warning": "addition" };
         } else if (possibles.length >= 0 && additions.length === 0) {
             let checkNum = b[possibles[0]][0]
@@ -2098,19 +1995,15 @@ function checkExtend(p, b) {
                     checkNum = b[possibles[x]][0]
                     checkDen = b[possibles[x]][1]
                 } else {
-                    console.log("add warning: trying to expand/reduce with wrong method 2")
                     return { "faults": true, "warning": "extention-multiplication" };
                 }
             }
-            console.log("going forward to multiplication")
             return { "faults": true, "warning": "multiplication" };
         };
     } else if (a.length > 0) {
         if (additions.length >= 1) {
-            console.log("add warning: mixed methods")
             return { "faults": true, "warning": "mixed-operations" };
         } else if (possibles.length > 0) {
-            console.log("add warning: mixed methods")
             if (a.length >= possibles.length) {
                 return { "faults": true, "warning": "mixed-multiplications" };
             } else {
@@ -2126,7 +2019,6 @@ function checkExtend(p, b) {
     }
 
     // Return the array of details for extending/reducing the fractions
-    console.log("ext", ext)
     return { "faults": false, "extentions": ext };
 }
 
@@ -2136,7 +2028,6 @@ function checkExtend(p, b) {
  * @param {Array} p - The array containing the positions to be added to the new row.
  */
 function createNewRow(p) {
-    console.log("Creating new row");
 
     let newRowGroup = document.createElement("div")
     let newRow = document.createElement("div");
@@ -2379,12 +2270,10 @@ function updateElementWithExtend(newNum, newDen, hasXnum, hasXden, position) {
  * @param {Array} a - Array of indices to process.
  */
 function addition(p, b, a) {
-    console.log("running addition");
     a[0].forEach(index => processIndex(index, p, b));
     let target = element(`row-${row + 1}`)
     let infoText = ""
     for (let x = 0; x < 7; x += 2) {
-        console.log("x", target.children[x].children[0].innerHTML)
         if (target.children[x].children.length > 1) {
             let numHasX = target.children[x].children[0].innerHTML.includes("x") ? true : false
             let denHasX = target.children[x].children[1].innerHTML.includes("x") ? true : false
@@ -2396,12 +2285,9 @@ function addition(p, b, a) {
             num = num / g
             den = den / g
             if (den === 1) {
-                console.log("2 to 1")
                 target.children[x].innerHTML = `<div class="int">${numHasX ? num + "x" : num}</div></div>`
                 newText = numHasX ? `${num}x` : num
                 infoText = g !== 1 ? infoText + `${oldText} = ${newText} <br><br>` : infoText
-                console.log(infoText)
-
             } else {
                 target.children[x].children[0].innerHTML = numHasX ? num + "x" : num
                 target.children[x].children[1].innerHTML = denHasX ? den + "x" : den
@@ -2410,7 +2296,6 @@ function addition(p, b, a) {
             }
         }
     }
-    console.log(infoText, element("info-screen"))
     element("info-screen").innerHTML = infoText
 }
 
@@ -2500,7 +2385,6 @@ function getResultString(result, original, balance) {
  * @param {HTMLElement} newRow - The new row element.
  */
 function setElementContent(p, b, x, newRow) {
-    console.log("set contents")
     if (p[0] === "-x") p[0] = "-1x"
     if (p[1] === "-x") p[1] = "-1x"
     let numElement = document.createElement("div");
@@ -2511,7 +2395,6 @@ function setElementContent(p, b, x, newRow) {
 
     let num, den;
     if (b[0][0] === "*") {
-        console.log("running *");
         num = parseInt(p[0].replace("x", "")) * parseInt(b[0].slice(1).replace("x", ""));
         den = parseInt(p[1].replace("x", "")) * parseInt(b[1].replace("x", ""));
         if (den < 0) {
@@ -2519,7 +2402,6 @@ function setElementContent(p, b, x, newRow) {
             den = den * (-1)
         }
     } else {
-        console.log("running /");
         num = parseInt(p[0].replace("x", "")) * parseInt(b[1].replace("x", ""));
         den = parseInt(p[1].replace("x", "")) * parseInt(b[0].slice(1).replace("x", ""));
         if (den < 0) {
@@ -2528,17 +2410,14 @@ function setElementContent(p, b, x, newRow) {
         }
     }
 
-    console.log("created", num, den)
 
     let g = gcd(num, den);
     num = num / g;
     den = den / g;
 
-    console.log("gcd", num, den)
 
     let [numHasX, denHasX] = getVariablesStatus(b, p);
 
-    console.log("after get variable status")
 
     if (den === 1 && !denHasX) {
         denElement.innerHTML = Math.abs(num) !== 1 ? (numHasX ? num + "x" : num) : (numHasX ? (num < 0 ? "-x" : "x") : num);
@@ -2594,7 +2473,6 @@ function getVariablesStatus(b, p) {
  * @param {Array} a - Array of indices.
  */
 function multiplication(p, b, a) {
-    console.log("running multiplication");
     let newRow = document.getElementById(`row-${row + 1}`);
     for (let x of a) {
         newRow.children[x * 2].innerHTML = "";
@@ -2749,7 +2627,6 @@ function createHistory(newArray) {
     let hbid = `hb${historyId}`
     let historyArray = [...newArray]
     history[hcid] = historyArray
-    console.log(history)
     let historyText = `
         <div id="${hrid}-1" class="plhs"><div class="num">${newArray[0]}</div><div class="int">${newArray[1]}</div></div>
         <div id="${hrid}-2o" class="plhs"><div class="int">${newArray[2]}</div></div>
@@ -2802,14 +2679,12 @@ function createHistory(newArray) {
     function hideUnused() {
         let prhs = getElementsContent(`[id^='${hrid}']:not(.plhs):not(.history-row)`);
         let plhs = getElementsContent(`[id^='${hrid}']:not(.prhs):not(.history-row)`);
-        console.log(prhs, plhs)
         handleLeftSide(plhs);
         handleRightSide(prhs);
         
     }
     
     function handleRightSide(prhs) {
-        console.log(prhs[0])
         if ((prhs[0] === "0"||prhs[0] === "") && prhs[2] !== "0") {
             hideElements(1, 3);
         } else if (prhs[0] !== "0" && (prhs[2] === "0"||prhs[2] === "")) {
@@ -2844,7 +2719,6 @@ function createHistory(newArray) {
 
     function updateRow() {
         let newRow = element(`${hrid}`);
-        console.log(newRow)
     
         // Update the signs and values based on conditions
         if (newRow.children[0].children[0].innerHTML === "0" && newRow.children[1].children[0].innerHTML === "-") {
@@ -2879,8 +2753,6 @@ function createHistory(newArray) {
 }
 
 function enterHistory(id) {
-    console.log(history)
-    console.log(id)
     hideElement(id)
     addEquation(3, history[id])
 }
@@ -2891,7 +2763,6 @@ function clearHistory() {
 }
 
 function infoPopup() {
-    console.log("popup")
     element("info-popup").style.display = popupOpen ? "none" : "flex";
     popupOpen = !popupOpen
 }
