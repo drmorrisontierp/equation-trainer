@@ -798,8 +798,7 @@ const levelInfo = {
     6: `Nivå 6: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax/b + c/d = h/k </span> <br> med en heltalslösning`,
     7: `Nivå 7: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax + c = h + mx </span> <br> med en heltalslösning`,
     8: `Nivå 8: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax/b + c/d = h/k + mx/n </span> <br> med en rationeltalslösning`,
-    9: `Nivå 9: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax/b + c/d = h/k + mx/n </span> <br> med en rationeltalslösning`,
-    10: "Nivå 10: Ekvationer där alla positioner är randomiserat",
+    9: "Nivå 9: Ekvationer där alla positioner är randomiserat",
 }
 
 element("info-screen").innerHTML = levelInfo[level]
@@ -832,11 +831,11 @@ function restart() {
 
 function changeLevel(direction) {
     if (direction === "up") {
-        if (level < 10) {
+        if (level < 9) {
             level++
             element("info-screen").innerHTML = levelInfo[level]
         } else {
-            level = 10
+            level = 9
         }
     } else {
         if (level > 1) {
@@ -848,53 +847,6 @@ function changeLevel(direction) {
     }
     element("level-display").innerHTML = level
 }
-
-function levelSeven() {
-  let a = Math.round(Math.random() * 8 + 1);
-  let b = Math.round(Math.random() * 8 + 1);
-  let c =
-    Math.round(Math.random() * 10 + 1) *
-    Math.round(Math.random() * 100 < 50 ? -1 : 1);
-  let d = Math.round(Math.random() * 4 + 1);
-  let m = Math.round(Math.random() * 20 + 1);
-  let n = Math.round(Math.random() * 8 + 1);
-  let o =
-    Math.round(Math.random() * 4 + 1) *
-    Math.round(Math.random() * 100 < 50 ? -1 : 1);
-  let p = Math.round(Math.random() * 8 + 1);
-
-  let x = 0;
-  while (
-    ((m * d - c * n) * p * b) % ((a * p - o * b) * (d * n)) != 0 &&
-    x < 200
-  ) {
-    m = Math.round(Math.random() * 20 + 1);
-    x++;
-  }
-  if (x > 198) {
-    return [false, []];
-  } else if ((a / b).toFixed(5) == (o / p).toFixed(5)) {
-    return [false, []];
-  } else {
-    return [
-      true,
-      [
-        `${a}x`,
-        `${b}`,
-        `${c.toString()[0] == "-" ? "-" : "+"}`,
-        `${c.toString()[0] == "-" ? c.toString().slice(1) : c.toString()}`,
-        `${d}`,
-        `${m}`,
-        `${n}`,
-        `${o.toString()[0] == "-" ? "-" : "+"}`,
-        `${o.toString()[0] == "-" ? o.toString().slice(1) : o.toString()}x`,
-        `${d}`
-      ]
-    ];
-  }
-}
-
-
 
 
 function createEquation(level) {
@@ -912,7 +864,7 @@ function createEquation(level) {
     let o = Math.round(Math.random() * 12 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
     let p = Math.round(Math.random() * 8 + 1)
 
-    if ("89".includes(level.toString())) {
+    if ("78".includes(level.toString())) {
         while (a / b == (o / p)*(-1)) {
             console.log("new o")
             o = Math.round(Math.random() * 12 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
@@ -938,7 +890,7 @@ function createEquation(level) {
     let o6 = j * (-1)
     let [x, y, x1, y1, b1, a1, o1] = [0, 0, 0, 0, 0, 0]
 
-    if ("57".includes(level.toString())) {
+    if ("5".includes(level.toString())) {
         x = Math.round(Math.random() * 8 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
         y = Math.round(Math.random() * 8 + 1)
         x1 = Math.round(Math.random() * 8 + 1)
@@ -1042,17 +994,8 @@ function createEquation(level) {
         newArray[8] = (o6.toString()[0] === "-" ? o6.toString().slice(1) + "x" : o6.toString() + "x")
         newArray[9] = "1"
     }
+    
     if (level === 7) {
-        let L7 = levelSeven();
-        while (L7[0] == false) {
-            console.log("false 7")
-            console.log(L7)
-            L7 = levelSeven();
-            console.log(L7)
-        }
-        newArray = L7[1]
-    }
-    if (level === 8) {
         newArray[0] = (a / gcd(a, b)).toString() + "x"
         newArray[1] = (b / gcd(a, b)).toString()
         newArray[2] = (c.toString()[0] === "-" ? "-" : "+")
@@ -1064,7 +1007,7 @@ function createEquation(level) {
         newArray[8] = (o.toString()[0] === "-" ? (o / gcd(o, p)).toString().slice(1) + "x" : (o / gcd(o, p)).toString() + "x")
         newArray[9] = (p / gcd(o, p)).toString()
     }
-    if (level === 9) {
+    if (level === 8) {
         let xpos1 = (Math.round(Math.random() * 100) < 50 ? true : false)
         let xpos3 = (Math.round(Math.random() * 100) < 50 ? true : false)
         let xnum = (Math.round(Math.random() * 100) < 50 ? true : false)
