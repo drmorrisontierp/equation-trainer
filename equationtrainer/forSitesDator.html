@@ -178,7 +178,7 @@ font-size: 10pt;
     text-align: center;
     border: solid black 1px;
     background-color: rgb(177, 245, 175);
-    width: 200px;
+    min-width: 200px;
     height: 30px;
     margin-left: 25px;
     cursor: pointer;
@@ -482,6 +482,24 @@ font-size: 10pt;
     fill: rgb(224, 231, 236);
 }
 
+#check-score-info {
+    display: flex;
+    flex-direction: row;
+    row-gap: 10px;
+}
+
+#score {
+    margin: 0 20px 0 20px;
+    min-width: 60px;
+    min-height: 20px;
+    border: solid black 1px;
+    align-items: center;
+    text-align: center;
+    background-color: white;
+}
+#score-text {
+    font-size: 25px;
+}
     </style>
 </head>
 <body>
@@ -691,7 +709,7 @@ font-size: 10pt;
                 </div>
                 <div id="check-score-info" >
                 <div id="check" class="check-button" onclick="check()">check</div>
-                <div id="score" ></div>
+                <div id="score" >SCORE <br><span id="score-text">0</span></div>
                 <div id="info-button" onclick="infoPopup()">
                     <svg width="40px" height="40px" xmlns="http://www.w3.org/2000/svg">
                         <g>
@@ -722,6 +740,7 @@ let historyId = 0
 let level = 1
 let popupOpen = false
 let bonus = 1
+let score = 0
 const infoShape = `"M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L320 5 Q330 5 330 15 L330 45 Q 330 55 320 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30"`
 
 newArray = createEquation(level-1)
@@ -790,15 +809,15 @@ const warningsText = (warning, args) => {
 }
 
 const levelInfo = {
-    1: `Nivå 1: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp x + c = h </span> <br> med en heltalslösning`,
-    2: `Nivå 2: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax = h </span> <br> med en heltalslösning`,
-    3: `Nivå 3: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp x/b = h </span> <br> med en heltalslösning`,
-    4: `Nivå 4: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax + c = h </span> <br> med en heltalslösning`,
-    5: `Nivå 5: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax/b + c = h </span> <br> med en heltalslösning`,
-    6: `Nivå 6: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax/b + c/d = h/k </span> <br> med en heltalslösning`,
-    7: `Nivå 7: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax + c = h + mx </span> <br> med en heltalslösning`,
-    8: `Nivå 8: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax/b + c/d = h/k + mx/n </span> <br> med en rationeltalslösning`,
-    9: "Nivå 9: Ekvationer där alla positioner är randomiserat",
+    1: `Nivå 1: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp x + c = h </span> <br> med en heltalslösning. <br> Bonus: 1`,
+    2: `Nivå 2: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax = h </span> <br> med en heltalslösning. <br> Bonus: 1`,
+    3: `Nivå 3: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp x/b = h </span> <br> med en heltalslösning. <br> Bonus: 1`,
+    4: `Nivå 4: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax + c = h </span> <br> med en heltalslösning. <br> Bonus: 3`,
+    5: `Nivå 5: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax/b + c = h </span> <br> med en heltalslösning. <br> Bonus: 4`,
+    6: `Nivå 6: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax/b + c/d = h/k </span> <br> med en heltalslösning. <br> Bonus: 6`,
+    7: `Nivå 7: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax + c = h + mx </span> <br> med en heltalslösning. <br> Bonus: 6`,
+    8: `Nivå 8: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax/b + c/d = h/k + mx/n </span> <br> med en rationeltalslösning. <br> Bonus: 8`,
+    9: "Nivå 9: Ekvationer där alla positioner är randomiserat. <br> Bonus: 10",
 }
 
 element("info-screen").innerHTML = levelInfo[level]
@@ -807,6 +826,12 @@ element("info-screen").innerHTML = levelInfo[level]
 select(available[0])
 
 function newLevel() {
+    if (("123").includes(level.toString())) bonus = 1
+    if (("4").includes(level.toString())) bonus = 3
+    if (("5").includes(level.toString())) bonus = 4
+    if (("67").includes(level.toString())) bonus = 6
+    if (("8").includes(level.toString())) bonus = 8
+    if (("9").includes(level.toString())) bonus = 10
     newArray = createEquation(level-1)
     addEquation(1, newArray)
 }
@@ -1400,6 +1425,8 @@ function checkWin() {
         element(`row-${row}`).style.width = "50%"
         element(`row-info-${row}`).innerHTML = `<div id="restart" onclick="restart()">click here for a new equation</div>`
         element(`bal-info-${row}`).style.display = "none"
+        score = score + bonus
+        element("score-text").innerHTML = score
 
         stopped = true
 
