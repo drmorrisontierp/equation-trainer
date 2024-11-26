@@ -184,7 +184,7 @@ font-size: 10pt;
     text-align: center;
     border: solid black 1px;
     background-color: rgb(177, 245, 175);
-    width: 200px;
+    max-width: 200px;
     height: 30px;
     margin-left: 25px;
     cursor: pointer;
@@ -500,6 +500,25 @@ font-size: 10pt;
     fill: rgb(224, 231, 236);
 }
 
+#check-score-info {
+    display: flex;
+    flex-direction: row;
+    row-gap: 10px;
+}
+
+#score {
+    margin: 0 20px 0 20px;
+    min-width: 60px;
+    min-height: 20px;
+    border: solid black 1px;
+    align-items: center;
+    text-align: center;
+    background-color: white;
+}
+#score-text {
+    font-size: 25px;
+}
+
     </style>
 </head>
 <body>
@@ -707,7 +726,9 @@ font-size: 10pt;
                     <div id="custom" class="reset-button" onclick="addEquation(2, emptyArray)">custom</div>
                     <div id="reset" class="reset-button" onclick="addEquation(3, newArray)">reset</div>
                 </div>
+                <div id="check-score-info" >
                 <div id="check" class="check-button" onclick="check()">check</div>
+                <div id="score" >SCORE <br><span id="score-text">0</span></div>
                 <div id="info-button" onclick="infoPopup()">
                     <svg width="30px" height="30px" xmlns="http://www.w3.org/2000/svg">
                         <g>
@@ -717,6 +738,7 @@ font-size: 10pt;
                         </g>
                     </svg>
                 </div> 
+            </div>
             </div>
         </div>
     </div>
@@ -736,6 +758,8 @@ let history = {}
 let historyId = 0
 let level = 1
 let popupOpen = false
+let bonus = 1
+let score = 0
 const infoShape = `"M5 30 L20 15 L20 22 L30 22 L30 15 Q30 5 40 5 L200 5 Q210 5 210 15 L210 45 Q 210 55 200 55 L40 55 Q 30 55 30 45 L30 37 L20 37 L20 45 L5 30"`
 
 createEquation()
@@ -802,11 +826,31 @@ const warningsText = (warning, args) => {
 
 }
 
+const levelInfo = {
+    1: `Nivå 1: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp x + c = h </span> <br> med en heltalslösning. <br> Bonus: 1`,
+    2: `Nivå 2: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax = h </span> <br> med en heltalslösning. <br> Bonus: 1`,
+    3: `Nivå 3: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp x/b = h </span> <br> med en heltalslösning. <br> Bonus: 1`,
+    4: `Nivå 4: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax + c = h </span> <br> med en heltalslösning. <br> Bonus: 3`,
+    5: `Nivå 5: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax/b + c = h </span> <br> med en heltalslösning. <br> Bonus: 4`,
+    6: `Nivå 6: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax/b + c/d = h/k </span> <br> med en heltalslösning. <br> Bonus: 6`,
+    7: `Nivå 7: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax + c = h + mx </span> <br> med en heltalslösning. <br> Bonus: 6`,
+    8: `Nivå 8: Ekvationer i form av <br> <span style="font-weight:bold">&nbsp&nbsp&nbsp&nbsp ax/b + c/d = h/k + mx/n </span> <br> med en rationeltalslösning. <br> Bonus: 8`,
+    9: "Nivå 9: Ekvationer där alla positioner är randomiserat. <br> Bonus: 10",
+}
+
+element("info-screen").innerHTML = levelInfo[level]
+
 // Select the first available position in the first balance row
 select(available[0])
 
 function newLevel() {
-    createEquation()
+    if (("123").includes(level.toString())) bonus = 1
+    if (("4").includes(level.toString())) bonus = 3
+    if (("5").includes(level.toString())) bonus = 4
+    if (("67").includes(level.toString())) bonus = 6
+    if (("8").includes(level.toString())) bonus = 8
+    if (("9").includes(level.toString())) bonus = 10
+    newArray = createEquation(level-1)
     addEquation(1, newArray)
 }
 
@@ -817,7 +861,7 @@ function restart() {
     stopped = false
     creating = false
     createEquation()
-    addEquation(1, newArray)
+    newArray = createEquation(level-1)
     element("row-info-1").innerHTML = `
         <svg width="280px" height="60px" xmlns="http://www.w3.org/2000/svg">
            <path d=${infoShape} stroke="black" fill="white"/>
@@ -831,12 +875,14 @@ function changeLevel(direction) {
     if (direction === "up") {
         if (level < 9) {
             level++
+            element("info-screen").innerHTML = levelInfo[level]
         } else {
             level = 9
         }
     } else {
         if (level > 1) {
             level--
+            element("info-screen").innerHTML = levelInfo[level]
         } else {
             level = 1
         }
@@ -845,296 +891,181 @@ function changeLevel(direction) {
     element("level-display").innerHTML = level
 }
 
-function createEquation() {
-    newArray = ["", "", "", "", "", "", "", "", "", ""]
-    let x1 = Math.round(Math.random() * 8 + 1)
-    let x2 = Math.round(Math.random() * 8 + 1)
-    let x1b = Math.round(Math.random() * 8 + 1)
-    let x2b = Math.round(Math.random() * 8 + 1)
-    let nox1 = Math.round(Math.random() * 99 + 1)
-    let nox2 = Math.round(Math.random() * 99 + 1)
-    let nox1b = Math.round(Math.random() * 8 + 1)
-    let nox2b = Math.round(Math.random() * 8 + 1)
-    let opp1 = Math.round(Math.random() * 100) < 50 ? "+" : "-";
-    let opp2 = Math.round(Math.random() * 100) < 50 ? "+" : "-";
-    let gx1 = gcd(x1, x1b)
-    let gx2 = gcd(x2, x2b)
-    let g1 = gcd(nox1, nox1b)
-    let g2 = gcd(nox2, nox2b)
-    let x1n = (x1 / gx1).toString() + "x"
-    let x1d = x1b / gx1
-    let x2n = (x2 / gx2).toString() + "x"
-    let x2d = x2b / gx2
-    nox1 = nox1 / g1
-    nox1b = nox1b / g1
-    nox2 = nox2 / g2
-    nox2b = nox2b / g2
-//for levels one and two
-    let final = Math.round(Math.random() * 20 + 1)
-    let numbers = level === 1 ? final * (x1 / gx1) : Math.round(Math.random() * 100) < 50 ? final * (x1 / gx1) : final * (x1 / gx1) * (-1)
-    let num2 = 0
-    let num1 = Math.round(Math.random() * numbers + 1)
-// for level four
-    let solution = Math.round(Math.random() * 20 + 1)
-    solution = Math.round(Math.random() * 100) < 50 ? solution : solution*(-1)
-    let multiple = solution * x1
-    let x14 = Math.round(Math.random()*x1 + 1)
-    let x24 = 0
-    let num4 = 0
-    let num3 = Math.round(Math.random() * multiple + 1)
+function createEquation(level) {
+    let newArray = ["", "", "", "", "", "", "", "", "", ""]
 
+    let s = Math.round(Math.random() * 20 + 1) * ("123456".includes(level.toString()) ? 1 : (Math.round(Math.random() * 100) < 50 ? 1 : -1))
+    let c0 = Math.round(Math.random() * 99 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+    let c4 = Math.round(Math.random() * 25 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+    let a = Math.round(Math.random() * 7 + 2)
+    let b = Math.round(Math.random() * 8 + 1)
+    let c = Math.round(Math.random() * 20 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+    let d = Math.round(Math.random() * 8 + 1)
+    let m = Math.round(Math.random() * 20 + 1)
+    let n = Math.round(Math.random() * 8 + 1)
+    let o = Math.round(Math.random() * 12 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+    let p = Math.round(Math.random() * 8 + 1)
 
-    while (num2 === 0) {
-        num1 = Math.round(Math.random() * numbers + 1); // Regenerate num1
-        num2 = opp1 === "+" ? numbers + num1 : numbers - num1;
+    if ("78".includes(level.toString())) {
+        while (a / b == (o / p)*(-1)) {
+            console.log("new o")
+            o = Math.round(Math.random() * 12 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+        }
+        while (c / d == (o / p)*(-1)) {
+            console.log("new c")
+            c = Math.round(Math.random() *20 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+        }
+        while (c / d == (m / n)*(-1)) {
+            console.log("new m")
+            m = Math.round(Math.random() * 20 + 1)
+        }
+    }
+    if ("4".includes(level.toString())) {
+        while (s * a % b !== 0) {
+            console.log("new b")
+            b = Math.round(Math.random() * 8 + 1)
+        }
+    }
+    let j = Math.round(Math.random() * (a-1) + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+    let k = a - j
+    let a6 = k
+    let o6 = j * (-1)
+    let [x, y, x1, y1, b1, a1, o1] = [0, 0, 0, 0, 0, 0]
+
+    if ("5".includes(level.toString())) {
+        x = Math.round(Math.random() * 8 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+        y = Math.round(Math.random() * 8 + 1)
+        x1 = Math.round(Math.random() * 8 + 1)
+        y1 = Math.round(Math.random() * 8 + 1)
+        b1 = Math.round(Math.random() * 3 + 1)
+        a1 = Math.round(Math.random() * 8 + 1)
+        o1 = Math.round(Math.random() * 8 + 1) * (Math.round(Math.random() * 100) < 50 ? 1 : -1)
+
+        while ((x + x1) % a !== 0) {
+            console.log("new x")
+            x = Math.round(Math.random() * 8 + 1)
+        }
+        while ((y + y1) % a !== 0) {
+            console.log("new y")
+            y = Math.round(Math.random() * 8 + 1)
+        }
     }
 
-    while (num4 === 0) {
-        num3 = Math.round(Math.random() * multiple + 1); // Regenerate num1
-        num4 = opp1 === "+" ? (multiple + num3)*(-1) : (num3 - multiple);
+    if (level === 0) {
+        newArray[0] = "x"
+        newArray[1] = "1"
+        newArray[2] = (c0.toString())[0] === "-" ? "-" : "+"
+        newArray[3] = (c0.toString())[0] === "-" ? c0.toString().slice(1) : c0.toString();
+        newArray[4] = "1"
+        newArray[5] = (s - c0).toString()
+        newArray[6] = "1"
+        newArray[7] = ""
+        newArray[8] = ""
+        newArray[9] = ""
     }
-
-    while (x24 === 0) {
-        x14 = Math.round(Math.random()*x1 + 1)
-        x24 = opp2 === "+" ? (x1 - x14)*(-1) : (x14 - x1)
-    }
-
-    let flip = Math.round(Math.random() * 100) < 50
-    let x114 = `${flip ? x14 : x24}x`
-    let x224 = `${flip ? x24 : x24}x`
-    num1 = num1.toString()
-    num3 = num3.toString()
-    num4 = num4.toString()
-
-    console.log(final, numbers, num1, num2)
-    let xOneNum
-    let xOneZero
-    let xTwoFive
-    let noxOneNum
-    let noxTwoNum
-
     if (level === 1) {
-        newArray[0] = x1n
-        newArray[1] = 1
-        newArray[2] = opp1
-        newArray[3] = num1
-        newArray[4] = 1
-        newArray[5] = num2
-        newArray[6] = 1
+        newArray[0] = a.toString() + "x"
+        newArray[1] = "1"
+        newArray[2] = ""
+        newArray[3] = ""
+        newArray[4] = "1"
+        newArray[5] = (a * s).toString()
+        newArray[6] = "1"
         newArray[7] = ""
         newArray[8] = ""
         newArray[9] = ""
     }
     if (level === 2) {
-        xOneZero = Math.round(Math.random() * 100) < 50 ? true : false;
-        numOneMinus = Math.round(Math.random() * 100) < 50 ? true : false;
-        numTwoMinus = Math.round(Math.random() * 100) < 50 ? true : false;
-        newArray[0] = xOneZero ? x1n : opp1 === "+" ? num1 : num1[0] === "-" ? num1.replace("-", "") : "-" + num1
-        newArray[1] = 1
-        newArray[2] = !xOneZero ? opp2 : opp1 === "-" && num1[0] === "-" ? "+" : opp1 === "+" && num1[0] !== "-" ? "+" : "-"
-        newArray[3] = !xOneZero ? x1n : opp1 === "-" && num1[0] === "-" ? num1.replace("-", "") : opp1 === "+" && num1[0] !== "-" ? num1 : num1.replace("-", "")
-        newArray[4] = 1
-        newArray[5] = num2
-        newArray[6] = 1
+        newArray[0] = "x"
+        newArray[1] = a.toString()
+        newArray[2] = ""
+        newArray[3] = ""
+        newArray[4] = "1"
+        newArray[5] = Math.round(Math.random() * 20 + 1).toString()
+        newArray[6] = "1"
         newArray[7] = ""
         newArray[8] = ""
         newArray[9] = ""
     }
     if (level === 3) {
-        newArray[0] = "x"
-        newArray[1] = x1b
-        newArray[2] = opp1
-        newArray[3] = nox1
-        newArray[4] = 1
-        newArray[5] = nox2
-        newArray[6] = 1
+        newArray[0] = a.toString() + "x"
+        newArray[1] = "1"
+        newArray[2] = c0.toString()[0] === "-" ? "-" : "+"
+        newArray[3] = c0.toString()[0] === "-" ? c0.toString().slice(1) : c0.toString();
+        newArray[4] = "1"
+        newArray[5] = (s * a + c0).toString()
+        newArray[6] = "1"
         newArray[7] = ""
         newArray[8] = ""
         newArray[9] = ""
     }
     if (level === 4) {
-        newArray[0] = x114
-        newArray[1] = 1
-        newArray[2] = num3[0] === "+" ? "+" : "-"
-        newArray[3] = num3[0] === "+" ? num3 : num3.replace("-", "")
-        newArray[4] = 1
-        newArray[5] = num4
-        newArray[6] = 1
-        newArray[7] = x224[0] === "+" ? "+" : "-"
-        newArray[8] = x224[0] === "+" ? x224 : x224.replace("-", "")
-        newArray[9] = 1
+        console.log((s * a) % b == 0)
+        newArray[0] = (a / gcd(a, b)).toString() + "x"
+        newArray[1] = (b / gcd(a, b)).toString()
+        newArray[2] = c4.toString()[0] === "-" ? "-" : "+"
+        newArray[3] = c4.toString()[0] === "-" ? c4.toString().slice(1) : c4.toString();
+        newArray[4] = "1"
+        newArray[5] = (s * a) % b == 0 ? ((s * a + c4 * b) / b).toString() : ((s * a + c4)).toString()
+        newArray[6] = "1"
+        newArray[7] = ""
+        newArray[8] = ""
+        newArray[9] = ""
     }
     if (level === 5) {
-        newArray[0] = x1n
-        newArray[1] = x1d
-        newArray[2] = opp1
-        newArray[3] = nox1
-        newArray[4] = nox1b
-        newArray[5] = nox2
-        newArray[6] = nox2b
-        newArray[7] = opp2
-        newArray[8] = x2n
-        newArray[9] = x2d
+        newArray[0] = (a / gcd(a, (x1 * y1 * b1))).toString() + "x"
+        newArray[1] = ((x1 * y1 * b1) / gcd(a, (x1 * y1 * b1))).toString()
+        newArray[2] = (x.toString()[0] === "-" ? "-" : "+")
+        newArray[3] = (x.toString()[0] === "-" ? (x / gcd(x, (x1 * b1))).toString().slice(1) : (x / gcd(x, (x1 * b1))).toString())
+        newArray[4] = ((x1 * b1) / gcd(x, (x1 * b1))).toString()
+        newArray[5] = (y / gcd(y, (y1 * b1))).toString()
+        newArray[6] = ((y1 * b1) / gcd(y, (y1 * b1))).toString()
+        newArray[7] = ""
+        newArray[8] = ""
+        newArray[9] = ""
     }
     if (level === 6) {
-        xOneNum = Math.round(Math.random() * 100) < 50 ? true : false;
-        newArray[0] = xOneNum ? x1n : x1d
-        newArray[1] = xOneNum ? x1d : x1n
-        newArray[2] = opp1
-        newArray[3] = nox1
-        newArray[4] = 1
-        newArray[5] = nox2
-        newArray[6] = 1
-        newArray[7] = ""
-        newArray[8] = ""
-        newArray[9] = ""
+        newArray[0] = (a6).toString() + "x"
+        newArray[1] = "1"
+        newArray[2] = (c4.toString()[0] === "-" ? "-" : "+")
+        newArray[3] = (c4.toString()[0] === "-" ? c4.toString().slice(1) : c4.toString())
+        newArray[4] = "1"
+        newArray[5] = (s * a + c4).toString()
+        newArray[6] = "1"
+        newArray[7] = (o6.toString()[0] === "-" ? "-" : "+")
+        newArray[8] = (o6.toString()[0] === "-" ? o6.toString().slice(1) + "x" : o6.toString() + "x")
+        newArray[9] = "1"
     }
+    
     if (level === 7) {
-        xOneNum = Math.round(Math.random() * 100) < 50 ? true : false;
-        newArray[0] = xOneNum ? x1n : x1d
-        newArray[1] = xOneNum ? x1d : x1n
-        newArray[2] = opp1
-        newArray[3] = nox1
-        newArray[4] = nox1b
-        newArray[5] = nox2
-        newArray[6] = nox2b
-        newArray[7] = ""
-        newArray[8] = ""
-        newArray[9] = ""
+        newArray[0] = (a / gcd(a, b)).toString() + "x"
+        newArray[1] = (b / gcd(a, b)).toString()
+        newArray[2] = (c.toString()[0] === "-" ? "-" : "+")
+        newArray[3] = (c.toString()[0] === "-" ? (c / gcd(c, d)).toString().slice(1) : (c / gcd(c, d)).toString())
+        newArray[4] = (d / gcd(c, d)).toString()
+        newArray[5] = (m / gcd(m, n)).toString()
+        newArray[6] = (n / gcd(m, n)).toString()
+        newArray[7] = (o.toString()[0] === "-" ? "-" : "+")
+        newArray[8] = (o.toString()[0] === "-" ? (o / gcd(o, p)).toString().slice(1) + "x" : (o / gcd(o, p)).toString() + "x")
+        newArray[9] = (p / gcd(o, p)).toString()
     }
-
     if (level === 8) {
-        xOneNum = Math.round(Math.random() * 100) < 50 ? true : false;
-        newArray[0] = xOneNum ? x1n : x1d
-        newArray[1] = xOneNum ? x1d : x1n
-        newArray[2] = opp1
-        newArray[3] = nox1
-        newArray[4] = nox1b
-        newArray[5] = nox2
-        newArray[6] = nox2b
-        newArray[7] = opp2
-        newArray[8] = xOneNum ? x2n : x2d
-        newArray[9] = xOneNum ? x2d : x2n
+        let xpos1 = (Math.round(Math.random() * 100) < 50 ? true : false)
+        let xpos3 = (Math.round(Math.random() * 100) < 50 ? true : false)
+        let xnum = (Math.round(Math.random() * 100) < 50 ? true : false)
+        newArray[0] = (a / gcd(a, b)).toString() + (!xpos1 ? "" : xnum ? "x" : "")
+        newArray[1] = (b / gcd(a, b)).toString() + (!xpos1 ? "" : xnum ? "" : "x")
+        newArray[2] = (c.toString()[0] === "-" ? "-" : "+")
+        newArray[3] = (c.toString()[0] === "-" ? (c / gcd(c, d)).toString().slice(1) + (xpos1 ? "" : xnum ? "x" : "") : (c / gcd(c, d)).toString() + (xpos1 ? "" : xnum ? "x" : ""))
+        newArray[4] = (d / gcd(c, d)).toString() + (xpos1 ? "" : xnum ? "" : "x")
+        newArray[5] = (m / gcd(m, n)).toString() + (!xpos3 ? "" : xnum ? "x" : "")
+        newArray[6] = (n / gcd(m, n)).toString() + (!xpos3 ? "" : xnum ? "" : "x")
+        newArray[7] = (o.toString()[0] === "-" ? "-" : "+")
+        newArray[8] = (o.toString()[0] === "-" ? (o / gcd(o, p)).toString().slice(1) + (xpos3 ? "" : xnum ? "x" : "") : (o / gcd(o, p)).toString() + (xpos3 ? "" : xnum ? "x" : ""))
+        newArray[9] = (p / gcd(o, p)).toString() + (xpos3 ? "" : xnum ? "" : "x")
     }
-    if (level === 9) {
-        xOneNum = Math.round(Math.random() * 100) < 50 ? true : false;
-        noxOneNum = Math.round(Math.random() * 100) < 50 ? true : false;
-        noxTwoNum = Math.round(Math.random() * 100) < 50 ? true : false;
-        xOneZero = Math.round(Math.random() * 100) < 50 ? true : false;
-        xTwoFive = Math.round(Math.random() * 100) < 50 ? true : false;
-        if (xOneNum) {
-            if (noxOneNum) {
-                if (xOneZero) {
-                    newArray[0] = x1n
-                    newArray[1] = x1d
-                    newArray[3] = nox1
-                    newArray[4] = nox1b
-                } else {
-                    newArray[0] = nox1
-                    newArray[1] = nox1b
-                    newArray[3] = x1n
-                    newArray[4] = x1d
-                }
-            } else {
-                if (xOneZero) {
-                    newArray[0] = x1n
-                    newArray[1] = x1d
-                    newArray[3] = nox1b
-                    newArray[4] = nox1
-                } else {
-                    newArray[0] = nox1b
-                    newArray[1] = nox1
-                    newArray[3] = x1n
-                    newArray[4] = x1d
-                }
-            }
-        } else {
-            if (noxOneNum) {
-                if (xOneZero) {
-                    newArray[0] = nox1
-                    newArray[1] = nox1b
-                    newArray[3] = x1d
-                    newArray[4] = x1n
-                } else {
-                    newArray[0] = x1d
-                    newArray[1] = x1n
-                    newArray[3] = nox1
-                    newArray[4] = nox1b
-                }
-            } else {
-                if (xOneZero) {
-                    newArray[0] = x1d
-                    newArray[1] = x1n
-                    newArray[3] = nox1b
-                    newArray[4] = nox1
-                } else {
-                    newArray[0] = nox1b
-                    newArray[1] = nox1
-                    newArray[3] = x1n
-                    newArray[4] = x1d
-                }
-            }
-
-        }
-        newArray[2] = opp1
-        if (xOneNum) {
-            if (noxTwoNum) {
-                if (xTwoFive) {
-                    newArray[5] = x2n
-                    newArray[6] = x2d
-                    newArray[8] = nox2
-                    newArray[9] = nox2b
-                } else {
-                    newArray[5] = nox2
-                    newArray[6] = nox2b
-                    newArray[8] = x2n
-                    newArray[9] = x2d
-                }
-            } else {
-                if (xTwoFive) {
-                    newArray[5] = x2n
-                    newArray[6] = x2d
-                    newArray[8] = nox2b
-                    newArray[9] = nox2
-                } else {
-                    newArray[5] = nox2b
-                    newArray[6] = nox2
-                    newArray[8] = x2n
-                    newArray[9] = x2d
-                }
-            }
-        } else {
-            if (noxTwoNum) {
-                if (xTwoFive) {
-                    newArray[5] = nox2
-                    newArray[6] = nox2b
-                    newArray[8] = x2d
-                    newArray[9] = x2n
-                } else {
-                    newArray[5] = x2d
-                    newArray[6] = x2n
-                    newArray[8] = nox2
-                    newArray[9] = nox2b
-                }
-            } else {
-                if (xTwoFive) {
-                    newArray[0] = x2d
-                    newArray[1] = x2n
-                    newArray[3] = nox2b
-                    newArray[4] = nox2
-                } else {
-                    newArray[0] = nox2b
-                    newArray[1] = nox2
-                    newArray[3] = x2n
-                    newArray[4] = x2d
-                }
-            }
-
-        }
-        newArray[7] = opp2
-    }
+    return newArray
 }
-
 
 /**
  * Helper function to replace document.getElementById(id).
@@ -1500,7 +1431,8 @@ function checkWin() {
         element(`row-${row}`).style.width = "50%"
         element(`row-info-${row}`).innerHTML = `<div id="restart" onclick="restart()">click here for a new equation</div>`
         element(`bal-info-${row}`).style.display = "none"
-
+        score = score + bonus
+        element("score-text").innerHTML = score
         stopped = true
 
         console.log("You won")
@@ -1580,16 +1512,6 @@ function completeCheckWithAddEquation() {
     let targetChildren = Array.from(target.children)
     console.log(targetChildren)
     
-        /*for (let x = 0; x < targetChildren.length; x++) {
-            if (x !== 1 || x!== 3 || x !== 5) {
-                values.push(targetChildren[x].children[0].innerHTML)
-                targetChildren[x].children.length > 1 ? values.push(targetChildren[x].children[1].innerHTML) : values.push("1")
-
-            } else if (x !== 1 || x !== 5) {
-                values.push(targetChildren[x].children[0].innerHTML)
-            }
-            
-        }*/
 
        values = [
         targetChildren[0].children[0].innerHTML,
@@ -1832,8 +1754,7 @@ function check() {
                 extend(e[0], e[1], e[2], e[3]);
             }
             completeCheck()
-            //let finalRow = element(`row-${row}`)
-            //checkRows(initialRow, finalRow)
+            
             return;
         }
 
@@ -1842,8 +1763,7 @@ function check() {
             createNewRow(newP);
             multiplication(newP, b, multiplicationCheck.multiplications[0]);
             completeCheck()
-            //let finalRow = element(`row-${row}`)
-            //checkRows(initialRow, finalRow)
+            
             return;
         }
 
